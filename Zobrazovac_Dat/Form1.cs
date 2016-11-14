@@ -45,5 +45,6 @@ namespace Zobrazovac_Dat
             _kontroler.SelektProjektu(faza, projekt);
             dgvVlaky.DataSource = _kontroler.GetVlaky();
         }
+
     }
 }
