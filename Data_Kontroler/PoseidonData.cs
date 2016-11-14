@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Service_Konektor.poseidon;
 
+
 namespace Data_Kontroler
 {
     public class PoseidonData
@@ -15,16 +16,42 @@ namespace Data_Kontroler
 
         public PoseidonData(string meno, string heslo)
         {
-            Poseidon = new gvd();
-            Poseidon.Login(meno, heslo);
-            Projekty = Poseidon.GetProjects();
+            Poseidon = new gvd
+            {
+                Timeout = 600000,
+                CookieContainer = new System.Net.CookieContainer()
+            };
+            try
+            {
+                Poseidon.Login(meno, heslo);
+                Projekty = Poseidon.GetProjects();
+            }
+            catch (Exception)
+            {
+                
+            }
+
+
         }
 
         public PoseidonData()
         {
-            Poseidon = new gvd();
-            Poseidon.Login("suna", "peter");
-            Projekty = Poseidon.GetProjects();
+
+            Poseidon = new gvd
+            {
+                Timeout = 600000,
+                CookieContainer = new System.Net.CookieContainer()
+            };
+            try
+            {
+                Poseidon.Login("suna", "peter");
+                Projekty = Poseidon.GetProjects();
+            }
+            catch (Exception)
+            {
+
+            }
+                                 
         }
 
         /// <summary>
@@ -33,14 +60,16 @@ namespace Data_Kontroler
         /// <param name="faza"></param>
         /// <param name="project"></param>
         /// <returns></returns>
-        public bool SelektProjektu(eVSVlakFaza faza, VSProject project )
+        public bool SelektProjektu(eVSVlakFaza faza, VSProject project)
         {
-            var filter = new VSVlakFilter {Faza = faza};
-            if (Poseidon.SelectProject(project, filter)) {
+            var filter = new VSVlakFilter { Faza = faza };
+            if (Poseidon.SelectProject(project, filter))
+            {
                 return true;
             }
             return false;
         }
+
 
         /// <summary>
         /// Pred zavolaním metody je potrebne vykonať metodu SelektProjektu()

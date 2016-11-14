@@ -35,6 +35,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +56,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Web References\sk.uniza.fri.kst.poseidon\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,9 +82,133 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDBrakePercent.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDBrakePosition.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDCable.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDHDVFunction.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDKindOfTrain.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDRollingResistance.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDType.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\ETDWayBrakes.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\gvd.wsdl" />
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\TrainType.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSDopravca.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSDopravcePracoviste.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSDopravnyBod.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSDopravnyUsek.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSDraha.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSKalendar.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSKolaj.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSObecnaPoznamka.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSObjednatel.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSProject.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaBod.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaDopravca.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaDruh.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaHnacieVozidlo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaObecPozn.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaObjednatel.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaPrestavenie.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaSoupis.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSTrasaSpecifikace.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\VSVlak.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://poseidon.kst.fri.uniza.sk/kangostabil/apps/export/gvd.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\sk.uniza.fri.kst.poseidon\</RelPath>
+      <UpdateFromURL>http://poseidon.kst.fri.uniza.sk/kangostabil/apps/export/gvd.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Zobrazovac_Dat_sk_uniza_fri_kst_poseidon_gvd</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\sk.uniza.fri.kst.poseidon\gvd.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data_Kontroler\Data_Kontroler.csproj">
+      <Project>{5e7fbec3-cabc-40cd-8a77-61731d83aa7f}</Project>
+      <Name>Data_Kontroler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service_Konektor\Service_Konektor.csproj">
+      <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
+      <Name>Service_Konektor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
