@@ -25,8 +25,15 @@ namespace Zobrazovac_Dat
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _projekty = _kontroler.Projekty;
-            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov)?.ToList();
+            try
+            {
+                _projekty = _kontroler.Projekty;
+            }
+            catch (Exception)
+            {
+
+            }
+            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
             cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
 
         }

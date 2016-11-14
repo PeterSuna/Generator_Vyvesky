@@ -28,15 +28,12 @@ namespace Data_Kontroler
             }
             catch (Exception)
             {
-                
+               
             }
-
-
         }
 
         public PoseidonData()
         {
-
             Poseidon = new gvd
             {
                 Timeout = 600000,
@@ -49,9 +46,7 @@ namespace Data_Kontroler
             }
             catch (Exception)
             {
-
             }
-                                 
         }
 
         /// <summary>
