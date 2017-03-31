@@ -111,5 +111,23 @@ namespace Zobrazovac_Dat
             MessageBox.Show(telo, hlavicka, btn, icn);
         }
 
+
+        private void btnGenTrasaBody_Click(object sender, EventArgs e)
+        {
+            if (!_online)
+            {
+                Mbox("Uzivatel nieje pripojený na server", "chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                var faza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
+                    ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
+                    : eVSVlakFaza.Pozadavek_zkonstruovano;
+                var projekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+                _kontroler.SelektProjektu(faza, projekt);
+                dgvVlaky.DataSource = _kontroler.GetTrasy();
+            }
+           
+        }
     }
 }

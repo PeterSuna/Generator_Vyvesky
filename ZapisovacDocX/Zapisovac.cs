@@ -23,6 +23,7 @@ namespace ZapisovacDocX
             using (DocX document = DocX.Create(cesta +"\\Vyveska.docx"))
             {
                 Paragraph p = document.InsertParagraph();
+                var b = p.Direction == Direction.LeftToRight;
                 var arial = new FontFamily("Arial");
                 try
                 {

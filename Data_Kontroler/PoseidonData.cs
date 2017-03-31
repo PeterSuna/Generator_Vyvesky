@@ -25,6 +25,7 @@ namespace Data_Kontroler
             {
                 Poseidon.Login(meno, heslo);
                 Projekty = Poseidon.GetProjects();
+
             }
             catch (Exception)
             {
@@ -57,7 +58,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public bool SelektProjektu(eVSVlakFaza faza, VSProject project)
         {
-            var filter = new VSVlakFilter { Faza = faza };
+            var filter = new VSVlakFilter {Faza = faza};
             if (Poseidon.SelectProject(project, filter))
             {
                 return true;
@@ -74,6 +75,12 @@ namespace Data_Kontroler
         {
             var vlaky = Poseidon.GetVlaky();
             return vlaky;
+        }
+
+        public VSTrasaBod[] GetTrasy()
+        {
+            var trasy = Poseidon.GetTrasaBody();
+            return trasy;
         }
     }
 }
