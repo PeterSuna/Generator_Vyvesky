@@ -31,13 +31,14 @@
             this.cbxSelektProjektu = new System.Windows.Forms.ComboBox();
             this.cbxSelektFiltra = new System.Windows.Forms.ComboBox();
             this.dgvVlaky = new System.Windows.Forms.DataGridView();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnGenVlaky = new System.Windows.Forms.Button();
             this.lblSelekt = new System.Windows.Forms.Label();
             this.lblFilter = new System.Windows.Forms.Label();
             this.btnZapisDoSuboru = new System.Windows.Forms.Button();
             this.btnNacitaj = new System.Windows.Forms.Button();
             this.btnVytvorVyvesku = new System.Windows.Forms.Button();
             this.btnGenTrasaBody = new System.Windows.Forms.Button();
+            this.btnNacitajTrasyBody = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVlaky)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,7 +46,7 @@
             // 
             this.cbxSelektProjektu.FormattingEnabled = true;
             this.cbxSelektProjektu.Location = new System.Drawing.Point(10, 46);
-            this.cbxSelektProjektu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbxSelektProjektu.Margin = new System.Windows.Forms.Padding(4);
             this.cbxSelektProjektu.Name = "cbxSelektProjektu";
             this.cbxSelektProjektu.Size = new System.Drawing.Size(167, 21);
             this.cbxSelektProjektu.TabIndex = 1;
@@ -55,7 +56,7 @@
             // 
             this.cbxSelektFiltra.FormattingEnabled = true;
             this.cbxSelektFiltra.Location = new System.Drawing.Point(184, 46);
-            this.cbxSelektFiltra.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbxSelektFiltra.Margin = new System.Windows.Forms.Padding(4);
             this.cbxSelektFiltra.Name = "cbxSelektFiltra";
             this.cbxSelektFiltra.Size = new System.Drawing.Size(167, 21);
             this.cbxSelektFiltra.TabIndex = 2;
@@ -69,20 +70,20 @@
             this.dgvVlaky.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvVlaky.Location = new System.Drawing.Point(12, 73);
             this.dgvVlaky.Name = "dgvVlaky";
-            this.dgvVlaky.Size = new System.Drawing.Size(784, 248);
+            this.dgvVlaky.Size = new System.Drawing.Size(823, 241);
             this.dgvVlaky.TabIndex = 0;
             // 
-            // btnOK
+            // btnGenVlaky
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(612, 11);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(186, 20);
-            this.btnOK.TabIndex = 3;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnGenVlaky.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenVlaky.Location = new System.Drawing.Point(445, 40);
+            this.btnGenVlaky.Margin = new System.Windows.Forms.Padding(4);
+            this.btnGenVlaky.Name = "btnGenVlaky";
+            this.btnGenVlaky.Size = new System.Drawing.Size(90, 25);
+            this.btnGenVlaky.TabIndex = 3;
+            this.btnGenVlaky.Text = "Generuj Vlaky";
+            this.btnGenVlaky.UseVisualStyleBackColor = true;
+            this.btnGenVlaky.Click += new System.EventHandler(this.btnGenVlaky_Click);
             // 
             // lblSelekt
             // 
@@ -107,8 +108,8 @@
             // btnZapisDoSuboru
             // 
             this.btnZapisDoSuboru.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnZapisDoSuboru.Location = new System.Drawing.Point(741, 40);
-            this.btnZapisDoSuboru.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnZapisDoSuboru.Location = new System.Drawing.Point(780, 40);
+            this.btnZapisDoSuboru.Margin = new System.Windows.Forms.Padding(4);
             this.btnZapisDoSuboru.Name = "btnZapisDoSuboru";
             this.btnZapisDoSuboru.Size = new System.Drawing.Size(56, 26);
             this.btnZapisDoSuboru.TabIndex = 6;
@@ -119,8 +120,8 @@
             // btnNacitaj
             // 
             this.btnNacitaj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNacitaj.Location = new System.Drawing.Point(612, 40);
-            this.btnNacitaj.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNacitaj.Location = new System.Drawing.Point(651, 40);
+            this.btnNacitaj.Margin = new System.Windows.Forms.Padding(4);
             this.btnNacitaj.Name = "btnNacitaj";
             this.btnNacitaj.Size = new System.Drawing.Size(122, 26);
             this.btnNacitaj.TabIndex = 7;
@@ -131,7 +132,7 @@
             // btnVytvorVyvesku
             // 
             this.btnVytvorVyvesku.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVytvorVyvesku.Location = new System.Drawing.Point(504, 40);
+            this.btnVytvorVyvesku.Location = new System.Drawing.Point(543, 40);
             this.btnVytvorVyvesku.Margin = new System.Windows.Forms.Padding(4, 32, 4, 4);
             this.btnVytvorVyvesku.Name = "btnVytvorVyvesku";
             this.btnVytvorVyvesku.Size = new System.Drawing.Size(100, 26);
@@ -143,32 +144,45 @@
             // btnGenTrasaBody
             // 
             this.btnGenTrasaBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenTrasaBody.Location = new System.Drawing.Point(422, 44);
+            this.btnGenTrasaBody.Location = new System.Drawing.Point(445, 6);
             this.btnGenTrasaBody.Name = "btnGenTrasaBody";
-            this.btnGenTrasaBody.Size = new System.Drawing.Size(75, 23);
+            this.btnGenTrasaBody.Size = new System.Drawing.Size(90, 27);
             this.btnGenTrasaBody.TabIndex = 9;
-            this.btnGenTrasaBody.Text = "GenTrasaBody";
+            this.btnGenTrasaBody.Text = "Generuj Body";
             this.btnGenTrasaBody.UseVisualStyleBackColor = true;
             this.btnGenTrasaBody.Click += new System.EventHandler(this.btnGenTrasaBody_Click);
+            // 
+            // btnNacitajTrasyBody
+            // 
+            this.btnNacitajTrasyBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNacitajTrasyBody.Location = new System.Drawing.Point(651, 8);
+            this.btnNacitajTrasyBody.Margin = new System.Windows.Forms.Padding(3, 3, 65, 3);
+            this.btnNacitajTrasyBody.Name = "btnNacitajTrasyBody";
+            this.btnNacitajTrasyBody.Size = new System.Drawing.Size(122, 25);
+            this.btnNacitajTrasyBody.TabIndex = 10;
+            this.btnNacitajTrasyBody.Text = "Načítaj uložené body";
+            this.btnNacitajTrasyBody.UseVisualStyleBackColor = true;
+            this.btnNacitajTrasyBody.Click += new System.EventHandler(this.btnNacitajTrasyBody_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 333);
+            this.ClientSize = new System.Drawing.Size(847, 326);
+            this.Controls.Add(this.btnNacitajTrasyBody);
             this.Controls.Add(this.btnGenTrasaBody);
             this.Controls.Add(this.btnVytvorVyvesku);
             this.Controls.Add(this.btnNacitaj);
             this.Controls.Add(this.btnZapisDoSuboru);
             this.Controls.Add(this.lblFilter);
             this.Controls.Add(this.lblSelekt);
-            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnGenVlaky);
             this.Controls.Add(this.cbxSelektFiltra);
             this.Controls.Add(this.cbxSelektProjektu);
             this.Controls.Add(this.dgvVlaky);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Generátor vlakovej vývesky";
             ((System.ComponentModel.ISupportInitialize)(this.dgvVlaky)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -180,13 +194,14 @@
         private System.Windows.Forms.ComboBox cbxSelektProjektu;
         private System.Windows.Forms.ComboBox cbxSelektFiltra;
         private System.Windows.Forms.DataGridView dgvVlaky;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnGenVlaky;
         private System.Windows.Forms.Label lblSelekt;
         private System.Windows.Forms.Label lblFilter;
         private System.Windows.Forms.Button btnZapisDoSuboru;
         private System.Windows.Forms.Button btnNacitaj;
         private System.Windows.Forms.Button btnVytvorVyvesku;
         private System.Windows.Forms.Button btnGenTrasaBody;
+        private System.Windows.Forms.Button btnNacitajTrasyBody;
     }
 }
 

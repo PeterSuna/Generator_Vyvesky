@@ -18,7 +18,7 @@ namespace Data_Kontroler
         {
             Poseidon = new gvd
             {
-                Timeout = 600000,
+                Timeout = 2000000,
                 CookieContainer = new System.Net.CookieContainer()
             };
             try
@@ -29,7 +29,7 @@ namespace Data_Kontroler
             }
             catch (Exception)
             {
-               
+               // pokračuje offline
             }
         }
 
@@ -47,6 +47,7 @@ namespace Data_Kontroler
             }
             catch (Exception)
             {
+                // pokračuje offline
             }
         }
 
