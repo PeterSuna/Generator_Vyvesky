@@ -55,7 +55,7 @@ namespace ZapisovacDocX
         /// </summary>
         /// <param name="cesta"></param>
         /// <param name="vlaky"></param>
-        public static void ZapisVlakyDoSuboru(String cesta, VSVlak[] vlaky)
+        public static void ZapisVlakyDoSuboru(string cesta, VSVlak[] vlaky)
         {
             //string json = JsonConvert.SerializeObject(vlaky);
             //ZapisDoSuboru(cesta,json);
@@ -71,10 +71,8 @@ namespace ZapisovacDocX
         /// </summary>
         /// <param name="cesta"></param>
         /// <param name="trasaBody"></param>
-        public static void ZapisTrasaBodyDoSuboru(String cesta, VSTrasaBod[] trasaBody)
-        {
-            //string json = JsonConvert.SerializeObject(trasaBody);
-            //ZapisDoSuboru(cesta, json);
+        public static void ZapisTrasaBodyDoSuboru(string cesta, VSTrasaBod[] trasaBody)
+        { 
             using (TextWriter writer = File.CreateText(Path.Combine(cesta, "PomocneData.json")))
             {
                 var serializer = new JsonSerializer();
@@ -82,16 +80,36 @@ namespace ZapisovacDocX
             }
         }
 
-
-        private static void ZapisDoSuboru(string cesta, string json)
+        public static void ZapisTrasaBodyDoSuboryCasti(string cesta, VSTrasaBod[] trasaBody)
         {
-            if (cesta == null)
+            int pocet = trasaBody.Length;
+            int part = pocet / 10 + 1;
+            int j = 0;
+            while (j < trasaBody.Length)
             {
-                cesta = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                VSTrasaBod[] bodpart = new VSTrasaBod[part];
+                for (int i = 0; i < part; i++)
+                {
+                    if (j >= trasaBody.Length)
+                        break;
+                    bodpart[i] = trasaBody[j++];
+                }
+
+                using (TextWriter writer = File.CreateText(Path.Combine(cesta, "PomocneData" + j + ".json")))
+                {
+                    var serializer = new JsonSerializer();
+                    serializer.Serialize(writer, bodpart);
+                }
             }
-            using (var sw = new StreamWriter(Path.Combine(cesta, "PomocneData.json")))
+        }
+
+
+        public static void ZapisDoSuboruDopravneBody(string cesta, VSDopravnyBod[] dopravneBody)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "DopravneBody.json")))
             {
-                sw.WriteLine(json);
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, dopravneBody);
             }
         }
 
@@ -140,6 +158,24 @@ namespace ZapisovacDocX
                 return null;
             }
             return JsonConvert.DeserializeObject<VSTrasaBod[]>(json);
+        }
+
+        public static VSDopravnyBod[] NacitajDopravneBodyZoSuboru(string cesta)
+        {
+            string json;
+            try
+            {
+                String str = Path.Combine(cesta, "DopravneBody.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSDopravnyBod[]>(json);
         }
     }
 }

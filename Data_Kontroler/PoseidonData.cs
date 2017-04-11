@@ -25,7 +25,6 @@ namespace Data_Kontroler
             {
                 Poseidon.Login(meno, heslo);
                 Projekty = Poseidon.GetProjects();
-
             }
             catch (Exception)
             {
@@ -78,10 +77,24 @@ namespace Data_Kontroler
             return vlaky;
         }
 
+        /// <summary>
+        /// Vrati všetky TrasaBody s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSTrasaBod[] GetTrasy()
         {
             var trasy = Poseidon.GetTrasaBody();
             return trasy;
+        }
+
+        /// <summary>
+        /// Vrati všetky dopravne body s poseidona
+        /// </summary>
+        /// <returns></returns>
+        public VSDopravnyBod[] GetDopravneBody()
+        {
+            var body = Poseidon.GetDopravneBody();
+            return body;
         }
     }
 }
