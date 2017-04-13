@@ -42,7 +42,7 @@ namespace Zobrazovac_Dat
 
         private void btnSubor_Click(object sender, EventArgs e)
         {
-            _dopravneBody = ZapisovacDocX.Zapisovac.NacitajDopravneBodyZoSuboru(@"..\..\..\Projekt\");
+            _dopravneBody = Zapisovac.Zapisovac.NacitajDopravneBodyZoSuboru(@"..\..\..\Projekt\");
             InitCmbox();
         }
 

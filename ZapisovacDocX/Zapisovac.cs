@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Novacode;
 using Service_Konektor.poseidon;
 
-namespace ZapisovacDocX
+namespace Zapisovac
 {
     public static class Zapisovac
     {

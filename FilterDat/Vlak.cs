@@ -19,5 +19,15 @@ namespace FilterDat
         {
             return vlaky.SingleOrDefault(c => c.ID == id);
         }
+
+        public static int[] NajdiIdVlakovPodla()
+        {
+            return null;
+        }
+
+        public static string ZistiDruhVlaku(int idvlaku, VSVlak[] vlaky)
+        {
+            return null;
+        }
     }
 }

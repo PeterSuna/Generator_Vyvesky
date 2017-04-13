@@ -233,13 +233,17 @@
       <Project>{7aaab3da-f869-4095-9a8c-07b21e87080c}</Project>
       <Name>FilterDat</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GeneratorVyvesky\GeneratorVyvesky.csproj">
+      <Project>{298de4c5-3c91-4f70-b1c6-fb276cda56e7}</Project>
+      <Name>GeneratorVyvesky</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Service_Konektor\Service_Konektor.csproj">
       <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
       <Name>Service_Konektor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ZapisovacDocX\ZapisovacDocX.csproj">
+    <ProjectReference Include="..\ZapisovacDocX\Zapisovac.csproj">
       <Project>{a18ec1cf-b69d-48c7-82b9-69cd61b22905}</Project>
-      <Name>ZapisovacDocX</Name>
+      <Name>Zapisovac</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
