@@ -20,5 +20,19 @@ namespace FilterDat
             VSDopravnyBod[] body = dopravneBody.Where(c => idBodov.Contains(c.ID)).Select(c => c).ToArray();
             return body;
         }
+
+        public static string[] NajdiNazvyStanic(VSTrasaBod aktualnaStanica,VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        {
+            int[] idDopBodov = body.Where(c => c.Poradi<= aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku)
+                .OrderByDescending(c => c.Poradi).Select(c => c.BodID).ToArray();
+            return dopravneBody.Where(c => idDopBodov.Contains(c.ID)).Select(c => c.Nazov).ToArray();
+        }
+
+        public static VSTrasaBod[] Stanic(VSTrasaBod aktualnaStanica, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        {
+            
+            return body.Where(c => c.Poradi <= aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku)
+                .OrderBy(c => c.Poradi).Select(c => c).ToArray();
+        }
     }
 }

@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DopravnyBod.cs" />
+    <Compile Include="Poznamka.cs" />
     <Compile Include="TrasaBod.cs" />
+    <Compile Include="TrasaDruh.cs" />
     <Compile Include="Vlak.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

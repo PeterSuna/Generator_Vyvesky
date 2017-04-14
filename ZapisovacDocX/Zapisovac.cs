@@ -66,6 +66,15 @@ namespace Zapisovac
             }
         }
 
+        public static void ZapisSpecifikacieDoSuboru(string cesta, VSTrasaSpecifikace[] specifikaces)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "Specifikacie.json")))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, specifikaces);
+            }
+        }
+
         /// <summary>
         /// metóda uloží načítané dáta Bodov
         /// </summary>
@@ -77,6 +86,32 @@ namespace Zapisovac
             {
                 var serializer = new JsonSerializer();
                 serializer.Serialize(writer, trasaBody);
+            }
+        }
+
+        public static void ZapisTrasaDopravneDruhyDoSuboru(string cesta, VSTrasaDruh[] druhy)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "DopravneDruhy.json")))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, druhy);
+            }
+        }
+
+        public static void ZapisTrasaObecnePoznamky(string cesta, VSTrasaObecPozn[] top)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "TrasaObPoznamky.json")))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, top);
+            }
+        }
+        public static void ZapisObecnePoznamky(string cesta, VSObecnaPoznamka[] op)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "ObecnaPoznamka.json")))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, op);
             }
         }
 
@@ -133,6 +168,77 @@ namespace Zapisovac
                 return null;
             }
             return JsonConvert.DeserializeObject<VSVlak[]>(json);
+        }
+
+        public static VSTrasaDruh[] NacitajZoSuboruDopravneDruhy(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "DopravneDruhy.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSTrasaDruh[]>(json);
+        }
+
+        public static VSTrasaObecPozn[] NacitajZoSuboruTrasaObPozn(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "TrasaObPoznamky.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSTrasaObecPozn[]>(json);
+        }
+        public static VSObecnaPoznamka[] NacitajZoSuboruObecnuPoznam(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "ObecnaPoznamka.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSObecnaPoznamka[]>(json);
+        }
+
+        public static VSTrasaSpecifikace[] NacitajZoSuborSpecifikaces(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "Specifikacie.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSTrasaSpecifikace[]>(json);
         }
 
         /// <summary>

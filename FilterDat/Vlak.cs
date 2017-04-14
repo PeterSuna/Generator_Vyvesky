@@ -15,19 +15,24 @@ namespace FilterDat
         /// <param name="id"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static VSVlak NajdiVlakPodlaID(int id, VSVlak[] vlaky)
+        public static VSVlak NajdiVlakPodlaId(int id, VSVlak[] vlaky)
         {
             return vlaky.SingleOrDefault(c => c.ID == id);
         }
 
-        public static int[] NajdiIdVlakovPodla()
+
+        public static VSVlak[] NajdiVlakyVTrasaBody(VSTrasaBod[] body, VSVlak[] vlaky)
         {
-            return null;
+            int[] idVlakov = body.Select(c => c.VlakID).ToArray();
+            VSVlak[] v = vlaky.Where(c => idVlakov.Contains(c.ID)).Select(c => c).ToArray();
+            return v;
         }
 
-        public static string ZistiDruhVlaku(int idvlaku, VSVlak[] vlaky)
+        public static int ZisiteCisloVlaku(int idVlaku, VSVlak[] vlaky)
         {
-            return null;
+            VSVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);
+            int cislovlaku = vlak?.Cislo ?? -1;
+            return cislovlaku;
         }
     }
 }

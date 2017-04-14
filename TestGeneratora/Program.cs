@@ -18,11 +18,7 @@ namespace TestGeneratora
 
             document.LoadFromFile("vzor.docx");
             Section section = document.Sections[1];
-            TextSelection selection = document.FindString("Table1", true, true);
-            TextRange range = selection.GetAsOneRange();
-            Paragraph paragraph = range.OwnerParagraph;
-            Body body = paragraph.OwnerTextBody;
-            int index = body.ChildObjects.IndexOf(paragraph);
+
 
             Table table = section.AddTable(true);
             table.ResetCells(1, 1);
@@ -31,12 +27,17 @@ namespace TestGeneratora
             p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
             TextRange TR2 = p2.AppendText("0.00 - 0.59");
             TR2.CharacterFormat.FontSize = 12;
+            table.AddRow(false, 2);
+            TableRow DataRow1 = table.Rows[1];
+            Paragraph p3 = DataRow1.Cells[0].AddParagraph();
+            p3.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            TextRange TR3 = p3.AppendText("0.00 - 0.59");
+            TR3.CharacterFormat.FontSize = 12;
+            Paragraph p4 = DataRow1.Cells[1].AddParagraph();
+            p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            TextRange TR4 = p4.AppendText("0.00 - 0.59");
+            TR4.CharacterFormat.FontSize = 12;
 
-
-
-
-            body.ChildObjects.Remove(paragraph);
-            body.ChildObjects.Insert(index, table);
 
             //Paragraph para = document.Sections[0].AddParagraph();
             //para.AppendText("halo");

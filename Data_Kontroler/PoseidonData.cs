@@ -96,5 +96,25 @@ namespace Data_Kontroler
             var body = Poseidon.GetDopravneBody();
             return body;
         }
+
+        public VSTrasaSpecifikace[] GetTrasaSpecifikacie()
+        {
+            return Poseidon.GetTrasaSpecifikacie();
+        }
+
+        public VSTrasaDruh[] GetTrasaDopravneDruhy()
+        {
+            return Poseidon.GetTrasaDopravneDruhy();
+        }
+
+        public VSTrasaObecPozn[] GetTrasaObPoznamky()
+        {
+            return Poseidon.GetTrasaObecPoznamky();
+        }
+
+        public VSObecnaPoznamka[] GetObecnePoznamky()
+        {
+            return Poseidon.GetObecnePoznamky();
+        }
     }
 }

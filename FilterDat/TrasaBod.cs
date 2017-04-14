@@ -45,5 +45,21 @@ namespace FilterDat
             VSTrasaBod[] body = trasaBody.Where(c => c!=null && c.BodID == bodId).Select(c => c).ToArray();
             return body;
         }
+
+        public static VSTrasaBod[] NajdiTrasyPoldaIdVlaku(int vlakId, VSTrasaBod[] trasaBody)
+        {
+            return trasaBody.Where(c => c.VlakID == vlakId).Select(c => c).ToArray();
+        }
+
+        public static VSTrasaBod[] NajdiTrasyPoldaVlaku(VSVlak[] vlaky, VSTrasaBod[] trasaBody)
+        {
+            int[] idVlakov = vlaky.Select(c => c.ID).ToArray();
+            return trasaBody.Where(c => c!=null && idVlakov.Contains(c.VlakID)).Select(c => c).ToArray();
+        }
+
+        public static int[] NajdiCasiPrichodov(VSTrasaBod aktualnaStanica,VSTrasaBod[] trasaBody)
+        {
+            return trasaBody.Where(c =>c.Poradi<=aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku).OrderByDescending(c =>c.Poradi).Select(c => c.CasPrijazdu).ToArray();
+        }
     }
 }

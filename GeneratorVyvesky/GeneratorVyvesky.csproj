@@ -67,6 +67,10 @@
       <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
       <Name>Service_Konektor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ZapisovacDocX\Zapisovac.csproj">
+      <Project>{a18ec1cf-b69d-48c7-82b9-69cd61b22905}</Project>
+      <Name>Zapisovac</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

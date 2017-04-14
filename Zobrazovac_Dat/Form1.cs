@@ -130,10 +130,18 @@ namespace Zobrazovac_Dat
                 Mbox("Pre zobrazenie vlakou prechádzajúcich stanicou je potrebné v nastaveniach vybrať stanicu", "Upozornenie", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            _trasBody = NacitajVsetkyTrsaBody();
-            var body = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, _trasBody);
-            var sortedBody = body.OrderBy(c => c.CasPrijazdu).ToArray();
-            dgvVlaky.DataSource = sortedBody;
+            //string cesta = @"..\..\..\Projekt\" + _projekt.Nazov + @"\Vlaky";
+            //var trasaBody = NacitajVsetkyTrsaBody();
+            //var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
+            //var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice, Zapisovac.Zapisovac.NacitajVlakyZoSuboru(cesta));
+            //var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
+            //string cesta2 = @"..\..\..\Projekt\";
+
+            //var dopravneBody = Zapisovac.Zapisovac.NacitajDopravneBodyZoSuboru(cesta2);
+            //VSTrasaBod[] stanice = FilterDat.DopravnyBod.Stanic(trasaBodyVybStanice[0], trasaBodyVlakov, dopravneBody);
+            //dgvVlaky.DataSource = stanice;
+
+            dgvVlaky.DataSource = _kontrolerPoseidon.GetTrasaObPoznamky();
         }
 
         private void btnZapisDoSuboru_Click(object sender, EventArgs e)
@@ -160,7 +168,28 @@ namespace Zobrazovac_Dat
                     string cesta = @"..\..\..\Projekt\";
                     Zapisovac.Zapisovac.ZapisDoSuboruDopravneBody(cesta, dgvVlaky.DataSource as VSDopravnyBod[]);
                 }
-                
+                if (dgvVlaky.DataSource is VSTrasaSpecifikace[])
+                {
+                    path += @"\Specifikacie";
+                    Zapisovac.Zapisovac.ZapisSpecifikacieDoSuboru(path, dgvVlaky.DataSource as VSTrasaSpecifikace[]);
+                }
+                if (dgvVlaky.DataSource is VSTrasaDruh[])
+                {
+                    path += @"\TrasaDruh";
+                    Zapisovac.Zapisovac.ZapisTrasaDopravneDruhyDoSuboru(path, dgvVlaky.DataSource as VSTrasaDruh[]);
+                }
+                if (dgvVlaky.DataSource is VSObecnaPoznamka[])
+                {
+                    path += @"\Poznamky";
+                    Zapisovac.Zapisovac.ZapisObecnePoznamky(path, dgvVlaky.DataSource as VSObecnaPoznamka[]);
+                }
+                if (dgvVlaky.DataSource is VSTrasaObecPozn[])
+                {
+                    path += @"\Poznamky";
+                    Zapisovac.Zapisovac.ZapisTrasaObecnePoznamky(path, dgvVlaky.DataSource as VSTrasaObecPozn[]);
+                }
+
+                Mbox("Data Boli uložené","Oznam",MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
            
         }
@@ -237,10 +266,12 @@ namespace Zobrazovac_Dat
 
         private void btnDocx_Click(object sender, EventArgs e)
         {
-            //_trasBody = NacitajVsetkyTrsaBody();
-            //var body = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, _trasBody);
-            //VSVlak[] vlaky, VSTrasaBod[] trasaBody, VSDopravnyBod dopravnyBod
-            Generator gen = new Generator(null,_vybranyDopBod);
+            string cesta = @"..\..\..\Projekt\" + _projekt.Nazov + @"\Vlaky";
+            var trasaBody = NacitajVsetkyTrsaBody();
+            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
+            var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice, Zapisovac.Zapisovac.NacitajVlakyZoSuboru(cesta));
+            var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
+            Generator gen = new Generator(trasaBodyVlakov,vlaky,trasaBodyVybStanice,_vybranyDopBod, @"..\..\..\Projekt\"+_projekt.Nazov);
             gen.GenerujDocxSubor();
         }
     }
