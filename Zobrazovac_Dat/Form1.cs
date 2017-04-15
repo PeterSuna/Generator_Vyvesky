@@ -64,24 +64,6 @@ namespace Zobrazovac_Dat
             }
         }
 
-        private void btnGenerujVyvesku_Click(object sender, EventArgs e)
-        {
-            if (dgvVlaky.DataSource == null)
-            {
-                Mbox("Vlaky neboli načítane", "chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                if (Zapisovac.Zapisovac.GenerujVyvesku(null, dgvVlaky.DataSource as VSVlak[]))
-                {
-                    Mbox("Data boli vygenerovane", "Inform", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    Mbox("Pri generovani nastala chyba", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
 
         private void btnGenVlaky_Click(object sender, EventArgs e)
         {

@@ -26,16 +26,21 @@ namespace GeneratorVyvesky
 
         public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky,VSTrasaBod[] trasaBodyVybStanice, VSDopravnyBod dopravnyBod, string cesta)
         {
-            _trasaBodyVlakov = trasaBodyVlakov.OrderBy(c => c.CasPrijazdu).ToArray();
+            _trasaBodyVlakov = trasaBodyVlakov;
             _druh = Zapisovac.Zapisovac.NacitajZoSuboruDopravneDruhy(cesta+ "\\TrasaDruh");
             _vlaky = vlaky;
-            _trasaBodyVybStanice = trasaBodyVybStanice.OrderBy(c => TimeSpan.FromSeconds(c.CasPrijazdu)).ToArray();
+            _trasaBodyVybStanice = trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
             _dopravneBody = Zapisovac.Zapisovac.NacitajDopravneBodyZoSuboru(@"..\..\..\Projekt\");
             _trasaObPoznamka = Zapisovac.Zapisovac.NacitajZoSuboruTrasaObPozn(cesta + "\\Poznamky");
             _obecnaPoznamka = Zapisovac.Zapisovac.NacitajZoSuboruObecnuPoznam(cesta + "\\Poznamky");
 
             _document = new Document();
             _document.LoadFromFile(@"..\..\..\vzor.docx");
+            ParagraphStyle style= new ParagraphStyle(_document);
+            style.Name = "FontStyle";
+            style.CharacterFormat.FontSize = 18;
+            style.CharacterFormat.Bold = true;
+            _document.Styles.Add(style);
             for (int i = 0; i < 2; i++)
             {
                 TextSelection selection = _document.FindString("#Stanica", true, true);
@@ -47,6 +52,7 @@ namespace GeneratorVyvesky
                 Section section = _document.Sections[0];
                 Paragraph para = section.AddParagraph();
                 para.AppendText(dopravnyBod.Nazov);
+                para.ApplyStyle(style.Name);
                 para.Format.HorizontalAlignment = HorizontalAlignment.Right;
 
                 body.ChildObjects.Remove(paragraph);
@@ -59,19 +65,57 @@ namespace GeneratorVyvesky
         {
             int hodina =-1;
             VytvorHlavičku();
-            
-            for (int i = 0; i < _trasaBodyVybStanice.Length; i++)
+            int row = 0;
+            Table table =null;
+            int i = 0;
+            int zlomy = 0;
+            int pocet = _trasaBodyVybStanice.Length < 20 ? _trasaBodyVybStanice.Length : 20;
+            int znaky = 0; //2300
+            while(zlomy < 4 && _trasaBodyVybStanice.Length > i)
             {
+                string text = FilterDat.DopravnyBod.VytvorTextZoSmeru(_trasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
+                string poznamka = FilterDat.Poznamka.ZistiPoznamku(_trasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
+                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(_trasaBodyVybStanice[i].VlakID, _druh))
+                {
+                    i++;
+                    continue;
+                }
+                int riadok = (poznamka!=null && poznamka.Length*5 > text.Length) ? poznamka.Length*5 : text.Length;
+                znaky += riadok;
                 if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
                 {
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i]);
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        row = 0;
+                        table = vytvorTabulku();
+                        znaky = riadok;
+                    }
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row,text,poznamka);
+                    row++;
                 }
                 else
                 {
-                    hodina= Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
+                    znaky += 40;
+                    hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        znaky = riadok;
+                    }
                     NastavenieCasu(hodina);
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i]);
+                    row = 0;
+                    table = vytvorTabulku();
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i],table,row,text,poznamka);
+                    row++;
                 }
+                i++;
             }
            
             _document.SaveToFile("result.docx", FileFormat.Auto);
@@ -95,7 +139,7 @@ namespace GeneratorVyvesky
             DataRow1.Cells[0].Width = 170;
         }
 
-        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice)
+        public Table vytvorTabulku()
         {
             Section section = _document.Sections[1];
             Table table1 = section.AddTable(true);
@@ -104,7 +148,17 @@ namespace GeneratorVyvesky
             table1.TableFormat.HorizontalAlignment = RowAlignment.Center;
             table1.TableFormat.Positioning.HorizPositionAbs = HorizontalPosition.Outside;
             table1.TableFormat.Positioning.VertRelationTo = VerticalRelation.Margin;
-            TableRow DataRow = table1.Rows[0];
+            return table1;
+        }
+
+        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int row, string text, string poznamka)
+        {
+            if (row != 0)
+            {
+                table.AddRow(true, 7);
+            }
+
+            TableRow DataRow = table.Rows[row];
 
             //čas
             Paragraph p1 = DataRow.Cells[0].AddParagraph();
@@ -126,22 +180,7 @@ namespace GeneratorVyvesky
             TextRange TR3 = p3.AppendText(FilterDat.Vlak.ZisiteCisloVlaku(trasBodStanice.VlakID,_vlaky)+"");
             TR3.CharacterFormat.FontSize = 5;
             DataRow.Cells[2].Width = 10;
-
-            //zo smeru
-            string[] stanice = FilterDat.DopravnyBod.NajdiNazvyStanic(trasBodStanice,_trasaBodyVlakov, _dopravneBody);
-            int[] casi = FilterDat.TrasaBod.NajdiCasiPrichodov(trasBodStanice,_trasaBodyVlakov);
-            string text = "";
-            for (int i = 0; i < stanice.Length; i++)
-            {
-                if (i == stanice.Length - 1)
-                {
-                    text += string.Format("{0}({1:%h}.{1:%m})", stanice[i], TimeSpan.FromSeconds(casi[i]));
-                }
-                else
-                {
-                    text += string.Format("{0}({1:%h}.{1:%m}) - ", stanice[i], TimeSpan.FromSeconds(casi[i]));
-                }
-            }
+           
             Paragraph p4 = DataRow.Cells[3].AddParagraph();
             p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
             TextRange TR4 = p4.AppendText(text);
@@ -151,7 +190,7 @@ namespace GeneratorVyvesky
             //Poznamky
             Paragraph p5 = DataRow.Cells[4].AddParagraph();
             p5.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR5 = p5.AppendText(FilterDat.Poznamka.ZistiPoznamku(trasBodStanice.VlakID,_trasaObPoznamka,_obecnaPoznamka));
+            TextRange TR5 = p5.AppendText(poznamka);
             TR5.CharacterFormat.FontSize = 5;
             DataRow.Cells[4].Width = 25;
             DataRow.Cells[5].Width = 12;
@@ -176,12 +215,11 @@ namespace GeneratorVyvesky
                                 new string[]{ "","Druh", "Čislo" }};
 
             table.TableFormat.HorizontalAlignment = RowAlignment.Center;
-            table.Rows[0].Cells[4].Width = 40;
-            table.Rows[0].Cells[3].Width = 500;
             table.TableFormat.WrapTextAround = true;
             table.TableFormat.Positioning.HorizPositionAbs = HorizontalPosition.Outside;
             table.TableFormat.Positioning.VertRelationTo = VerticalRelation.Margin;
             table.TableFormat.Paddings.All = 0;
+            table.ColumnWidth[4] = 300;
 
             for (int r = 0; r < data.Length; r++)
             {
@@ -193,25 +231,26 @@ namespace GeneratorVyvesky
                     {
                         continue;
                     }
-
-                    if (c != 3 && c != 4)
+                    switch (c)
                     {
-                        if (c == 0)
-                        {
+                        case 0:
                             table.Rows[r].Cells[c].Width = 18;
-                        }
-                        else
-                        {
-                            if (c == 2 && r == 1)
+                            break;
+                        case 2:
+                            if (r == 1)
                             {
                                 table.Rows[r].Cells[c].Width = 17;
                             }
-                            else
-                            {
-                                table.Rows[r].Cells[c].Width = 15;
-                            }
-                        }
-                       
+                            break;
+                        case 3:
+                            table.Rows[r].Cells[c].Width = 500;
+                            break;
+                        case 4:
+                            table.Rows[r].Cells[c].Width = 40;
+                            break;
+                        default:
+                            table.Rows[r].Cells[c].Width = 15;
+                            break;
                     }
 
                     DataRow.Cells[c].CellFormat.VerticalAlignment = VerticalAlignment.Bottom;

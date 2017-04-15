@@ -89,18 +89,7 @@
             this.btnNacitaj.Text = "Nacitat ulozene vlaky";
             this.btnNacitaj.UseVisualStyleBackColor = true;
             this.btnNacitaj.Click += new System.EventHandler(this.btnNacitaj_Click);
-            // 
-            // btnVytvorVyvesku
-            // 
-            this.btnVytvorVyvesku.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVytvorVyvesku.Location = new System.Drawing.Point(695, 40);
-            this.btnVytvorVyvesku.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnVytvorVyvesku.Name = "btnVytvorVyvesku";
-            this.btnVytvorVyvesku.Size = new System.Drawing.Size(116, 26);
-            this.btnVytvorVyvesku.TabIndex = 8;
-            this.btnVytvorVyvesku.Text = "Vytvor vyvesku";
-            this.btnVytvorVyvesku.UseVisualStyleBackColor = true;
-            this.btnVytvorVyvesku.Click += new System.EventHandler(this.btnGenerujVyvesku_Click);
+
             // 
             // btnGenTrasaBody
             // 

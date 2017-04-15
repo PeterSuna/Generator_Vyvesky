@@ -14,40 +14,57 @@ namespace TestGeneratora
     {
         static void Main(string[] args)
         {
-            Document document = new Document();
-
-            document.LoadFromFile("vzor.docx");
-            Section section = document.Sections[1];
-
-
-            Table table = section.AddTable(true);
-            table.ResetCells(1, 1);
-            TableRow DataRow = table.Rows[0];
-            Paragraph p2 = DataRow.Cells[0].AddParagraph();
-            p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR2 = p2.AppendText("0.00 - 0.59");
-            TR2.CharacterFormat.FontSize = 12;
-            table.AddRow(false, 2);
-            TableRow DataRow1 = table.Rows[1];
-            Paragraph p3 = DataRow1.Cells[0].AddParagraph();
-            p3.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR3 = p3.AppendText("0.00 - 0.59");
-            TR3.CharacterFormat.FontSize = 12;
-            Paragraph p4 = DataRow1.Cells[1].AddParagraph();
-            p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR4 = p4.AppendText("0.00 - 0.59");
-            TR4.CharacterFormat.FontSize = 12;
+            //Document document = new Document();
+            string s = @"Kelebia(3.4) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Beograd(21.50) - Novi Beograd(3.14) - Nova Pazova(3.14) - Stara Pazova(22.27) - Indija(22.36) - Novi Sad(23.16) - Vrbas(0.5) - Bačka Topola(0.45) - Subotica(1.41) - Kelebia(2.30) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Budapest - Keleti pu.(22.25) - Ferencváros(3.14) - Soroksári út(3.14) - Kunszentmiklós - Tass(3.14) - Szabadszállás(3.14) - Fülöpszállás(3.14) - Soltszentimre(3.14) - Csengöd(3.14)
+Kelebia(3.4) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Beograd(21.50) - Novi Beograd(3.14) - Nova Pazova(3.14) - Stara Pazova(22.27) - Indija(22.36) - Novi Sad(23.16) - Vrbas(0.5) - Bačka Topola(0.45) - Subotica(1.41) - Kelebia(2.30) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Budapest - Keleti pu.(22.25) - Ferencváros(3.14) - Soroksári út(3.14) - Kunszentmiklós - Tass(3.14) - Szabadszállás(3.14) - Fülöpszállás(3.14) - Soltszentimre(3.14) - Csengöd(3.14)
+Kelebia(3.4) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Beograd(21.50) - Novi Beograd(3.14) - Nova Pazova(3.14) - Stara Pazova(22.27) - Indija(22.36) - Novi Sad(23.16) - Vrbas(0.5) - Bačka Topola(0.45) - Subotica(1.41) - Kelebia(2.30) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Budapest - Keleti pu.(22.25) - Ferencváros(3.14) - Soroksári út(3.14) - Kunszentmiklós - Tass(3.14) - Szabadszállás(3.14) - Fülöpszállás(3.14) - Soltszentimre(3.14) - Csengöd(3.14)
+Kelebia(3.4) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Beograd(21.50) - Novi Beograd(3.14) - Nova Pazova(3.14) - Stara Pazova(22.27) - Indija(22.36) - Novi Sad(23.16) - Vrbas(0.5) - Bačka Topola(0.45) - Subotica(1.41) - Kelebia(2.30) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Budapest - Keleti pu.(22.25) - Ferencváros(3.14) - Soroksári út(3.14) - Kunszentmiklós - Tass(3.14) - Szabadszállás(3.14) - Fülöpszállás(3.14) - Soltszentimre(3.14) - Csengöd(3.14)
+Kelebia(3.4) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Beograd(21.50) - Novi Beograd(3.14) - Nova Pazova(3.14) - Stara Pazova(22.27) - Indija(22.36) - Novi Sad(23.16) - Vrbas(0.5) - Bačka Topola(0.45) - Subotica(1.41) - Kelebia(2.30) - Kiskunhalas(3.14) - Soltvadkert(3.14)
+Budapest - Keleti pu.(22.25) - Ferencváros(3.14) - Soroksári út(3.14) - Kunszentmiklós - Tass(3.14) - Szabadszállás(3.14) - Fülöpszállás(3.14) - Soltszentimre(3.14) - Csengöd(3.14)
+";
+            Console.WriteLine(s.Length);
+            Console.ReadKey();
+            //document.LoadFromFile("vzor.docx");
+            //Section section = document.Sections[1];
 
 
-            //Paragraph para = document.Sections[0].AddParagraph();
-            //para.AppendText("halo");
-            //Paragraph para1 = document.Sections[1].AddParagraph();
-            //para1.AppendText("halo2");
-            //Paragraph para2 = document.Sections[2].AddParagraph();
-            //para2.AppendText("halo1");
+            //Table table = section.AddTable(true);
+            //table.ResetCells(1, 1);
+            //TableRow DataRow = table.Rows[0];
+            //Paragraph p2 = DataRow.Cells[0].AddParagraph();
+            //p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            //TextRange TR2 = p2.AppendText("0.00 - 0.59");
+            //TR2.CharacterFormat.FontSize = 12;
+            //table.AddRow(false, 2);
+            //TableRow DataRow1 = table.Rows[1];
+            //Paragraph p3 = DataRow1.Cells[0].AddParagraph();
+            //p3.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            //TextRange TR3 = p3.AppendText("0.00 - 0.59");
+            //TR3.CharacterFormat.FontSize = 12;
+            //Paragraph p4 = DataRow1.Cells[1].AddParagraph();
+            //p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            //TextRange TR4 = p4.AppendText("0.00 - 0.59");
+            //TR4.CharacterFormat.FontSize = 12;
 
-            document.SaveToFile("result.docx", FileFormat.Auto);
-            System.Diagnostics.Process.Start("result.docx");
+
+            ////Paragraph para = document.Sections[0].AddParagraph();
+            ////para.AppendText("halo");
+            ////Paragraph para1 = document.Sections[1].AddParagraph();
+            ////para1.AppendText("halo2");
+            ////Paragraph para2 = document.Sections[2].AddParagraph();
+            ////para2.AppendText("halo1");
+
+            //document.SaveToFile("result.docx", FileFormat.Auto);
+            //System.Diagnostics.Process.Start("result.docx");
 
             //Document document = new Document();
             //Section section = document.AddSection();

@@ -2,54 +2,13 @@
 using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
-using Novacode;
 using Service_Konektor.poseidon;
 
 namespace Zapisovac
 {
     public static class Zapisovac
     {
-        /// <summary>
-        /// Vygenerejuje Docx súbor Vývesky vlakov
-        /// </summary>
-        /// <param name="cesta">Nieje povinný parameter/ ak je null subor je vytvorený na ploche</param>
-        /// <param name="vlaky">Data s ktorými sa pracuje</param>
-        /// <returns></returns>
-        public static bool GenerujVyvesku(string cesta, VSVlak[] vlaky)
-        {
-            if (cesta == null)
-            {
-                cesta = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            }
-            using (DocX document = DocX.Create(cesta +"\\Vyveska.docx"))
-            {
-                Paragraph p = document.InsertParagraph();
-                var b = p.Direction == Direction.LeftToRight;
-                var arial = new FontFamily("Arial");
-                try
-                {
-                    p.Append("Vyveska vlakov\n\n").Bold().FontSize(24).Font(arial);
-                    foreach (var vlak in vlaky)
-                    {
-                        var nazov = vlak.Nazev == null ? "": ", s názvom: " +vlak.Nazev;
-                        p.Append(
-                                $"císlo vlaku: {vlak.Cislo}{nazov}, a platnostou od: {vlak.PlatnostOd.ToShortDateString()} " +
-                                $"do: {vlak.PlatnostDo.ToShortDateString()} \n")
-                            .Font(arial)
-                            .Spacing(1.3)
-                            .FontSize(12);
-                    }
-                    document.Save();
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-
-            }
-        }
-
+       
         /// <summary>
         /// Metóda uloží načítané dáta vlakov
         /// </summary>
