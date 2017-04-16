@@ -16,41 +16,66 @@ namespace Zobrazovac_Dat
     {
         private VSDopravnyBod[] _dopravneBody;
         private VSProject[] _projekty;
-        private readonly PoseidonData _kontrolerPoseidon = new PoseidonData();
 
+        public readonly PoseidonData KontrolerPoseidon = new PoseidonData();
         public VSProject VybranyProjekt { get; set; }
         public VSDopravnyBod VybranyDopravnyBod { get; set; }
         public eVSVlakFaza VybranaFaza { get; set; }
         public bool Online { get; set; }
 
-        public UvitacieOkno()
+        public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
+           
             InitializeComponent();
             try
             {
-                _projekty = _kontrolerPoseidon.Projekty;
+                _projekty = KontrolerPoseidon.Projekty;
                 cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
                 cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
             }
             catch (Exception)
             {
-                string[] nazvi = {"gvd16","gvd16_zm3","gvd17_tsi","gvd17_zaklad","gvd17_zm2"};
+                string[] nazvi = {"gvd16", "gvd16_zm3", "gvd17_tsi", "gvd17_zaklad", "gvd17_zm2"};
                 cbxSelektProjektu.DataSource = nazvi;
                 Online = false;
-                Mbox("Nebolo možne pripojiť sa k serveru", "chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnServer.Visible = false;
+                Mwbox("Nebolo možne pripojiť sa k serveru", "chyba");
             }
+            
+    
+            if (projekt != null)
+            {
+                lblFilter.Text = "Vybraná fáza: " + faza;
+                lblSelekt.Text = "Vybraný projekt: " + projekt.Nazov;
+                cbxSelektProjektu.SelectedText = projekt.Nazov;
+                cbxSelektFiltra.SelectedText = faza.ToString();
+            }
+               
+            
         }
 
 
         private void btnSubor_Click(object sender, EventArgs e)
         {
-            _dopravneBody = Zapisovac.Zapisovac.NacitajDopravneBodyZoSuboru(@"..\..\..\Projekt\");
+            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
+            Online = false;
             InitCmbox();
         }
 
         private void btnServer_Click(object sender, EventArgs e)
         {
-            _dopravneBody = _kontrolerPoseidon.GetDopravneBody();
+            VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
+                       ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
+                       : eVSVlakFaza.Pozadavek_zkonstruovano;
+            
+            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+            KontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
+            _dopravneBody = KontrolerPoseidon.GetDopravneBody();
+            cbxSelektFiltra.Visible = false;
+            cbxSelektProjektu.Visible = false;
+            lblFilter.Text = "Vybraná fáza: "+VybranaFaza;
+            lblSelekt.Text = "Vybraný projekt: "+VybranyProjekt.Nazov;
+            Online = true;
             InitCmbox();
         }
 
@@ -58,16 +83,18 @@ namespace Zobrazovac_Dat
         {
             if (DialogResult == DialogResult.OK)
             {
-                VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
-                if (Online)
-                {
-                    VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
-                        ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
-                        : eVSVlakFaza.Pozadavek_zkonstruovano;
-                }
                 if (cbxMesto.SelectedItem != null)
                 {
-                    VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string)cbxMesto.SelectedItem);
+                    VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
+                    VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
+                       ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
+                       : eVSVlakFaza.Pozadavek_zkonstruovano;
+                    VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+                }
+                else
+                {
+                    Mwbox("Pre pokračovanie je potrebné zvoliť mesto", "Upozornenie");
+                    return;
                 }
                 base.OnFormClosing(e);
             }
@@ -75,11 +102,14 @@ namespace Zobrazovac_Dat
 
 
 
-        private void Mbox(string telo, string hlavicka, MessageBoxButtons btn, MessageBoxIcon icn)
+        private void Mwbox(string telo, string hlavicka)
         {
-            MessageBox.Show(telo, hlavicka, btn, icn);
+            MessageBox.Show(telo, hlavicka, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
+        /// <summary>
+        /// Naplní combobox mestami ktoré boli načítané
+        /// </summary>
         private void InitCmbox()
         {
             cbxMesto.DataSource = _dopravneBody.Select(c => c.Nazov).ToArray();

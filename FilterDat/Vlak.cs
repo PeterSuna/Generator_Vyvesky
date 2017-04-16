@@ -21,6 +21,13 @@ namespace FilterDat
         }
 
 
+        /// <summary>
+        /// prejde všetky vybradné trasi a všetky vybrané vlaky a porovná ktoré vlaky prechádzajú danú trasu
+        /// a tie vlaky vráti
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="vlaky"></param>
+        /// <returns></returns>
         public static VSVlak[] NajdiVlakyVTrasaBody(VSTrasaBod[] body, VSVlak[] vlaky)
         {
             int[] idVlakov = body.Select(c => c.VlakID).ToArray();
@@ -28,6 +35,12 @@ namespace FilterDat
             return v;
         }
 
+        /// <summary>
+        /// najde vlak z vybraného pola ktorému patrí zadané idVlaku
+        /// </summary>
+        /// <param name="idVlaku"></param>
+        /// <param name="vlaky"></param>
+        /// <returns></returns>
         public static int ZisiteCisloVlaku(int idVlaku, VSVlak[] vlaky)
         {
             VSVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);

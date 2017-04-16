@@ -26,13 +26,14 @@ namespace GeneratorVyvesky
 
         public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky,VSTrasaBod[] trasaBodyVybStanice, VSDopravnyBod dopravnyBod, string cesta)
         {
+            //načítanie potrebných údajov
             _trasaBodyVlakov = trasaBodyVlakov;
-            _druh = Zapisovac.Zapisovac.NacitajZoSuboruDopravneDruhy(cesta+ "\\TrasaDruh");
+            _druh = DataZoSuboru.Nacitaj.ZoSuboruDopravneDruhy(cesta+ "\\TrasaDruh");
             _vlaky = vlaky;
             _trasaBodyVybStanice = trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
-            _dopravneBody = Zapisovac.Zapisovac.NacitajDopravneBodyZoSuboru(@"..\..\..\Projekt\");
-            _trasaObPoznamka = Zapisovac.Zapisovac.NacitajZoSuboruTrasaObPozn(cesta + "\\Poznamky");
-            _obecnaPoznamka = Zapisovac.Zapisovac.NacitajZoSuboruObecnuPoznam(cesta + "\\Poznamky");
+            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
+            _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboruTrasaObPozn(cesta + "\\Poznamky");
+            _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboruObecnuPoznam(cesta + "\\Poznamky");
 
             _document = new Document();
             _document.LoadFromFile(@"..\..\..\vzor.docx");
@@ -41,6 +42,8 @@ namespace GeneratorVyvesky
             style.CharacterFormat.FontSize = 18;
             style.CharacterFormat.Bold = true;
             _document.Styles.Add(style);
+
+            // prepíše v pripravenom dokumente #Stanica za vybranú stanicu
             for (int i = 0; i < 2; i++)
             {
                 TextSelection selection = _document.FindString("#Stanica", true, true);
@@ -61,6 +64,9 @@ namespace GeneratorVyvesky
            
         }
 
+        /// <summary>
+        /// hlavná metóda ktorá v cykle prejde všetky vlaky ktoré majú trasu cez vybranú stanicu a vypíše ich
+        /// </summary>
         public void GenerujDocxSubor()
         {
             int hodina =-1;
@@ -69,8 +75,7 @@ namespace GeneratorVyvesky
             Table table =null;
             int i = 0;
             int zlomy = 0;
-            int pocet = _trasaBodyVybStanice.Length < 20 ? _trasaBodyVybStanice.Length : 20;
-            int znaky = 0; //2300
+            int znaky = 0; //2450
             while(zlomy < 4 && _trasaBodyVybStanice.Length > i)
             {
                 string text = FilterDat.DopravnyBod.VytvorTextZoSmeru(_trasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
@@ -80,10 +85,13 @@ namespace GeneratorVyvesky
                     i++;
                     continue;
                 }
+                //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
                 int riadok = (poznamka!=null && poznamka.Length*5 > text.Length) ? poznamka.Length*5 : text.Length;
                 znaky += riadok;
+                //rozhodnutie či vypísať hlavičku z časom
                 if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
                 {
+                    //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
                     if (znaky >= 2450)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
@@ -123,7 +131,10 @@ namespace GeneratorVyvesky
         }
 
 
-
+        /// <summary>
+        /// Vloží hlavičku kedy daný vlak prechádza stanicou
+        /// </summary>
+        /// <param name="h"> hodina rozpetia daných vlakov</param>
         public void NastavenieCasu(int h)
         {
             Section section = _document.Sections[1];
@@ -139,6 +150,10 @@ namespace GeneratorVyvesky
             DataRow1.Cells[0].Width = 170;
         }
 
+        /// <summary>
+        /// vytvorý tabulku a vráti jej inštanciu
+        /// </summary>
+        /// <returns></returns>
         public Table vytvorTabulku()
         {
             Section section = _document.Sections[1];
@@ -151,14 +166,23 @@ namespace GeneratorVyvesky
             return table1;
         }
 
-        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int row, string text, string poznamka)
+
+        /// <summary>
+        /// Do dokumentu pridá vlak ktorý prechádza danou stanicou
+        /// </summary>
+        /// <param name="trasBodStanice"> vybraná trasa vlaku pre ktorý sa robý výpis</param>
+        /// <param name="table"> tabulka do ktorej sa vloží info o vlaku</param>
+        /// <param name="riadok"> na akú pozíciu riadku v tabulke sa zapíše info o vlaku</param>
+        /// <param name="text"> zoznam staníc a časou cez ktoré prechádza daný vlak </param>
+        /// <param name="poznamka"> poznámka priradená k danému vlaku</param>
+        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka)
         {
-            if (row != 0)
+            if (riadok != 0)
             {
                 table.AddRow(true, 7);
             }
 
-            TableRow DataRow = table.Rows[row];
+            TableRow DataRow = table.Rows[riadok];
 
             //čas
             Paragraph p1 = DataRow.Cells[0].AddParagraph();
@@ -198,6 +222,9 @@ namespace GeneratorVyvesky
 
         }
 
+        /// <summary>
+        /// V dokumente vytvorý hlavičku z metadátami
+        /// </summary>
         public void VytvorHlavičku()
         {
             Section section = _document.Sections[1];
@@ -260,7 +287,6 @@ namespace GeneratorVyvesky
                     TR2.CharacterFormat.FontSize = 5;
                     p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
                 }
-
             }
         }
     }

@@ -46,20 +46,28 @@ namespace FilterDat
             return body;
         }
 
+        /// <summary>
+        /// vyberie tie trasy ktoré prechádza vlak s daným id;
+        /// </summary>
+        /// <param name="vlakId"></param>
+        /// <param name="trasaBody"></param>
+        /// <returns></returns>
         public static VSTrasaBod[] NajdiTrasyPoldaIdVlaku(int vlakId, VSTrasaBod[] trasaBody)
         {
             return trasaBody.Where(c => c.VlakID == vlakId).Select(c => c).ToArray();
         }
 
+        /// <summary>
+        /// porovná všetky id vlakov a všetky idVlakov ktoré obsauje pole trasaBody. Tie trasabody ktoré majú zhodné idVlakou z nejakým vlakom
+        /// tak tie vráti.
+        /// </summary>
+        /// <param name="vlaky"></param>
+        /// <param name="trasaBody"></param>
+        /// <returns></returns>
         public static VSTrasaBod[] NajdiTrasyPoldaVlaku(VSVlak[] vlaky, VSTrasaBod[] trasaBody)
         {
             int[] idVlakov = vlaky.Select(c => c.ID).ToArray();
             return trasaBody.Where(c => c!=null && idVlakov.Contains(c.VlakID)).Select(c => c).ToArray();
-        }
-
-        public static int[] NajdiCasiPrichodov(VSTrasaBod aktualnaStanica,VSTrasaBod[] trasaBody)
-        {
-            return trasaBody.Where(c =>c.Poradi<=aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku).OrderByDescending(c =>c.Poradi).Select(c => c.CasPrijazdu).ToArray();
         }
     }
 }

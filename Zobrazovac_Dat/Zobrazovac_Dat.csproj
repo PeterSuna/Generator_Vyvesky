@@ -225,6 +225,10 @@
     <None Include="Web References\sk.uniza.fri.kst.poseidon\gvd.disco" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataZoSuboru\DataZoSuboru.csproj">
+      <Project>{084c6cf7-d5c8-4596-aef2-6bdb66b51446}</Project>
+      <Name>DataZoSuboru</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data_Kontroler\Data_Kontroler.csproj">
       <Project>{5e7fbec3-cabc-40cd-8a77-61731d83aa7f}</Project>
       <Name>Data_Kontroler</Name>
@@ -240,10 +244,6 @@
     <ProjectReference Include="..\Service_Konektor\Service_Konektor.csproj">
       <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
       <Name>Service_Konektor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ZapisovacDocX\Zapisovac.csproj">
-      <Project>{a18ec1cf-b69d-48c7-82b9-69cd61b22905}</Project>
-      <Name>Zapisovac</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

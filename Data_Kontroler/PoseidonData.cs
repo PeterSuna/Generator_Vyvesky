@@ -97,21 +97,37 @@ namespace Data_Kontroler
             return body;
         }
 
+        /// <summary>
+        /// Vrati všetky Specifikácie trasy s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSTrasaSpecifikace[] GetTrasaSpecifikacie()
         {
             return Poseidon.GetTrasaSpecifikacie();
         }
 
+        /// <summary>
+        /// Vrati všetky Trsa dopravné druhy s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSTrasaDruh[] GetTrasaDopravneDruhy()
         {
             return Poseidon.GetTrasaDopravneDruhy();
         }
 
+        /// <summary>
+        /// Vrati všetky Trasa obecné poznámky s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSTrasaObecPozn[] GetTrasaObPoznamky()
         {
             return Poseidon.GetTrasaObecPoznamky();
         }
 
+        /// <summary>
+        /// Vrati všetky Obecné poznámky s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSObecnaPoznamka[] GetObecnePoznamky()
         {
             return Poseidon.GetObecnePoznamky();

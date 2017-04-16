@@ -9,6 +9,13 @@ namespace FilterDat
 {
     public static class Poznamka
     {
+        /// <summary>
+        /// zistí poznámku pre daný vlak
+        /// </summary>
+        /// <param name="vlakId"></param>
+        /// <param name="top"></param>
+        /// <param name="op"></param>
+        /// <returns></returns>
         public static string ZistiPoznamku(int vlakId, VSTrasaObecPozn[] top, VSObecnaPoznamka[] op)
         {
             VSTrasaObecPozn trasobp = top.FirstOrDefault(c => c.VlakID == vlakId);

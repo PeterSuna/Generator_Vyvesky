@@ -21,23 +21,17 @@ namespace FilterDat
             return body;
         }
 
-        public static string[] NajdiNazvyStanic(VSTrasaBod aktualnaStanica,VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
-        {
-            int[] idDopBodov = body.Where(c => c.Poradi<= aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku)
-                .OrderByDescending(c => c.Poradi).Select(c => c.BodID).ToArray();
-            return dopravneBody.Where(c => idDopBodov.Contains(c.ID)).Select(c => c.Nazov).ToArray();
-        }
-
-        public static VSTrasaBod[] Stanic(VSTrasaBod aktualnaStanica, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
-        {
-            return body.Where(c => c.Poradi <= aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku)
-                .OrderBy(c => c.Poradi).Select(c => c).ToArray();
-        }
-
-        public static string VytvorTextZoSmeru(VSTrasaBod aktualnaStanica, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        /// <summary>
+        /// Vytvorý text z názvami staníc a práchodom do danej stanice pre vlak ktorý má danú aktualnu trasu 
+        /// </summary>
+        /// <param name="aktualnaTrasa"></param>
+        /// <param name="body"></param>
+        /// <param name="dopravneBody"></param>
+        /// <returns></returns>
+        public static string VytvorTextZoSmeru(VSTrasaBod aktualnaTrasa, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
         {
             VSTrasaBod[] bodyStanicPred =
-                body.Where(c => c.Poradi < aktualnaStanica.Poradi && c.AktCisloVlaku == aktualnaStanica.AktCisloVlaku)
+                body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();
             string text ="";
             for (int i = 0; i < bodyStanicPred.Length; i++)
@@ -54,6 +48,12 @@ namespace FilterDat
             return text;
         }
 
+        /// <summary>
+        /// zistí názdov dopravného bodu podla jeho id
+        /// </summary>
+        /// <param name="idBodu"></param>
+        /// <param name="dopravneBody"></param>
+        /// <returns></returns>
         private static string NajdiNazovDopBodu(int idBodu, VSDopravnyBod[] dopravneBody)
         {
             VSDopravnyBod db = dopravneBody.FirstOrDefault(c => c.ID == idBodu);

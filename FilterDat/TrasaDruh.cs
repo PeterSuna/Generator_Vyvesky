@@ -1,24 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Service_Konektor.poseidon;
 
 namespace FilterDat
 {
    public static class TrasaDruh
     {
+        /// <summary>
+        /// zistí aký druh vlaku je vlak s daným idVlaku
+        /// </summary>
+        /// <param name="idVlaku"></param>
+        /// <param name="druhy"></param>
+        /// <returns></returns>
         public static string NajdiDruhVlaku(int idVlaku, VSTrasaDruh[] druhy)
         {
             VSTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
             return druh?.Druh;
         }
 
+        /// <summary>
+        /// zistí či vlak s daným idVlaku je vlak ktorý prepravuje osoby
+        /// </summary>
+        /// <param name="idVlaku"></param>
+        /// <param name="druhy"></param>
+        /// <returns></returns>
         public static bool ZisitiSpravnyDruhVlaku(int idVlaku, VSTrasaDruh[] druhy)
         {
-            VSTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
-            switch (druh?.Druh)
+            switch (NajdiDruhVlaku(idVlaku,druhy))
             {
                 case "EC":
                 case "IC":
@@ -32,8 +39,6 @@ namespace FilterDat
                 default:
                     return false;
             }
-            
         }
-
     }
 }
