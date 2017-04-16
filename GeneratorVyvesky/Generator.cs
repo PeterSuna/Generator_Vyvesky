@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,28 +25,31 @@ namespace GeneratorVyvesky
         private readonly VSObecnaPoznamka[] _obecnaPoznamka;
 
 
-        public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky,VSTrasaBod[] trasaBodyVybStanice, VSDopravnyBod dopravnyBod, string cesta)
+        public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, VSTrasaBod[] trasaBodyVybStanice,
+            VSDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
             //načítanie potrebných údajov
             _trasaBodyVlakov = trasaBodyVlakov;
-            _druh = DataZoSuboru.Nacitaj.ZoSuboruDopravneDruhy(cesta+ "\\TrasaDruh");
+            _druh = DataZoSuboru.Nacitaj.ZoSuboruDopravneDruhy(cesta + "\\TrasaDruh");
             _vlaky = vlaky;
-            _trasaBodyVybStanice = trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
+            _trasaBodyVybStanice =
+                trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
             _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
             _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboruTrasaObPozn(cesta + "\\Poznamky");
             _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboruObecnuPoznam(cesta + "\\Poznamky");
 
             _document = new Document();
             _document.LoadFromFile(@"..\..\..\vzor.docx");
-            ParagraphStyle style= new ParagraphStyle(_document);
+            ParagraphStyle style = new ParagraphStyle(_document);
             style.Name = "FontStyle";
             style.CharacterFormat.FontSize = 18;
             style.CharacterFormat.Bold = true;
             _document.Styles.Add(style);
-
-            // prepíše v pripravenom dokumente #Stanica za vybranú stanicu
+            CultureInfo ci = CultureInfo.InvariantCulture;
+            // prepíše v pripravenom dokumente #Stanica za vybranú stanicu a #Datum za datum v projekte
             for (int i = 0; i < 2; i++)
             {
+                //nazov stanice
                 TextSelection selection = _document.FindString("#Stanica", true, true);
                 TextRange range = selection.GetAsOneRange();
                 Paragraph paragraph = range.OwnerParagraph;
@@ -60,8 +64,23 @@ namespace GeneratorVyvesky
 
                 body.ChildObjects.Remove(paragraph);
                 body.ChildObjects.Insert(index, para);
+
+                //datum
+                TextSelection selectionOd = _document.FindString("#Datum", true, true);
+                TextRange rangeOd = selectionOd.GetAsOneRange();
+                Paragraph paragraphOd = rangeOd.OwnerParagraph;
+                Body bodyOd = paragraphOd.OwnerTextBody;
+                int indexOd = bodyOd.ChildObjects.IndexOf(paragraphOd);
+
+                Section sectionOd = _document.Sections[0];
+                Paragraph paraOd = sectionOd.AddParagraph();
+                string text = "Platí od " + projekt.PlatnostOd.ToString("dd.MM.yyyy", ci) + " do " +
+                              projekt.PlatnostDo.ToString("dd.MM.yyyy", ci);
+                paraOd.AppendText(text);
+                paraOd.Format.HorizontalAlignment = HorizontalAlignment.Center;
+                bodyOd.ChildObjects.Remove(paragraphOd);
+                bodyOd.ChildObjects.Insert(indexOd, paraOd);
             }
-           
         }
 
         /// <summary>

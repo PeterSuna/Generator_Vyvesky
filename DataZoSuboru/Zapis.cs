@@ -49,6 +49,19 @@ namespace DataZoSuboru
         }
 
         /// <summary>
+        /// metóda uloží načítané dáta projektov
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <param name="projekty"></param>
+        public static void ProjektyDoSuboru(string cesta, VSProject[] projekty)
+        {
+            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "projekty.json")))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(writer, projekty);
+            }
+        }
+        /// <summary>
         /// Metóda uloží načítané dáta TrsaDruhy
         /// </summary>
         /// <param name="cesta"></param>

@@ -53,6 +53,29 @@ namespace DataZoSuboru
         }
 
         /// <summary>
+        ///  Načíta projekty z uloženého súboru
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
+        public static VSProject[] ZoSuboruProjekty(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "projekty.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSProject[]>(json);
+        }
+
+        /// <summary>
         /// Načíta Trsa obecnú poznámky z uloženého súboru
         /// </summary>
         /// <param name="cesta"></param>
