@@ -49,6 +49,33 @@ namespace FilterDat
         }
 
         /// <summary>
+        /// Vytvorý text z názvami staníc a práchodom do danej stanice pre vlak ktorý má danú aktualnu trasu 
+        /// </summary>
+        /// <param name="aktualnaTrasa"></param>
+        /// <param name="body"></param>
+        /// <param name="dopravneBody"></param>
+        /// <returns></returns>
+        public static string VytvorTextOdchodovZoSmeru(VSTrasaBod aktualnaTrasa, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        {
+            VSTrasaBod[] bodyStanicPred =
+                body.Where(c => c.Poradi > aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
+                    .OrderBy(c => c.Poradi).Select(c => c).ToArray();
+            string text = "";
+            for (int i = 0; i < bodyStanicPred.Length; i++)
+            {
+                if (i == bodyStanicPred.Length - 1)
+                {
+                    text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPred[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                }
+                else
+                {
+                    text += string.Format("{0}({1:%h}.{1:%m}) - ", NajdiNazovDopBodu(bodyStanicPred[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                }
+            }
+            return text;
+        }
+
+        /// <summary>
         /// zistí názdov dopravného bodu podla jeho id
         /// </summary>
         /// <param name="idBodu"></param>

@@ -38,6 +38,7 @@
             this.btnNacitajDopravneBody = new System.Windows.Forms.Button();
             this.btnNastav = new System.Windows.Forms.Button();
             this.btnDocx = new System.Windows.Forms.Button();
+            this.btnGenerujOdchody = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVlaky)).BeginInit();
             this.SuspendLayout();
             // 
@@ -138,10 +139,10 @@
             // 
             // btnNastav
             // 
-            this.btnNastav.Location = new System.Drawing.Point(134, 39);
+            this.btnNastav.Location = new System.Drawing.Point(175, 4);
             this.btnNastav.Margin = new System.Windows.Forms.Padding(4);
             this.btnNastav.Name = "btnNastav";
-            this.btnNastav.Size = new System.Drawing.Size(113, 27);
+            this.btnNastav.Size = new System.Drawing.Size(113, 63);
             this.btnNastav.TabIndex = 14;
             this.btnNastav.Text = "Zmenit nastavenia";
             this.btnNastav.UseVisualStyleBackColor = true;
@@ -149,20 +150,31 @@
             // 
             // btnDocx
             // 
-            this.btnDocx.Location = new System.Drawing.Point(13, 4);
+            this.btnDocx.Location = new System.Drawing.Point(13, 40);
             this.btnDocx.Margin = new System.Windows.Forms.Padding(4);
             this.btnDocx.Name = "btnDocx";
-            this.btnDocx.Size = new System.Drawing.Size(113, 62);
+            this.btnDocx.Size = new System.Drawing.Size(154, 26);
             this.btnDocx.TabIndex = 15;
-            this.btnDocx.Text = "Generuj vývesku";
+            this.btnDocx.Text = "Generuj vývesku príchodov";
             this.btnDocx.UseVisualStyleBackColor = true;
             this.btnDocx.Click += new System.EventHandler(this.btnDocx_Click);
+            // 
+            // btnGenerujOdchody
+            // 
+            this.btnGenerujOdchody.Location = new System.Drawing.Point(13, 4);
+            this.btnGenerujOdchody.Name = "btnGenerujOdchody";
+            this.btnGenerujOdchody.Size = new System.Drawing.Size(154, 27);
+            this.btnGenerujOdchody.TabIndex = 16;
+            this.btnGenerujOdchody.Text = "Generuj vývesku odchodov";
+            this.btnGenerujOdchody.UseVisualStyleBackColor = true;
+            this.btnGenerujOdchody.Click += new System.EventHandler(this.btnGenerujOdchody_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(853, 492);
+            this.Controls.Add(this.btnGenerujOdchody);
             this.Controls.Add(this.btnDocx);
             this.Controls.Add(this.btnNastav);
             this.Controls.Add(this.btnNacitajDopravneBody);
@@ -192,6 +204,7 @@
         private System.Windows.Forms.Button btnNacitajDopravneBody;
         private System.Windows.Forms.Button btnNastav;
         private System.Windows.Forms.Button btnDocx;
+        private System.Windows.Forms.Button btnGenerujOdchody;
     }
 }
 

@@ -23,6 +23,8 @@ namespace GeneratorVyvesky
         private readonly VSDopravnyBod[] _dopravneBody;
         private readonly VSTrasaObecPozn[] _trasaObPoznamka;
         private readonly VSObecnaPoznamka[] _obecnaPoznamka;
+        private readonly VSDopravnyBod _dopravnyBod;
+        private readonly VSProject _projekt;
 
 
         public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, VSTrasaBod[] trasaBodyVybStanice,
@@ -37,50 +39,9 @@ namespace GeneratorVyvesky
             _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
             _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboruTrasaObPozn(cesta + "\\Poznamky");
             _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboruObecnuPoznam(cesta + "\\Poznamky");
-
+            _dopravnyBod = dopravnyBod;
+            _projekt = projekt;
             _document = new Document();
-            _document.LoadFromFile(@"..\..\..\vzor.docx");
-            ParagraphStyle style = new ParagraphStyle(_document);
-            style.Name = "FontStyle";
-            style.CharacterFormat.FontSize = 18;
-            style.CharacterFormat.Bold = true;
-            _document.Styles.Add(style);
-            CultureInfo ci = CultureInfo.InvariantCulture;
-            // prepíše v pripravenom dokumente #Stanica za vybranú stanicu a #Datum za datum v projekte
-            for (int i = 0; i < 2; i++)
-            {
-                //nazov stanice
-                TextSelection selection = _document.FindString("#Stanica", true, true);
-                TextRange range = selection.GetAsOneRange();
-                Paragraph paragraph = range.OwnerParagraph;
-                Body body = paragraph.OwnerTextBody;
-                int index = body.ChildObjects.IndexOf(paragraph);
-
-                Section section = _document.Sections[0];
-                Paragraph para = section.AddParagraph();
-                para.AppendText(dopravnyBod.Nazov);
-                para.ApplyStyle(style.Name);
-                para.Format.HorizontalAlignment = HorizontalAlignment.Right;
-
-                body.ChildObjects.Remove(paragraph);
-                body.ChildObjects.Insert(index, para);
-
-                //datum
-                TextSelection selectionOd = _document.FindString("#Datum", true, true);
-                TextRange rangeOd = selectionOd.GetAsOneRange();
-                Paragraph paragraphOd = rangeOd.OwnerParagraph;
-                Body bodyOd = paragraphOd.OwnerTextBody;
-                int indexOd = bodyOd.ChildObjects.IndexOf(paragraphOd);
-
-                Section sectionOd = _document.Sections[0];
-                Paragraph paraOd = sectionOd.AddParagraph();
-                string text = "Platí od " + projekt.PlatnostOd.ToString("dd.MM.yyyy", ci) + " do " +
-                              projekt.PlatnostDo.ToString("dd.MM.yyyy", ci);
-                paraOd.AppendText(text);
-                paraOd.Format.HorizontalAlignment = HorizontalAlignment.Center;
-                bodyOd.ChildObjects.Remove(paragraphOd);
-                bodyOd.ChildObjects.Insert(indexOd, paraOd);
-            }
         }
 
         /// <summary>
@@ -88,6 +49,8 @@ namespace GeneratorVyvesky
         /// </summary>
         public void GenerujDocxSubor()
         {
+            _document.LoadFromFile(@"..\..\..\vzorP.docx");
+            nastavDokument();
             int hodina =-1;
             VytvorHlavičku();
             int row = 0;
@@ -107,6 +70,7 @@ namespace GeneratorVyvesky
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
                 int riadok = (poznamka!=null && poznamka.Length*5 > text.Length) ? poznamka.Length*5 : text.Length;
                 znaky += riadok;
+                string cas = TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("mm");
                 //rozhodnutie či vypísať hlavičku z časom
                 if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
                 {
@@ -121,7 +85,7 @@ namespace GeneratorVyvesky
                         table = vytvorTabulku();
                         znaky = riadok;
                     }
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row,text,poznamka);
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row,text,poznamka,cas);
                     row++;
                 }
                 else
@@ -139,7 +103,7 @@ namespace GeneratorVyvesky
                     NastavenieCasu(hodina);
                     row = 0;
                     table = vytvorTabulku();
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i],table,row,text,poznamka);
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i],table,row,text,poznamka,cas);
                     row++;
                 }
                 i++;
@@ -148,6 +112,77 @@ namespace GeneratorVyvesky
             _document.SaveToFile("result.docx", FileFormat.Auto);
             System.Diagnostics.Process.Start("result.docx");
         }
+
+        /// <summary>
+        /// hlavná metóda ktorá v cykle prejde všetky vlaky ktoré majú trasu cez vybranú stanicu a vypíše ich
+        /// </summary>
+        public void GenerujOdchodyDocxSubor()
+        {
+            _document.LoadFromFile(@"..\..\..\vzorO.docx");
+            nastavDokument();
+            int hodina = -1;
+            VytvorHlavičku();
+            int row = 0;
+            Table table = null;
+            int i = 0;
+            int zlomy = 0;
+            int znaky = 0; //2450
+            while (zlomy < 4 && _trasaBodyVybStanice.Length > i)
+            {
+                string text = FilterDat.DopravnyBod.VytvorTextOdchodovZoSmeru(_trasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
+                string poznamka = FilterDat.Poznamka.ZistiPoznamku(_trasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
+                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(_trasaBodyVybStanice[i].VlakID, _druh))
+                {
+                    i++;
+                    continue;
+                }
+                //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
+                int riadok = (poznamka != null && poznamka.Length * 5 > text.Length) ? poznamka.Length * 5 : text.Length;
+                znaky += riadok;
+                string cas = TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
+                //rozhodnutie či vypísať hlavičku z časom
+                if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
+                {
+                    //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        row = 0;
+                        table = vytvorTabulku();
+                        znaky = riadok;
+                    }
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka,cas);
+                    row++;
+                }
+                else
+                {
+                    znaky += 40;
+                    hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        znaky = riadok;
+                    }
+                    NastavenieCasu(hodina);
+                    row = 0;
+                    table = vytvorTabulku();
+                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka,cas);
+                    row++;
+                }
+                i++;
+            }
+
+            _document.SaveToFile("result.docx", FileFormat.Auto);
+            System.Diagnostics.Process.Start("result.docx");
+        }
+
+
 
 
         /// <summary>
@@ -194,7 +229,7 @@ namespace GeneratorVyvesky
         /// <param name="riadok"> na akú pozíciu riadku v tabulke sa zapíše info o vlaku</param>
         /// <param name="text"> zoznam staníc a časou cez ktoré prechádza daný vlak </param>
         /// <param name="poznamka"> poznámka priradená k danému vlaku</param>
-        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka)
+        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka, string cas)
         {
             if (riadok != 0)
             {
@@ -206,7 +241,7 @@ namespace GeneratorVyvesky
             //čas
             Paragraph p1 = DataRow.Cells[0].AddParagraph();
             p1.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR1 = p1.AppendText(TimeSpan.FromSeconds(trasBodStanice.CasPrijazdu).ToString("hh")+"."+TimeSpan.FromSeconds(trasBodStanice.CasPrijazdu).ToString("hh"));
+            TextRange TR1 = p1.AppendText(TimeSpan.FromSeconds(trasBodStanice.CasPrijazdu).ToString("hh")+"."+TimeSpan.FromSeconds(trasBodStanice.CasPrijazdu).ToString("mm"));
             TR1.CharacterFormat.FontSize = 5;
             DataRow.Cells[0].Width = 5;
 
@@ -308,6 +343,55 @@ namespace GeneratorVyvesky
                 }
             }
         }
+
+        /// <summary>
+        /// Prepísanie #Stanice na stanicu pre kotú sa robý vývseka a nastavenie času platnosti podla vybraného projektu
+        /// </summary>
+        private void nastavDokument()
+        {
+            ParagraphStyle style = new ParagraphStyle(_document);
+            style.Name = "FontStyle";
+            style.CharacterFormat.FontSize = 18;
+            style.CharacterFormat.Bold = true;
+            _document.Styles.Add(style);
+            CultureInfo ci = CultureInfo.InvariantCulture;
+            // prepíše v pripravenom dokumente #Stanica za vybranú stanicu a #Datum za datum v projekte
+            for (int i = 0; i < 2; i++)
+            {
+                //nazov stanice
+                TextSelection selection = _document.FindString("#Stanica", true, true);
+                TextRange range = selection.GetAsOneRange();
+                Paragraph paragraph = range.OwnerParagraph;
+                Body body = paragraph.OwnerTextBody;
+                int index = body.ChildObjects.IndexOf(paragraph);
+
+                Section section = _document.Sections[0];
+                Paragraph para = section.AddParagraph();
+                para.AppendText(_dopravnyBod.Nazov);
+                para.ApplyStyle(style.Name);
+                para.Format.HorizontalAlignment = HorizontalAlignment.Right;
+
+                body.ChildObjects.Remove(paragraph);
+                body.ChildObjects.Insert(index, para);
+
+                //datum
+                TextSelection selectionOd = _document.FindString("#Datum", true, true);
+                TextRange rangeOd = selectionOd.GetAsOneRange();
+                Paragraph paragraphOd = rangeOd.OwnerParagraph;
+                Body bodyOd = paragraphOd.OwnerTextBody;
+                int indexOd = bodyOd.ChildObjects.IndexOf(paragraphOd);
+
+                Section sectionOd = _document.Sections[0];
+                Paragraph paraOd = sectionOd.AddParagraph();
+                string text = "Platí od " + _projekt.PlatnostOd.ToString("dd.MM.yyyy", ci) + " do " +
+                              _projekt.PlatnostDo.ToString("dd.MM.yyyy", ci);
+                paraOd.AppendText(text);
+                paraOd.Format.HorizontalAlignment = HorizontalAlignment.Center;
+                bodyOd.ChildObjects.Remove(paragraphOd);
+                bodyOd.ChildObjects.Insert(indexOd, paraOd);
+            }
+        }
+
     }
 }
 

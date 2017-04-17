@@ -227,23 +227,29 @@ namespace Zobrazovac_Dat
 
         private void btnDocx_Click(object sender, EventArgs e)
         {
-            string cesta = @"..\..\..\Projekt\" + _projekt.Nazov + @"\Vlaky";
-            var trasaBody = NacitajVsetkyTrsaBody();
-            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
-            var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
-                DataZoSuboru.Nacitaj.VlakyZoSuboru(cesta));
-            var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
-            
-                Generator gen = new Generator(trasaBodyVlakov, vlaky, trasaBodyVybStanice, _vybranyDopBod, @"..\..\..\Projekt\" + _projekt.Nazov, _projekt);
+           
             try
             {
-                gen.GenerujDocxSubor();
+                VytvorGenerator().GenerujDocxSubor();
             }
             catch (IOException ex)
             {
                 Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť result.docx dokument","upozornenie");
             }
            
+        }
+
+        private Generator VytvorGenerator()
+        {
+            string cesta = @"..\..\..\Projekt\" + _projekt.Nazov + @"\Vlaky";
+            var trasaBody = NacitajVsetkyTrsaBody();
+            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
+            var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
+                DataZoSuboru.Nacitaj.VlakyZoSuboru(cesta));
+            var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
+
+            Generator gen = new Generator(trasaBodyVlakov, vlaky, trasaBodyVybStanice, _vybranyDopBod, @"..\..\..\Projekt\" + _projekt.Nazov, _projekt);
+            return gen;
         }
 
         /// <summary>
@@ -283,6 +289,16 @@ namespace Zobrazovac_Dat
             MessageBox.Show(telo, hlavicka, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        
+        private void btnGenerujOdchody_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                VytvorGenerator().GenerujOdchodyDocxSubor();
+            }
+            catch (IOException ex)
+            {
+                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť result.docx dokument", "upozornenie");
+            }
+        }
     }
 }
