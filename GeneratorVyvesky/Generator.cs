@@ -80,19 +80,18 @@ namespace GeneratorVyvesky
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
-                        VytvorHlavičku();
+                        table = VytvorHlavičku();
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        row = 0;
-                        table = VytvorTabulku();
+                        row = 2;
                         znaky = riadok;
-                        prvy = true;
+                        //prvy = true;
                     }
                     NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, false);
                     row++;
                 }
                 else
                 {
-                    znaky += 40;
+                    znaky += 60;
                     hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2450)
                     {
@@ -101,17 +100,27 @@ namespace GeneratorVyvesky
                         VytvorHlavičku();
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
+
                     }
                     //NastavenieCasu(hodina);
                     if (prvy)
                     {
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         prvy = false;
+                        table.AddRow(false, 7);
+                        table.ApplyHorizontalMerge(2, 0, 6);
+                        nastavCas(table, hodina, 2);
+                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
+                        row = 3;
                     }
-                    table = VytvorTabulkuSCasom();
-                    row = 1;
-                    nastavCas(table, hodina);
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                    else
+                    {
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        table = VytvorTabulkuSCasom();
+                        row = 1;
+                        nastavCas(table, hodina, 0);
+                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                    }
+
                     row++;
                 }
                 i++;
@@ -128,10 +137,9 @@ namespace GeneratorVyvesky
             _document.LoadFromFile(@"..\..\..\vzorO.docx");     //načíta vzor pre Odchody vlakov
             nastavDokument();                                   //prednastavý potrebné veci na dokumente
             int hodina = -1;                                    //ukladá hodinu v akej odchádza vlak
-            VytvorHlavičku();                                   //Vytvorý tabulku s metadátami
             int row = 0;                                        //riadok na akom sa nachádzam vo vytvorenej tabulke
             bool prvy = true;                                   //ak potrebujem oddeliť abulky
-            Table table = null;                                 
+            Table table = VytvorHlavičku();
             int i = 0;
             int zlomy = 0;                                      //počíta zlomy strán aby sa vytvoril práve jeden dokument
             int znaky = 0; //2450
@@ -148,6 +156,7 @@ namespace GeneratorVyvesky
                 int riadok = (poznamka != null && poznamka.Length * 5 > text.Length) ? poznamka.Length * 5 : text.Length;
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
+
                 //rozhodnutie či vypísať hlavičku z časom
                 if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("hh")))
                 {
@@ -156,24 +165,31 @@ namespace GeneratorVyvesky
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
-                        VytvorHlavičku();
+                        if (zlomy > 3)
+                        {
+                            break;
+                        }
+                        table = VytvorHlavičku();
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        row = 0;
-                        table = VytvorTabulku();
+                        row = 2;
                         znaky = riadok;
-                        prvy = true;
+                        //prvy = true;
                     }
                     NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka,cas,false);
                     row++;
                 }
                 else
                 {
-                    znaky += 40;
+                    znaky += 60;
                     hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2450)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
+                        if (zlomy > 3)
+                        {
+                            break;
+                        }
                         VytvorHlavičku();
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
@@ -182,17 +198,34 @@ namespace GeneratorVyvesky
                   //NastavenieCasu(hodina);
                     if (prvy)
                     {
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         prvy = false;
+                        table.AddRow(false, 7);
+                        table.ApplyHorizontalMerge(2, 0, 6);
+                        nastavCas(table, hodina, 2);
+                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
+                        row = 3;
                     }
-                    table = VytvorTabulkuSCasom();
-                    row = 1;
-                    nastavCas(table,hodina);
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                    else
+                    {
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        table = VytvorTabulkuSCasom();
+                        row = 1;
+                        nastavCas(table, hodina, 0);
+                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                    }
+                    
                     row++;
                 }
                 i++;
             }
+            //table.AddRow(true, 1);
+            //TableRow DataRow = table.Rows[row];
+            //Paragraph p2 = DataRow.Cells[0].AddParagraph();
+            //p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
+            //TextRange TR2 = p2.AppendText(".00 - 59");
+            //TR2.CharacterFormat.FontSize = 7;
+            //DataRow.Cells[0].Width = 150;
+
             _document.SaveToFile("result.docx", FileFormat.Auto);
             System.Diagnostics.Process.Start("result.docx");
         }
@@ -212,7 +245,7 @@ namespace GeneratorVyvesky
             Table table = section.AddTable(true);
             table.ResetCells(1, 1);
             table.TableFormat.HorizontalAlignment = RowAlignment.Center;
-            nastavCas(table,h);
+            nastavCas(table,h,0);
         }
 
         /// <summary>
@@ -220,9 +253,9 @@ namespace GeneratorVyvesky
         /// </summary>
         /// <param name="table"></param>
         /// <param name="h"></param>
-        private void nastavCas(Table table, int h)
+        private void nastavCas(Table table, int h,int row)
         {
-            TableRow DataRow1 = table.Rows[0];
+            TableRow DataRow1 = table.Rows[row];
             Paragraph p2 = DataRow1.Cells[0].AddParagraph();
             p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
             TextRange TR2 = p2.AppendText(h + ".00 - " + h + ".59");
@@ -276,7 +309,8 @@ namespace GeneratorVyvesky
         {
             if (riadok != 0 && !tabScasom)
             {
-                table.AddRow(true, 7);
+                table.AddRow(false, 7);
+                
             }
 
             TableRow DataRow = table.Rows[riadok];
@@ -322,7 +356,7 @@ namespace GeneratorVyvesky
         /// <summary>
         /// V dokumente vytvorý hlavičku z metadátami
         /// </summary>
-        public void VytvorHlavičku()
+        public Table VytvorHlavičku()
         {
             Section section = _document.Sections[1];
            
@@ -385,6 +419,7 @@ namespace GeneratorVyvesky
                     p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
                 }
             }
+            return table;
         }
 
         /// <summary>
