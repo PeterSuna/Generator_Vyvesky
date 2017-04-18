@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data_Kontroler;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 namespace FilterDat
@@ -28,7 +30,7 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static VSVlak[] NajdiVlakyVTrasaBody(VSTrasaBod[] body, VSVlak[] vlaky)
+        public static VSVlak[] NajdiVlakyVTrasaBody(MapTrasaBod[] body, VSVlak[] vlaky)
         {
             int[] idVlakov = body.Select(c => c.VlakID).ToArray();
             VSVlak[] v = vlaky.Where(c => idVlakov.Contains(c.ID)).Select(c => c).ToArray();
@@ -41,11 +43,11 @@ namespace FilterDat
         /// <param name="idVlaku"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static int ZisiteCisloVlaku(int idVlaku, VSVlak[] vlaky)
+        public static string ZisiteCisloVlaku(int idVlaku, VSVlak[] vlaky)
         {
             VSVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);
             int cislovlaku = vlak?.Cislo ?? -1;
-            return cislovlaku;
+            return "";
         }
     }
 }

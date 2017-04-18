@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 using Spire.Doc;
 using Spire.Doc.Documents;
@@ -15,8 +16,8 @@ namespace GeneratorVyvesky
 {
     public class Generator
     {
-        private readonly VSTrasaBod[] _trasaBodyVlakov;
-        private readonly VSTrasaBod[] _trasaBodyVybStanice;
+        private readonly MapTrasaBod[] _trasaBodyVlakov;
+        public MapTrasaBod[] TrasaBodyVybStanice { get; }
         private readonly Document _document;
         private readonly VSTrasaDruh[] _druh;
         private readonly VSVlak[] _vlaky;
@@ -27,14 +28,14 @@ namespace GeneratorVyvesky
         private readonly VSProject _projekt;
 
 
-        public Generator(VSTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, VSTrasaBod[] trasaBodyVybStanice,
+        public Generator(MapTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, MapTrasaBod[] trasaBodyVybStanice,
             VSDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
             //načítanie potrebných údajov
             _trasaBodyVlakov = trasaBodyVlakov;
             _druh = DataZoSuboru.Nacitaj.ZoSuboruDopravneDruhy(cesta + "\\TrasaDruh");
             _vlaky = vlaky;
-            _trasaBodyVybStanice =
+            TrasaBodyVybStanice =
                 trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
             _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
             _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboruTrasaObPozn(cesta + "\\Poznamky");
@@ -47,23 +48,22 @@ namespace GeneratorVyvesky
         /// <summary>
         /// hlavná metóda ktorá v cykle prejde všetky vlaky ktoré majú trasu cez vybranú stanicu a vypíše ich
         /// </summary>
-        public void GenerujDocxSubor()
+        public int GenerujPrichodyDocxSubor(int index)
         {
             _document.LoadFromFile(@"..\..\..\vzorP.docx");
             nastavDokument();
-            int hodina =-1;
-            VytvorHlavičku();
+            int hodina =-1; 
             int row = 0;
-            Table table =null;
+            Table table = VytvorHlavičku();
             bool prvy = true;
-            int i = 0;
+            int i = index;
             int zlomy = 0;
             int znaky = 0; //2450
-            while(zlomy < 4 && _trasaBodyVybStanice.Length > i)
+            while(zlomy < 4 && TrasaBodyVybStanice.Length > i)
             {
-                string text = FilterDat.DopravnyBod.VytvorTextZoSmeru(_trasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
-                string poznamka = FilterDat.Poznamka.ZistiPoznamku(_trasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
-                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(_trasaBodyVybStanice[i].VlakID, _druh))
+                string text = FilterDat.DopravnyBod.VytvorTextZoSmeru(TrasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
+                string poznamka = FilterDat.Poznamka.ZistiPoznamku(TrasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
+                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(TrasaBodyVybStanice[i].VlakID, _druh))
                 {
                     i++;
                     continue;
@@ -71,94 +71,9 @@ namespace GeneratorVyvesky
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
                 int riadok = (poznamka!=null && poznamka.Length*5 > text.Length) ? poznamka.Length*5 : text.Length;
                 znaky += riadok;
-                string cas = TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("mm");
+                string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("mm");
                 //rozhodnutie či vypísať hlavičku z časom
-                if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
-                {
-                    //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2450)
-                    {
-                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
-                        zlomy++;
-                        table = VytvorHlavičku();
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        row = 2;
-                        znaky = riadok;
-                        //prvy = true;
-                    }
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, false);
-                    row++;
-                }
-                else
-                {
-                    znaky += 60;
-                    hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2450)
-                    {
-                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
-                        zlomy++;
-                        VytvorHlavičku();
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        znaky = riadok;
-
-                    }
-                    //NastavenieCasu(hodina);
-                    if (prvy)
-                    {
-                        prvy = false;
-                        table.AddRow(false, 7);
-                        table.ApplyHorizontalMerge(2, 0, 6);
-                        nastavCas(table, hodina, 2);
-                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
-                        row = 3;
-                    }
-                    else
-                    {
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        table = VytvorTabulkuSCasom();
-                        row = 1;
-                        nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
-                    }
-
-                    row++;
-                }
-                i++;
-            }
-            _document.SaveToFile("result.docx", FileFormat.Auto);
-            System.Diagnostics.Process.Start("result.docx");
-        }
-
-        /// <summary>
-        /// hlavná metóda ktorá v cykle prejde všetky vlaky ktoré majú trasu cez vybranú stanicu a vypíše ich
-        /// </summary>
-        public void GenerujOdchodyDocxSubor()
-        {
-            _document.LoadFromFile(@"..\..\..\vzorO.docx");     //načíta vzor pre Odchody vlakov
-            nastavDokument();                                   //prednastavý potrebné veci na dokumente
-            int hodina = -1;                                    //ukladá hodinu v akej odchádza vlak
-            int row = 0;                                        //riadok na akom sa nachádzam vo vytvorenej tabulke
-            bool prvy = true;                                   //ak potrebujem oddeliť abulky
-            Table table = VytvorHlavičku();
-            int i = 0;
-            int zlomy = 0;                                      //počíta zlomy strán aby sa vytvoril práve jeden dokument
-            int znaky = 0; //2450
-            while (zlomy < 4 && _trasaBodyVybStanice.Length > i)
-            {
-                string text = FilterDat.DopravnyBod.VytvorTextOdchodovZoSmeru(_trasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
-                string poznamka = FilterDat.Poznamka.ZistiPoznamku(_trasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
-                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(_trasaBodyVybStanice[i].VlakID, _druh))
-                {
-                    i++;
-                    continue;
-                }
-                //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
-                int riadok = (poznamka != null && poznamka.Length * 5 > text.Length) ? poznamka.Length * 5 : text.Length;
-                znaky += riadok;
-                string cas = TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
-
-                //rozhodnutie či vypísať hlavičku z časom
-                if (hodina == Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasOdjazdu).ToString("hh")))
+                if (hodina == Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
                     if (znaky >= 2450)
@@ -175,13 +90,107 @@ namespace GeneratorVyvesky
                         znaky = riadok;
                         //prvy = true;
                     }
-                    NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka,cas,false);
+                    NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, false);
                     row++;
                 }
                 else
                 {
                     znaky += 60;
-                    hodina = Parse(TimeSpan.FromSeconds(_trasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
+                    hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        if (zlomy > 3)
+                        {
+                            break;
+                        }
+                        VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        znaky = riadok;
+
+                    }
+                    //NastavenieCasu(hodina);
+                    if (prvy)
+                    {
+                        prvy = false;
+                        table.AddRow(false, 7);
+                        table.ApplyHorizontalMerge(2, 0, 6);
+                        nastavCas(table, hodina, 2);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
+                        row = 3;
+                    }
+                    else
+                    {
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        table = VytvorTabulkuSCasom();
+                        row = 1;
+                        nastavCas(table, hodina, 0);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                    }
+
+                    row++;
+                }
+                i++;
+            }
+            _document.SaveToFile("result"+i+".docx", FileFormat.Auto);
+            System.Diagnostics.Process.Start("result"+i+".docx");
+            return i;
+        }
+
+        /// <summary>
+        /// hlavná metóda ktorá v cykle prejde všetky vlaky ktoré majú trasu cez vybranú stanicu a vypíše ich
+        /// </summary>
+        public int GenerujOdchodyDocxSubor(int index)
+        {
+            _document.LoadFromFile(@"..\..\..\vzorO.docx");     //načíta vzor pre Odchody vlakov
+            nastavDokument();                                   //prednastavý potrebné veci na dokumente
+            int hodina = -1;                                    //ukladá hodinu v akej odchádza vlak
+            int row = 0;                                        //riadok na akom sa nachádzam vo vytvorenej tabulke
+            bool prvy = true;                                   //ak potrebujem oddeliť abulky
+            Table table = VytvorHlavičku();
+            int i = index;
+            int zlomy = 0;                                      //počíta zlomy strán aby sa vytvoril práve jeden dokument
+            int znaky = 0; //2450
+            while (zlomy < 4 && TrasaBodyVybStanice.Length > i)
+            {
+                string text = FilterDat.DopravnyBod.VytvorTextOdchodovZoSmeru(TrasaBodyVybStanice[i], _trasaBodyVlakov, _dopravneBody);
+                string poznamka = FilterDat.Poznamka.ZistiPoznamku(TrasaBodyVybStanice[i].VlakID, _trasaObPoznamka, _obecnaPoznamka);
+                if (text == "" || text.Length >= 2300 || !FilterDat.TrasaDruh.ZisitiSpravnyDruhVlaku(TrasaBodyVybStanice[i].VlakID, _druh))
+                {
+                    i++;
+                    continue;
+                }
+                //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
+                int riadok = (poznamka != null && poznamka.Length * 5 > text.Length) ? poznamka.Length * 5 : text.Length;
+                znaky += riadok;
+                string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
+
+                //rozhodnutie či vypísať hlavičku z časom
+                if (hodina == Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh")))
+                {
+                    //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
+                    if (znaky >= 2450)
+                    {
+                        _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
+                        zlomy++;
+                        if (zlomy > 3)
+                        {
+                            break;
+                        }
+                        table = VytvorHlavičku();
+                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        row = 2;
+                        znaky = riadok;
+                        //prvy = true;
+                    }
+                    NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka,cas,false);
+                    row++;
+                }
+                else
+                {
+                    znaky += 60;
+                    hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2450)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
@@ -202,7 +211,7 @@ namespace GeneratorVyvesky
                         table.AddRow(false, 7);
                         table.ApplyHorizontalMerge(2, 0, 6);
                         nastavCas(table, hodina, 2);
-                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, 3, text, poznamka, cas, false);
                         row = 3;
                     }
                     else
@@ -211,42 +220,20 @@ namespace GeneratorVyvesky
                         table = VytvorTabulkuSCasom();
                         row = 1;
                         nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(_trasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
                     }
                     
                     row++;
                 }
                 i++;
             }
-            //table.AddRow(true, 1);
-            //TableRow DataRow = table.Rows[row];
-            //Paragraph p2 = DataRow.Cells[0].AddParagraph();
-            //p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            //TextRange TR2 = p2.AppendText(".00 - 59");
-            //TR2.CharacterFormat.FontSize = 7;
-            //DataRow.Cells[0].Width = 150;
 
-            _document.SaveToFile("result.docx", FileFormat.Auto);
-            System.Diagnostics.Process.Start("result.docx");
+            _document.SaveToFile("Odchody"+DateTime.Now.Second+".docx", FileFormat.Auto);
+            System.Diagnostics.Process.Start("Odchody" + DateTime.Now.Second + ".docx");
+            return i;
         }
 
       
-        
-
-
-
-        /// <summary>
-        /// Vloží hlavičku kedy daný vlak prechádza stanicou
-        /// </summary>
-        /// <param name="h"> hodina rozpetia daných vlakov</param>
-        public void NastavenieCasu(int h)
-        {
-            Section section = _document.Sections[1];
-            Table table = section.AddTable(true);
-            table.ResetCells(1, 1);
-            table.TableFormat.HorizontalAlignment = RowAlignment.Center;
-            nastavCas(table,h,0);
-        }
 
         /// <summary>
         /// Pre vytvorenú tabulki 1x1 vloží čas
@@ -264,26 +251,10 @@ namespace GeneratorVyvesky
         }
 
         /// <summary>
-        /// vytvorý tabulku a vráti jej inštanciu
-        /// </summary>
-        /// <returns></returns>
-        public Table VytvorTabulku()
-        {
-            Section section = _document.Sections[1];
-            Table table1 = section.AddTable(true);
-            table1.ResetCells(1, 7);
-            table1.TableFormat.Paddings.All = 0.2f;
-            table1.TableFormat.HorizontalAlignment = RowAlignment.Center;
-            table1.TableFormat.Positioning.HorizPositionAbs = HorizontalPosition.Outside;
-            table1.TableFormat.Positioning.VertRelationTo = VerticalRelation.Margin;
-            return table1;
-        }
-
-        /// <summary>
         /// Ak pred tabulkov vlakou je čas vytvorý tabulku s vlakmi a časom
         /// </summary>
         /// <returns></returns>
-        public Table VytvorTabulkuSCasom()
+        private Table VytvorTabulkuSCasom()
         {
             Section section = _document.Sections[1];
             Table table1 = section.AddTable(true);
@@ -305,7 +276,7 @@ namespace GeneratorVyvesky
         /// <param name="riadok"> na akú pozíciu riadku v tabulke sa zapíše info o vlaku</param>
         /// <param name="text"> zoznam staníc a časou cez ktoré prechádza daný vlak </param>
         /// <param name="poznamka"> poznámka priradená k danému vlaku</param>
-        public void NastavenieTabulkyVlakov(VSTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka, string cas,bool tabScasom)
+        private void NastavenieTabulkyVlakov(MapTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka, string cas,bool tabScasom)
         {
             if (riadok != 0 && !tabScasom)
             {
@@ -356,7 +327,7 @@ namespace GeneratorVyvesky
         /// <summary>
         /// V dokumente vytvorý hlavičku z metadátami
         /// </summary>
-        public Table VytvorHlavičku()
+        private Table VytvorHlavičku()
         {
             Section section = _document.Sections[1];
            

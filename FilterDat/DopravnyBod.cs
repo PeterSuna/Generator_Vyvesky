@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 namespace FilterDat
@@ -28,9 +26,9 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        public static string VytvorTextZoSmeru(VSTrasaBod aktualnaTrasa, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, VSDopravnyBod[] dopravneBody)
         {
-            VSTrasaBod[] bodyStanicPred =
+            MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();
             string text ="";
@@ -55,9 +53,9 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        public static string VytvorTextOdchodovZoSmeru(VSTrasaBod aktualnaTrasa, VSTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        public static string VytvorTextOdchodovZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, VSDopravnyBod[] dopravneBody)
         {
-            VSTrasaBod[] bodyStanicPred =
+            MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi > aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();
             string text = "";
@@ -83,6 +81,7 @@ namespace FilterDat
         /// <returns></returns>
         private static string NajdiNazovDopBodu(int idBodu, VSDopravnyBod[] dopravneBody)
         {
+            //var b = dopravneBody[0].
             VSDopravnyBod db = dopravneBody.FirstOrDefault(c => c.ID == idBodu);
             return db?.Nazov;
         }

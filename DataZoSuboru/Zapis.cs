@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using Service_Konektor.poseidon;
 
@@ -7,99 +8,16 @@ namespace DataZoSuboru
     public static class Zapis
     {
         /// <summary>
-        /// Metóda uloží načítané dáta vlakov
+        /// Zapíše do súboru data
         /// </summary>
         /// <param name="cesta"></param>
-        /// <param name="vlaky"></param>
-        public static void VlakyDoSuboru(string cesta, VSVlak[] vlaky)
+        /// <param name="data"></param>
+        public static void DoSuboru(string cesta, VSEntitaBase[] data)
         {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "PomocneData.json")))
+            using (TextWriter writer = File.CreateText(cesta))
             {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, vlaky);
-            }
-        }
-
-        /// <summary>
-        /// Metóda uloží načítané dáta trsaSpecifikacie
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="specifikaces"></param>
-        public static void SpecifikacieDoSuboru(string cesta, VSTrasaSpecifikace[] specifikaces)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "Specifikacie.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, specifikaces);
-            }
-        }
-
-        /// <summary>
-        /// metóda uloží načítané dáta Bodov
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="trasaBody"></param>
-        public static void TrasaBodyDoSuboru(string cesta, VSTrasaBod[] trasaBody)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "PomocneData.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, trasaBody);
-            }
-        }
-
-        /// <summary>
-        /// metóda uloží načítané dáta projektov
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="projekty"></param>
-        public static void ProjektyDoSuboru(string cesta, VSProject[] projekty)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "projekty.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, projekty);
-            }
-        }
-        /// <summary>
-        /// Metóda uloží načítané dáta TrsaDruhy
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="druhy"></param>
-        public static void TrasaDopravneDruhyDoSuboru(string cesta, VSTrasaDruh[] druhy)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "DopravneDruhy.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, druhy);
-            }
-        }
-
-        /// <summary>
-        /// Metóda uloží načítané dáta Trsa Obecnej Poznámky
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="top"></param>
-        public static void TrasaObecnePoznamky(string cesta, VSTrasaObecPozn[] top)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "TrasaObPoznamky.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, top);
-            }
-        }
-
-        /// <summary>
-        /// Metóda uloží načítané dáta Obecnej poznámky
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="op"></param>
-        public static void ObecnePoznamky(string cesta, VSObecnaPoznamka[] op)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "ObecnaPoznamka.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, op);
+                    var serializer = new JsonSerializer();
+                    serializer.Serialize(writer, data);
             }
         }
 
@@ -108,7 +26,7 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <param name="trasaBody"></param>
-        public static void TrasaBodyDoSuboryCasti(string cesta, VSTrasaBod[] trasaBody)
+        public static void TrasaBodyDoSuboruCasti(string cesta, VSTrasaBod[] trasaBody)
         {
             int pocet = trasaBody.Length;
             int part = pocet / 10 + 1;
@@ -128,20 +46,6 @@ namespace DataZoSuboru
                     var serializer = new JsonSerializer();
                     serializer.Serialize(writer, bodpart);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Metóda uloží načítané dáta Dopravné body
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="dopravneBody"></param>
-        public static void DoSuboruDopravneBody(string cesta, VSDopravnyBod[] dopravneBody)
-        {
-            using (TextWriter writer = File.CreateText(Path.Combine(cesta, "DopravneBody.json")))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(writer, dopravneBody);
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using Data_Kontroler;
 using Newtonsoft.Json;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 namespace DataZoSuboru
@@ -17,7 +19,7 @@ namespace DataZoSuboru
             string json;
             try
             {
-                using (var sr = new StreamReader(Path.Combine(cesta, "PomocneData.json")))
+                using (var sr = new StreamReader(Path.Combine(cesta, "Vlaky.json")))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -73,6 +75,29 @@ namespace DataZoSuboru
                 return null;
             }
             return JsonConvert.DeserializeObject<VSProject[]>(json);
+        }
+
+        /// <summary>
+        ///  Načíta projekty z uloženého súboru
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
+        public static MapTrasaBod[] ZoSuboruMapTrasBody(string cesta)
+        {
+            string json;
+            try
+            {
+                string str = Path.Combine(cesta, "MapTrasaBody.json");
+                using (var sr = new StreamReader(str))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapTrasaBod[]>(json);
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Data_Kontroler;
 using Service_Konektor.poseidon;
 using GeneratorVyvesky;
+using Service_Konektor.Entity;
 
 namespace Zobrazovac_Dat
 {
@@ -137,45 +138,51 @@ namespace Zobrazovac_Dat
             else
             {
                 string cesta = @"..\..\..\Projekt\";
-                string path = @"..\..\..\Projekt\" + _projekt.Nazov;
+                string cestaProj = @"..\..\..\Projekt\" + _projekt.Nazov;
                 if (dgvVlaky.DataSource is VSTrasaBod[])
                 {
-                    path += @"\TrasaBody";
-                    DataZoSuboru.Zapis.TrasaBodyDoSuboryCasti(path, dgvVlaky.DataSource as VSTrasaBod[]);
+                    cestaProj += @"\TrasaBody";
+                    DataZoSuboru.Zapis.TrasaBodyDoSuboruCasti(cestaProj, dgvVlaky.DataSource as VSTrasaBod[]);
                 }
                 if (dgvVlaky.DataSource is VSVlak[])
                 {
-                    path += @"\Vlaky";
-                    DataZoSuboru.Zapis.VlakyDoSuboru(path, dgvVlaky.DataSource as VSVlak[]);
+                    cestaProj += @"\Vlaky\Vlaky.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as VSEntitaBase[]);
                 }
                 if (dgvVlaky.DataSource is VSDopravnyBod[])
                 {
-
-                    DataZoSuboru.Zapis.DoSuboruDopravneBody(cesta, dgvVlaky.DataSource as VSDopravnyBod[]);
+                    cesta += @"\DopravneBody.json";
+                    DataZoSuboru.Zapis.DoSuboru(cesta, dgvVlaky.DataSource as VSDopravnyBod[]);
                 }
                 if (dgvVlaky.DataSource is VSTrasaSpecifikace[])
                 {
-                    path += @"\Specifikacie";
-                    DataZoSuboru.Zapis.SpecifikacieDoSuboru(path, dgvVlaky.DataSource as VSTrasaSpecifikace[]);
+                    cestaProj += @"\Specifikacie\Specifikacie.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as VSTrasaSpecifikace[]);
                 }
                 if (dgvVlaky.DataSource is VSTrasaDruh[])
                 {
-                    path += @"\TrasaDruh";
-                    DataZoSuboru.Zapis.TrasaDopravneDruhyDoSuboru(path, dgvVlaky.DataSource as VSTrasaDruh[]);
+                    cestaProj += @"\TrasaDruh\DopravneDruhy.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as VSTrasaDruh[]);
                 }
                 if (dgvVlaky.DataSource is VSObecnaPoznamka[])
                 {
-                    path += @"\Poznamky";
-                    DataZoSuboru.Zapis.ObecnePoznamky(path, dgvVlaky.DataSource as VSObecnaPoznamka[]);
+                    cestaProj += @"\Poznamky\ObecnaPoznamka.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as VSObecnaPoznamka[]);
                 }
                 if (dgvVlaky.DataSource is VSTrasaObecPozn[])
                 {
-                    path += @"\Poznamky";
-                    DataZoSuboru.Zapis.TrasaObecnePoznamky(path, dgvVlaky.DataSource as VSTrasaObecPozn[]);
+                    cestaProj += @"\Poznamky\TrasaObPoznamky.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as VSTrasaObecPozn[]);
                 }
                 if (dgvVlaky.DataSource is VSProject[])
                 {
-                    DataZoSuboru.Zapis.ProjektyDoSuboru(cesta, dgvVlaky.DataSource as VSProject[]);
+                    cesta += @"\Projekty.json";
+                    DataZoSuboru.Zapis.DoSuboru(cesta, dgvVlaky.DataSource as VSProject[]);
+                }
+                if (dgvVlaky.DataSource is MapTrasaBod[])
+                {
+                    cestaProj += @"\MapTrasaBody.json";
+                    DataZoSuboru.Zapis.DoSuboru(cestaProj, dgvVlaky.DataSource as MapTrasaBod[]);
                 }
 
                 MessageBox.Show("Data Boli uložené", "Oznam", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -216,7 +223,7 @@ namespace Zobrazovac_Dat
 
         private void btnNacitajTrasyBody_Click(object sender, EventArgs e)
         {
-            var data = NacitajVsetkyTrsaBody();
+            var data = DataZoSuboru.Nacitaj.ZoSuboruMapTrasBody(@"..\..\..\Projekt\" + _projekt.Nazov);
             dgvVlaky.DataSource = data;
         }
 
@@ -227,22 +234,31 @@ namespace Zobrazovac_Dat
 
         private void btnDocx_Click(object sender, EventArgs e)
         {
-           
+
             try
             {
-                VytvorGenerator().GenerujDocxSubor();
+                int i = 0;
+                while (true)
+                {
+                    var generator = VytvorGenerator();
+                    i = generator.GenerujPrichodyDocxSubor(i);
+                    if (i >= generator.TrasaBodyVybStanice.Length)
+                    {
+                        break;
+                    }
+                }
             }
             catch (IOException ex)
             {
-                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť result.docx dokument","upozornenie");
+                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť Prichody.docx dokument", "upozornenie");
             }
-           
+
         }
 
         private Generator VytvorGenerator()
         {
             string cesta = @"..\..\..\Projekt\" + _projekt.Nazov + @"\Vlaky";
-            var trasaBody = NacitajVsetkyTrsaBody();
+            var trasaBody = DataZoSuboru.Nacitaj.ZoSuboruMapTrasBody(@"..\..\..\Projekt\" + _projekt.Nazov);
             var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
             var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
                 DataZoSuboru.Nacitaj.VlakyZoSuboru(cesta));
@@ -293,11 +309,22 @@ namespace Zobrazovac_Dat
         {
             try
             {
-                VytvorGenerator().GenerujOdchodyDocxSubor();
+                int i = 0;
+                while (true)
+                {
+                    var generator = VytvorGenerator();
+                    i = generator.GenerujOdchodyDocxSubor(i);
+                    if (i >= generator.TrasaBodyVybStanice.Length)
+                    {
+                        break;
+                    }
+                }
+                
+                
             }
             catch (IOException ex)
             {
-                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť result.docx dokument", "upozornenie");
+                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť Odchody.docx dokument", "upozornenie");
             }
         }
     }

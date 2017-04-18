@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 
@@ -88,6 +88,36 @@ namespace Data_Kontroler
             return trasy;
         }
 
+        public MapTrasaBod[] MapujTrasaBody(VSTrasaBod[] trasy)
+        {
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<VSTrasaBod, MapTrasaBod>();
+            });
+            IMapper mapper = config.CreateMapper();
+            List<MapTrasaBod> array = new List<MapTrasaBod>();
+            foreach (var trasa in trasy)
+            {
+                MapTrasaBod v = mapper.Map<MapTrasaBod>(trasa);
+                array.Add(v);
+            }
+            return array.ToArray();
+        }
+
+        public MapTrasaBod[] GetMapTrasy()
+        {
+            var trasy = Poseidon.GetTrasaBody();
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<VSTrasaBod, MapTrasaBod>();
+            });
+            IMapper mapper = config.CreateMapper();
+            List<MapTrasaBod> array = new List<MapTrasaBod>();
+            foreach (var trasa in trasy)
+            {
+                MapTrasaBod v = mapper.Map<MapTrasaBod>(trasa);
+                array.Add(v);
+            }
+            return array.ToArray();
+        }
         /// <summary>
         /// Vrati všetky dopravne body s poseidona
         /// </summary>
