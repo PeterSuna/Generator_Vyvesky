@@ -319,8 +319,6 @@ namespace Zobrazovac_Dat
                         break;
                     }
                 }
-                
-                
             }
             catch (IOException ex)
             {

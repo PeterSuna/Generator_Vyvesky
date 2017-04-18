@@ -105,7 +105,8 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                        VytvorHlavičku();
+                        table = VytvorHlavičku();
+                        row = 2;
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
 
@@ -123,10 +124,13 @@ namespace GeneratorVyvesky
                     else
                     {
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        table = VytvorTabulkuSCasom();
-                        row = 1;
-                        nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                        //table = VytvorTabulkuSCasom();
+                        table.AddRow(false, 7);
+                        table.ApplyHorizontalMerge(row, 0, 6);
+                        nastavCas(table, hodina, row);
+                        row++;
+                        //nastavCas(table, hodina, 0);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, false);
                     }
 
                     row++;
@@ -199,7 +203,8 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                        VytvorHlavičku();
+                       table = VytvorHlavičku();
+                        row = 2;
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
 
@@ -217,10 +222,13 @@ namespace GeneratorVyvesky
                     else
                     {
                         _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
-                        table = VytvorTabulkuSCasom();
-                        row = 1;
-                        nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, true);
+                        //table = VytvorTabulkuSCasom();
+                        table.AddRow(false, 7);
+                        table.ApplyHorizontalMerge(row, 0, 6);
+                        nastavCas(table, hodina, row);
+                        row++;
+                        //nastavCas(table, hodina, 0);
+                        NastavenieTabulkyVlakov(TrasaBodyVybStanice[i], table, row, text, poznamka, cas, false);
                     }
                     
                     row++;
@@ -248,23 +256,6 @@ namespace GeneratorVyvesky
             TextRange TR2 = p2.AppendText(h + ".00 - " + h + ".59");
             TR2.CharacterFormat.FontSize = 7;
             DataRow1.Cells[0].Width = 150;
-        }
-
-        /// <summary>
-        /// Ak pred tabulkov vlakou je čas vytvorý tabulku s vlakmi a časom
-        /// </summary>
-        /// <returns></returns>
-        private Table VytvorTabulkuSCasom()
-        {
-            Section section = _document.Sections[1];
-            Table table1 = section.AddTable(true);
-            table1.ResetCells(2, 7);
-            table1.ApplyHorizontalMerge(0, 0, 6);
-            table1.TableFormat.Paddings.All = 0.2f;
-            table1.TableFormat.HorizontalAlignment = RowAlignment.Center;
-            table1.TableFormat.Positioning.HorizPositionAbs = HorizontalPosition.Outside;
-            table1.TableFormat.Positioning.VertRelationTo = VerticalRelation.Margin;
-            return table1;
         }
 
 
