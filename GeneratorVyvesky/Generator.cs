@@ -236,8 +236,8 @@ namespace GeneratorVyvesky
                 i++;
             }
 
-            _document.SaveToFile("Odchody"+DateTime.Now.Second+".docx", FileFormat.Auto);
-            System.Diagnostics.Process.Start("Odchody" + DateTime.Now.Second + ".docx");
+            _document.SaveToFile("Odchody"+i+".docx", FileFormat.Auto);
+            System.Diagnostics.Process.Start("Odchody" +i + ".docx");
             return i;
         }
 
