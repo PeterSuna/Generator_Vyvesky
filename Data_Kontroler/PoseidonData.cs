@@ -10,21 +10,22 @@ namespace Data_Kontroler
 {
     public class PoseidonData
     {
+        private readonly gvd _poseidon;
+
         public VSProject[] Projekty { get; set; }
         public VSVlak[] Vlaky { get; set; }
-        public gvd Poseidon { get; set; }
 
         public PoseidonData(string meno, string heslo)
         {
-            Poseidon = new gvd
+            _poseidon = new gvd
             {
                 Timeout = 2000000,
                 CookieContainer = new System.Net.CookieContainer()
             };
             try
             {
-                Poseidon.Login(meno, heslo);
-                Projekty = Poseidon.GetProjects();
+                _poseidon.Login(meno, heslo);
+                Projekty = _poseidon.GetProjects();
             }
             catch (Exception)
             {
@@ -34,15 +35,15 @@ namespace Data_Kontroler
 
         public PoseidonData()
         {
-            Poseidon = new gvd
+            _poseidon = new gvd
             {
                 Timeout = 600000,
                 CookieContainer = new System.Net.CookieContainer()
             };
             try
             {
-                Poseidon.Login("suna", "peter");
-                Projekty = Poseidon.GetProjects();
+                _poseidon.Login("suna", "peter");
+                Projekty = _poseidon.GetProjects();
             }
             catch (Exception)
             {
@@ -60,7 +61,7 @@ namespace Data_Kontroler
         {
             var filter = new VSVlakFilter {Faza = faza};
             
-            if (Poseidon.SelectProject(project, filter))
+            if (_poseidon.SelectProject(project, filter))
             {
                 return true;
             }
@@ -74,7 +75,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSVlak[] GetVlaky()
         {
-            var vlaky = Poseidon.GetVlaky();
+            var vlaky = _poseidon.GetVlaky();
             return vlaky;
         }
 
@@ -84,7 +85,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSTrasaBod[] GetTrasy()
         {
-            var trasy = Poseidon.GetTrasaBody();
+            var trasy = _poseidon.GetTrasaBody();
             return trasy;
         }
 
@@ -105,7 +106,7 @@ namespace Data_Kontroler
 
         public MapTrasaBod[] GetMapTrasy()
         {
-            var trasy = Poseidon.GetTrasaBody();
+            var trasy = _poseidon.GetTrasaBody();
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<VSTrasaBod, MapTrasaBod>();
             });
@@ -124,7 +125,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSDopravnyBod[] GetDopravneBody()
         {
-            var body = Poseidon.GetDopravneBody();
+            var body = _poseidon.GetDopravneBody();
             return body;
         }
 
@@ -134,7 +135,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSTrasaSpecifikace[] GetTrasaSpecifikacie()
         {
-            return Poseidon.GetTrasaSpecifikacie();
+            return _poseidon.GetTrasaSpecifikacie();
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSTrasaDruh[] GetTrasaDopravneDruhy()
         {
-            return Poseidon.GetTrasaDopravneDruhy();
+            return _poseidon.GetTrasaDopravneDruhy();
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSTrasaObecPozn[] GetTrasaObPoznamky()
         {
-            return Poseidon.GetTrasaObecPoznamky();
+            return _poseidon.GetTrasaObecPoznamky();
         }
 
         /// <summary>
@@ -161,7 +162,12 @@ namespace Data_Kontroler
         /// <returns></returns>
         public VSObecnaPoznamka[] GetObecnePoznamky()
         {
-            return Poseidon.GetObecnePoznamky();
+            return _poseidon.GetObecnePoznamky();
+        }
+
+        public VSDopravnyUsek[] GetDopravneUseky()
+        {
+            return _poseidon.GetDopravneUseky();
         }
     }
 }

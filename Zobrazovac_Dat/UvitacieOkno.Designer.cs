@@ -37,6 +37,7 @@
             this.cbxMesto = new System.Windows.Forms.ComboBox();
             this.btnServer = new System.Windows.Forms.Button();
             this.btnSubor = new System.Windows.Forms.Button();
+            this.chbxAktData = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
             // button1
@@ -44,7 +45,7 @@
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(323, 193);
+            this.button1.Location = new System.Drawing.Point(266, 174);
             this.button1.Margin = new System.Windows.Forms.Padding(30, 32, 30, 16);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(106, 37);
@@ -55,7 +56,7 @@
             // lblFilter
             // 
             this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(185, 11);
+            this.lblFilter.Location = new System.Drawing.Point(203, 11);
             this.lblFilter.Margin = new System.Windows.Forms.Padding(10, 11, 10, 11);
             this.lblFilter.Name = "lblFilter";
             this.lblFilter.Size = new System.Drawing.Size(70, 13);
@@ -75,7 +76,7 @@
             // cbxSelektFiltra
             // 
             this.cbxSelektFiltra.FormattingEnabled = true;
-            this.cbxSelektFiltra.Location = new System.Drawing.Point(187, 39);
+            this.cbxSelektFiltra.Location = new System.Drawing.Point(205, 39);
             this.cbxSelektFiltra.Margin = new System.Windows.Forms.Padding(4);
             this.cbxSelektFiltra.Name = "cbxSelektFiltra";
             this.cbxSelektFiltra.Size = new System.Drawing.Size(167, 21);
@@ -95,7 +96,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 141);
+            this.label1.Location = new System.Drawing.Point(13, 148);
             this.label1.Margin = new System.Windows.Forms.Padding(4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
@@ -105,7 +106,7 @@
             // cbxMesto
             // 
             this.cbxMesto.FormattingEnabled = true;
-            this.cbxMesto.Location = new System.Drawing.Point(10, 163);
+            this.cbxMesto.Location = new System.Drawing.Point(10, 170);
             this.cbxMesto.Margin = new System.Windows.Forms.Padding(4);
             this.cbxMesto.Name = "cbxMesto";
             this.cbxMesto.Size = new System.Drawing.Size(164, 21);
@@ -113,31 +114,47 @@
             // 
             // btnServer
             // 
-            this.btnServer.Location = new System.Drawing.Point(124, 98);
+            this.btnServer.Location = new System.Drawing.Point(124, 84);
             this.btnServer.Margin = new System.Windows.Forms.Padding(4);
             this.btnServer.Name = "btnServer";
-            this.btnServer.Size = new System.Drawing.Size(100, 28);
+            this.btnServer.Size = new System.Drawing.Size(103, 56);
             this.btnServer.TabIndex = 12;
-            this.btnServer.Text = "Data zo servera";
+            this.btnServer.Text = "Aktualizovať vybrané dáta";
             this.btnServer.UseVisualStyleBackColor = true;
             this.btnServer.Click += new System.EventHandler(this.btnServer_Click);
             // 
             // btnSubor
             // 
-            this.btnSubor.Location = new System.Drawing.Point(16, 98);
+            this.btnSubor.Location = new System.Drawing.Point(16, 84);
             this.btnSubor.Margin = new System.Windows.Forms.Padding(4);
             this.btnSubor.Name = "btnSubor";
-            this.btnSubor.Size = new System.Drawing.Size(100, 28);
+            this.btnSubor.Size = new System.Drawing.Size(100, 56);
             this.btnSubor.TabIndex = 13;
-            this.btnSubor.Text = "Data zo suboru";
+            this.btnSubor.Text = "Načítať dáta";
             this.btnSubor.UseVisualStyleBackColor = true;
             this.btnSubor.Click += new System.EventHandler(this.btnSubor_Click);
+            // 
+            // chbxAktData
+            // 
+            this.chbxAktData.FormattingEnabled = true;
+            this.chbxAktData.Items.AddRange(new object[] {
+            "Dopravné body",
+            "Dopravné druhy",
+            "Dopravné úseky",
+            "Poznámky",
+            "Trasa body",
+            "Vlaky"});
+            this.chbxAktData.Location = new System.Drawing.Point(234, 67);
+            this.chbxAktData.Name = "chbxAktData";
+            this.chbxAktData.Size = new System.Drawing.Size(138, 94);
+            this.chbxAktData.TabIndex = 14;
             // 
             // UvitacieOkno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 261);
+            this.ClientSize = new System.Drawing.Size(410, 236);
+            this.Controls.Add(this.chbxAktData);
             this.Controls.Add(this.btnSubor);
             this.Controls.Add(this.btnServer);
             this.Controls.Add(this.cbxMesto);
@@ -149,7 +166,7 @@
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(484, 300);
-            this.MinimumSize = new System.Drawing.Size(484, 300);
+            this.MinimumSize = new System.Drawing.Size(426, 275);
             this.Name = "UvitacieOkno";
             this.Text = "UvitacieOkno";
             this.ResumeLayout(false);
@@ -168,5 +185,6 @@
         private System.Windows.Forms.ComboBox cbxMesto;
         private System.Windows.Forms.Button btnServer;
         private System.Windows.Forms.Button btnSubor;
+        private System.Windows.Forms.CheckedListBox chbxAktData;
     }
 }

@@ -14,12 +14,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSVlak[] VlakyZoSuboru(string cesta)
+        public static VSVlak[] Vlaky(string cesta)
         {
             string json;
             try
             {
-                using (var sr = new StreamReader(Path.Combine(cesta, "Vlaky.json")))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -31,18 +31,18 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<VSVlak[]>(json);
         }
 
+
         /// <summary>
         /// Načíta Dopravné druhy z uloženého súboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSTrasaDruh[] ZoSuboruDopravneDruhy(string cesta)
+        public static VSTrasaDruh[] DopravneDruhy(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "DopravneDruhy.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -59,13 +59,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSProject[] ZoSuboruProjekty(string cesta)
+        public static VSProject[] Projekty(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "projekty.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -82,13 +81,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static MapTrasaBod[] ZoSuboruMapTrasBody(string cesta)
+        public static MapTrasaBod[] MapTrasBody(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "MapTrasaBody.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -105,13 +103,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSTrasaObecPozn[] ZoSuboruTrasaObPozn(string cesta)
+        public static VSTrasaObecPozn[] TrasaObPozn(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "TrasaObPoznamky.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -128,13 +125,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSObecnaPoznamka[] ZoSuboruObecnuPoznam(string cesta)
+        public static VSObecnaPoznamka[] ObecnuPoznam(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "ObecnaPoznamka.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -151,13 +147,12 @@ namespace DataZoSuboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSTrasaSpecifikace[] ZoSuborSpecifikaces(string cesta)
+        public static VSTrasaSpecifikace[] Specifikacie(string cesta)
         {
             string json;
             try
             {
-                string str = Path.Combine(cesta, "Specifikacie.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -169,43 +164,18 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<VSTrasaSpecifikace[]>(json);
         }
 
-        /// <summary>
-        /// Načíta trasy Body trasy
-        /// </summary>
-        /// <param name="cesta"></param>
-        /// <param name="nazov"></param>
-        /// <returns></returns>
-        public static VSTrasaBod[] TrasaBodyZoSuboru(string cesta, string nazov)
-        {
-
-            string json;
-            try
-            {
-                String str = Path.Combine(cesta, nazov);
-                using (var sr = new StreamReader(str))
-                {
-                    json = sr.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-            return JsonConvert.DeserializeObject<VSTrasaBod[]>(json);
-        }
 
         /// <summary>
         /// Načíta Dopravný bod z uloženého súboru
         /// </summary>
         /// <param name="cesta"></param>
         /// <returns></returns>
-        public static VSDopravnyBod[] DopravneBodyZoSuboru(string cesta)
+        public static VSDopravnyBod[] DopravneBody(string cesta)
         {
             string json;
             try
             {
-                String str = Path.Combine(cesta, "DopravneBody.json");
-                using (var sr = new StreamReader(str))
+                using (var sr = new StreamReader(cesta))
                 {
                     json = sr.ReadToEnd();
                 }
@@ -215,6 +185,23 @@ namespace DataZoSuboru
                 return null;
             }
             return JsonConvert.DeserializeObject<VSDopravnyBod[]>(json);
+        }
+
+        public static VSDopravnyUsek[] DopravnyUsek(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<VSDopravnyUsek[]>(json);
         }
     }
 }

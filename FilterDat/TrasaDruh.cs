@@ -25,20 +25,26 @@ namespace FilterDat
         /// <returns></returns>
         public static bool ZisitiSpravnyDruhVlaku(int idVlaku, VSTrasaDruh[] druhy)
         {
-            switch (NajdiDruhVlaku(idVlaku,druhy))
+            //switch (NajdiDruhVlaku(idVlaku,druhy))
+            //{
+            //    case "EC":
+            //    case "IC":
+            //    case "EN":
+            //    case "Ex":
+            //    case "R":
+            //    case "Os":
+            //    case "Sp":
+            //    case "Sv":
+            //        return true;
+            //    default:
+            //        return false;
+            //}
+            VSTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
+            if (druh.Kategorie == "ODv")
             {
-                case "EC":
-                case "IC":
-                case "EN":
-                case "Ex":
-                case "R":
-                case "Os":
-                case "Sp":
-                case "Sv":
-                    return true;
-                default:
-                    return false;
+                return true;
             }
+            return false;
         }
     }
 }

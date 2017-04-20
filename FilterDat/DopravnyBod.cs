@@ -28,6 +28,14 @@ namespace FilterDat
         /// <returns></returns>
         public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, VSDopravnyBod[] dopravneBody)
         {
+            bool asd = false;
+            for (int i = 1; i < body.Length; i++)
+            {
+                if (body[i - 1].BodID == body[i].BodID)
+                {
+                    asd = true;
+                }
+            }
             MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();

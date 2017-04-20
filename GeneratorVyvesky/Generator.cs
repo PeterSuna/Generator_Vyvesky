@@ -17,7 +17,6 @@ namespace GeneratorVyvesky
     public class Generator
     {
         private readonly MapTrasaBod[] _trasaBodyVlakov;
-        public MapTrasaBod[] TrasaBodyVybStanice { get; }
         private readonly Document _document;
         private readonly VSTrasaDruh[] _druh;
         private readonly VSVlak[] _vlaky;
@@ -27,19 +26,21 @@ namespace GeneratorVyvesky
         private readonly VSDopravnyBod _dopravnyBod;
         private readonly VSProject _projekt;
 
+        public MapTrasaBod[] TrasaBodyVybStanice { get; }
+
 
         public Generator(MapTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, MapTrasaBod[] trasaBodyVybStanice,
             VSDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
             //načítanie potrebných údajov
             _trasaBodyVlakov = trasaBodyVlakov;
-            _druh = DataZoSuboru.Nacitaj.ZoSuboruDopravneDruhy(cesta + "\\TrasaDruh");
+            _druh = DataZoSuboru.Nacitaj.DopravneDruhy(cesta + @"\DopravneDruhy.json");
             _vlaky = vlaky;
             TrasaBodyVybStanice =
                 trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
-            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
-            _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboruTrasaObPozn(cesta + "\\Poznamky");
-            _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboruObecnuPoznam(cesta + "\\Poznamky");
+            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBody(cesta+ @"\DopravneBody.json");
+            _trasaObPoznamka = DataZoSuboru.Nacitaj.TrasaObPozn(cesta + @"\TrasaObPoznamky.json");
+            _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(cesta + @"\ObecnaPoznamka.json");
             _dopravnyBod = dopravnyBod;
             _projekt = projekt;
             _document = new Document();
@@ -69,7 +70,8 @@ namespace GeneratorVyvesky
                     continue;
                 }
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
-                int riadok = (poznamka!=null && poznamka.Length*5 > text.Length) ? poznamka.Length*5 : text.Length;
+                int riadok = (poznamka!=null && (poznamka.Length * 4) - 20 > text.Length) ? (poznamka.Length * 4) - 20 : text.Length;
+                riadok = (riadok < 65) ? 65 : riadok;   //ak je text menší ako by mal zabrať miesta
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("mm");
                 //rozhodnutie či vypísať hlavičku z časom
@@ -95,7 +97,7 @@ namespace GeneratorVyvesky
                 }
                 else
                 {
-                    znaky += 60;
+                    znaky += 65;
                     hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2450)
                     {
@@ -166,7 +168,8 @@ namespace GeneratorVyvesky
                     continue;
                 }
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
-                int riadok = (poznamka != null && poznamka.Length * 5 > text.Length) ? poznamka.Length * 5 : text.Length;
+                int riadok = (poznamka != null && (poznamka.Length * 4) - 20 > text.Length) ? (poznamka.Length * 4)-20 : text.Length;
+                riadok = (riadok < 65) ? 65 : riadok;   //ak je text menší ako by mal zabrať miesta
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
 
@@ -193,7 +196,7 @@ namespace GeneratorVyvesky
                 }
                 else
                 {
-                    znaky += 60;
+                    znaky += 65;    //vypisanie asi jeden riadok 
                     hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2450)
                     {

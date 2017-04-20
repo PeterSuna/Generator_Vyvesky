@@ -17,32 +17,19 @@ namespace Zobrazovac_Dat
         private VSDopravnyBod[] _dopravneBody;
         private VSProject[] _projekty;
 
-        public readonly PoseidonData KontrolerPoseidon = new PoseidonData();
         public VSProject VybranyProjekt { get; set; }
         public VSDopravnyBod VybranyDopravnyBod { get; set; }
         public eVSVlakFaza VybranaFaza { get; set; }
-        public bool Online { get; set; }
+
 
         public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
-           
             InitializeComponent();
-            try
-            {
-                _projekty = KontrolerPoseidon.Projekty;
-                cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
-                cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
-            }
-            catch (Exception)
-            {
-                string[] nazvi = {"gvd16", "gvd16_zm3", "gvd17_tsi", "gvd17_zaklad", "gvd17_zm2"};
-                cbxSelektProjektu.DataSource = nazvi;
-                Online = false;
-                btnServer.Visible = false;
-                Mwbox("Nebolo možne pripojiť sa k serveru", "chyba");
-            }
-            
-    
+
+            _projekty = DataZoSuboru.Nacitaj.Projekty(@"..\..\..\Projekt\Projekty.json");
+            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
+            cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
+
             if (projekt != null)
             {
                 lblFilter.Text = "Vybraná fáza: " + faza;
@@ -50,33 +37,53 @@ namespace Zobrazovac_Dat
                 cbxSelektProjektu.SelectedText = projekt.Nazov;
                 cbxSelektFiltra.SelectedText = faza.ToString();
             }
-               
-            
         }
 
 
         private void btnSubor_Click(object sender, EventArgs e)
         {
-            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBodyZoSuboru(@"..\..\..\Projekt\");
-            Online = false;
+            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
+            _dopravneBody =
+                DataZoSuboru.Nacitaj.DopravneBody(@"..\..\..\Projekt\" + VybranyProjekt.Nazov +
+                                                          "\\DopravneBody.json");
             InitCmbox();
         }
 
         private void btnServer_Click(object sender, EventArgs e)
         {
+            PoseidonData kontrolerPoseidon;
             VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
-                       ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
-                       : eVSVlakFaza.Pozadavek_zkonstruovano;
+                ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
+                : eVSVlakFaza.Pozadavek_zkonstruovano;
+            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
+            if (VybranyProjekt == null)
+            {
+                Mwbox("Je potrebný vybrať projekt podla ktorého bude prebiehať aktualizácia", "Upozornenie");
+                return;
+            }
+            try
+            {
+                kontrolerPoseidon = new PoseidonData();
+                kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
+            }
+            catch (Exception)
+            {
+                Mwbox("Nepodarilo sa pripojiť na server","Chyba");
+                return;
+            }
+           
+
+            lblFilter.Text = "Vybraná fáza: " + VybranaFaza;
+            lblSelekt.Text = "Vybraný projekt: " + VybranyProjekt.Nazov;
             
-            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
-            KontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
-            _dopravneBody = KontrolerPoseidon.GetDopravneBody();
-            cbxSelektFiltra.Visible = false;
-            cbxSelektProjektu.Visible = false;
-            lblFilter.Text = "Vybraná fáza: "+VybranaFaza;
-            lblSelekt.Text = "Vybraný projekt: "+VybranyProjekt.Nazov;
-            Online = true;
-            InitCmbox();
+            _projekty = kontrolerPoseidon.Projekty;
+            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
+            //Aktualizcácia Dát
+            foreach (object itemChecked in chbxAktData.CheckedItems)
+            {
+                Aktualizuj(itemChecked.ToString(),kontrolerPoseidon);
+            }
+            Mwbox("Data sú aktualizované","info");
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -113,6 +120,43 @@ namespace Zobrazovac_Dat
         private void InitCmbox()
         {
             cbxMesto.DataSource = _dopravneBody.Select(c => c.Nazov).ToArray();
+        }
+
+        private void Aktualizuj(string text, PoseidonData poseidon)
+        {
+            string cesta = @"..\..\..\Projekt\" + VybranyProjekt.Nazov;
+            VSEntitaBase[] data;
+            switch (text)
+            {
+                case "Dopravné body":
+                    cesta += @"\DopravneBody.json";
+                    data = poseidon.GetDopravneBody();
+                    break;
+                case "Dopravné druhy":
+                    cesta += @"\DopravneDruhy.json";
+                    data = poseidon.GetTrasaDopravneDruhy();
+                    break;
+                case "Dopravné úseky":
+                    cesta += @"\DopravneUseky.json";
+                    data = poseidon.GetDopravneUseky();
+                    break;
+                case "Poznámky":
+                    DataZoSuboru.Zapis.DoSuboru(cesta+ @"\TrasaObPoznamky.json", poseidon.GetTrasaObPoznamky());
+                    cesta += @"\ObecnaPoznamka.json";
+                    data = poseidon.GetObecnePoznamky();
+                    break;
+                case "Trasa body":
+                    cesta += @"\MapTrasaBody.json";
+                    data = poseidon.GetMapTrasy();
+                    break;
+                case "Vlaky":
+                    cesta += @"\Vlaky.json";
+                    data = poseidon.GetVlaky();
+                    break;
+                default:
+                    return;
+            }
+            DataZoSuboru.Zapis.DoSuboru(cesta,data);
         }
     }
 }

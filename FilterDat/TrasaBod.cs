@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,40 @@ namespace FilterDat
         {
             int[] idVlakov = vlaky.Select(c => c.ID).ToArray();
             return trasaBody.Where(c => c!=null && idVlakov.Contains(c.VlakID)).Select(c => c).ToArray();
+        }
+
+        public static MapTrasaBod[] NajdiDopravnéUzly(VSDopravnyUsek[] useky, MapTrasaBod[] body)
+        {
+            int[] bod1 = new int[useky.Length];
+            int[] bod2 = new int[useky.Length];
+            ArrayList dopBody = new ArrayList();
+            for (int i = 0; i < useky.Length; i++)
+            {
+
+                if (bod1.Contains(useky[i].DopravnyBod1ID) && !dopBody.Contains(useky[i].DopravnyBod1ID))
+                {
+                    dopBody.Add(useky[i].DopravnyBod1ID);
+                }
+                else
+                {
+                    bod1[i] = useky[i].DopravnyBod1ID;
+                }
+
+                if (bod2.Contains(useky[i].DopravnyBod2ID) && !dopBody.Contains(useky[i].DopravnyBod2ID))
+                {
+                    dopBody.Add(useky[i].DopravnyBod2ID);
+                }
+                else
+                {
+                    bod2[i] = useky[i].DopravnyBod2ID;
+                }
+            }
+
+            MapTrasaBod[] vytriedeneBody = body.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
+
+            MapTrasaBod[] uzly = vytriedeneBody.Where(c => dopBody.Contains(c.BodID)).Select(c => c).ToArray();
+          
+            return uzly;
         }
     }
 }

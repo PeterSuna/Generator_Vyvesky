@@ -29,12 +29,8 @@
         private void InitializeComponent()
         {
             this.dgvVlaky = new System.Windows.Forms.DataGridView();
-            this.btnGenVlaky = new System.Windows.Forms.Button();
-            this.btnZapisDoSuboru = new System.Windows.Forms.Button();
             this.btnNacitaj = new System.Windows.Forms.Button();
-            this.btnGenTrasaBody = new System.Windows.Forms.Button();
             this.btnNacitajTrasyBody = new System.Windows.Forms.Button();
-            this.btnGenerujDopBod = new System.Windows.Forms.Button();
             this.btnNacitajDopravneBody = new System.Windows.Forms.Button();
             this.btnNastav = new System.Windows.Forms.Button();
             this.btnDocx = new System.Windows.Forms.Button();
@@ -53,30 +49,6 @@
             this.dgvVlaky.Size = new System.Drawing.Size(829, 407);
             this.dgvVlaky.TabIndex = 0;
             // 
-            // btnGenVlaky
-            // 
-            this.btnGenVlaky.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenVlaky.Location = new System.Drawing.Point(435, 40);
-            this.btnGenVlaky.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGenVlaky.Name = "btnGenVlaky";
-            this.btnGenVlaky.Size = new System.Drawing.Size(90, 25);
-            this.btnGenVlaky.TabIndex = 3;
-            this.btnGenVlaky.Text = "Generuj Vlaky";
-            this.btnGenVlaky.UseVisualStyleBackColor = true;
-            this.btnGenVlaky.Click += new System.EventHandler(this.btnGenVlaky_Click);
-            // 
-            // btnZapisDoSuboru
-            // 
-            this.btnZapisDoSuboru.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnZapisDoSuboru.Location = new System.Drawing.Point(764, 4);
-            this.btnZapisDoSuboru.Margin = new System.Windows.Forms.Padding(4);
-            this.btnZapisDoSuboru.Name = "btnZapisDoSuboru";
-            this.btnZapisDoSuboru.Size = new System.Drawing.Size(78, 62);
-            this.btnZapisDoSuboru.TabIndex = 6;
-            this.btnZapisDoSuboru.Text = "Uloziť dáta";
-            this.btnZapisDoSuboru.UseVisualStyleBackColor = true;
-            this.btnZapisDoSuboru.Click += new System.EventHandler(this.btnZapisDoSuboru_Click);
-            // 
             // btnNacitaj
             // 
             this.btnNacitaj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -89,18 +61,6 @@
             this.btnNacitaj.UseVisualStyleBackColor = true;
             this.btnNacitaj.Click += new System.EventHandler(this.btnNacitaj_Click);
             // 
-            // btnGenTrasaBody
-            // 
-            this.btnGenTrasaBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenTrasaBody.Location = new System.Drawing.Point(320, 4);
-            this.btnGenTrasaBody.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGenTrasaBody.Name = "btnGenTrasaBody";
-            this.btnGenTrasaBody.Size = new System.Drawing.Size(107, 27);
-            this.btnGenTrasaBody.TabIndex = 9;
-            this.btnGenTrasaBody.Text = "Generuj T. Body";
-            this.btnGenTrasaBody.UseVisualStyleBackColor = true;
-            this.btnGenTrasaBody.Click += new System.EventHandler(this.btnGenTrasaBody_Click);
-            // 
             // btnNacitajTrasyBody
             // 
             this.btnNacitajTrasyBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -112,18 +72,6 @@
             this.btnNacitajTrasyBody.Text = "Načítaj T. body";
             this.btnNacitajTrasyBody.UseVisualStyleBackColor = true;
             this.btnNacitajTrasyBody.Click += new System.EventHandler(this.btnNacitajTrasyBody_Click);
-            // 
-            // btnGenerujDopBod
-            // 
-            this.btnGenerujDopBod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerujDopBod.Location = new System.Drawing.Point(320, 40);
-            this.btnGenerujDopBod.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGenerujDopBod.Name = "btnGenerujDopBod";
-            this.btnGenerujDopBod.Size = new System.Drawing.Size(107, 26);
-            this.btnGenerujDopBod.TabIndex = 11;
-            this.btnGenerujDopBod.Text = "Generuj D. Body";
-            this.btnGenerujDopBod.UseVisualStyleBackColor = true;
-            this.btnGenerujDopBod.Click += new System.EventHandler(this.btnGenerujDopBod_Click);
             // 
             // btnNacitajDopravneBody
             // 
@@ -142,7 +90,7 @@
             this.btnNastav.Location = new System.Drawing.Point(175, 4);
             this.btnNastav.Margin = new System.Windows.Forms.Padding(4);
             this.btnNastav.Name = "btnNastav";
-            this.btnNastav.Size = new System.Drawing.Size(113, 63);
+            this.btnNastav.Size = new System.Drawing.Size(82, 63);
             this.btnNastav.TabIndex = 14;
             this.btnNastav.Text = "Zmenit nastavenia";
             this.btnNastav.UseVisualStyleBackColor = true;
@@ -178,12 +126,8 @@
             this.Controls.Add(this.btnDocx);
             this.Controls.Add(this.btnNastav);
             this.Controls.Add(this.btnNacitajDopravneBody);
-            this.Controls.Add(this.btnGenerujDopBod);
             this.Controls.Add(this.btnNacitajTrasyBody);
-            this.Controls.Add(this.btnGenTrasaBody);
             this.Controls.Add(this.btnNacitaj);
-            this.Controls.Add(this.btnZapisDoSuboru);
-            this.Controls.Add(this.btnGenVlaky);
             this.Controls.Add(this.dgvVlaky);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
@@ -195,12 +139,8 @@
 
         #endregion
         private System.Windows.Forms.DataGridView dgvVlaky;
-        private System.Windows.Forms.Button btnGenVlaky;
-        private System.Windows.Forms.Button btnZapisDoSuboru;
         private System.Windows.Forms.Button btnNacitaj;
-        private System.Windows.Forms.Button btnGenTrasaBody;
         private System.Windows.Forms.Button btnNacitajTrasyBody;
-        private System.Windows.Forms.Button btnGenerujDopBod;
         private System.Windows.Forms.Button btnNacitajDopravneBody;
         private System.Windows.Forms.Button btnNastav;
         private System.Windows.Forms.Button btnDocx;
