@@ -13,9 +13,9 @@ namespace FilterDat
         /// <param name="idBodov"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        public static VSDopravnyBod[] NajdiDopravneBody(int[] idBodov, VSDopravnyBod[] dopravneBody)
+        public static MapDopravnyBod[] NajdiDopravneBody(int[] idBodov, MapDopravnyBod[] dopravneBody)
         {
-            VSDopravnyBod[] body = dopravneBody.Where(c => idBodov.Contains(c.ID)).Select(c => c).ToArray();
+            MapDopravnyBod[] body = dopravneBody.Where(c => idBodov.Contains(c.ID)).Select(c => c).ToArray();
             return body;
         }
 
@@ -26,7 +26,7 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, MapDopravnyBod[] dopravneBody)
         {
             bool asd = false;
             for (int i = 1; i < body.Length; i++)
@@ -61,7 +61,7 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        public static string VytvorTextOdchodovZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, VSDopravnyBod[] dopravneBody)
+        public static string VytvorTextOdchodovZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, MapDopravnyBod[] dopravneBody)
         {
             MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi > aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
@@ -87,10 +87,10 @@ namespace FilterDat
         /// <param name="idBodu"></param>
         /// <param name="dopravneBody"></param>
         /// <returns></returns>
-        private static string NajdiNazovDopBodu(int idBodu, VSDopravnyBod[] dopravneBody)
+        private static string NajdiNazovDopBodu(int idBodu, MapDopravnyBod[] dopravneBody)
         {
             //var b = dopravneBody[0].
-            VSDopravnyBod db = dopravneBody.FirstOrDefault(c => c.ID == idBodu);
+            MapDopravnyBod db = dopravneBody.FirstOrDefault(c => c.ID == idBodu);
             return db?.Nazov;
         }
 

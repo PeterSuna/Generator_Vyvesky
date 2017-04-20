@@ -1,9 +1,8 @@
-﻿
-using Service_Konektor.poseidon;
+﻿using Service_Konektor.poseidon;
 
 namespace Service_Konektor.Entity
 {
-   public class MapTrasaBod : VSEntitaBase
+    public class MapTrasaBod : VSEntitaBase
     {
         public int AktCisloVlaku { get; set; }
         public int BodID { get; set; }

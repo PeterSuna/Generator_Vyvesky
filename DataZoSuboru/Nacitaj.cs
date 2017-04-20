@@ -24,7 +24,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -47,7 +47,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -69,7 +69,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -91,7 +91,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -113,7 +113,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -135,7 +135,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -157,7 +157,7 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -180,14 +180,14 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
             return JsonConvert.DeserializeObject<VSDopravnyBod[]>(json);
         }
 
-        public static VSDopravnyUsek[] DopravnyUsek(string cesta)
+        public static VSDopravnyUsek[] DopravneUseky(string cesta)
         {
             string json;
             try
@@ -197,11 +197,79 @@ namespace DataZoSuboru
                     json = sr.ReadToEnd();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
             return JsonConvert.DeserializeObject<VSDopravnyUsek[]>(json);
+        }
+
+        public static MapDopravnyBod[] MapDopravneBody(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapDopravnyBod[]>(json);
+        }
+
+        public static MapDopravnyUsek[] MapDopravneUseky(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapDopravnyUsek[]>(json);
+        }
+
+        public static MapTrasaDruh[] MapTrasaDruhy(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapTrasaDruh[]>(json);
+        }
+
+        public static MapVlak[] MapVlaky(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapVlak[]>(json);
         }
     }
 }

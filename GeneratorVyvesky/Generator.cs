@@ -18,27 +18,27 @@ namespace GeneratorVyvesky
     {
         private readonly MapTrasaBod[] _trasaBodyVlakov;
         private readonly Document _document;
-        private readonly VSTrasaDruh[] _druh;
-        private readonly VSVlak[] _vlaky;
-        private readonly VSDopravnyBod[] _dopravneBody;
+        private readonly MapTrasaDruh[] _druh;
+        private readonly MapVlak[] _vlaky;
+        private readonly MapDopravnyBod[] _dopravneBody;
         private readonly VSTrasaObecPozn[] _trasaObPoznamka;
         private readonly VSObecnaPoznamka[] _obecnaPoznamka;
-        private readonly VSDopravnyBod _dopravnyBod;
+        private readonly MapDopravnyBod _dopravnyBod;
         private readonly VSProject _projekt;
 
         public MapTrasaBod[] TrasaBodyVybStanice { get; }
 
 
-        public Generator(MapTrasaBod[] trasaBodyVlakov, VSVlak[] vlaky, MapTrasaBod[] trasaBodyVybStanice,
-            VSDopravnyBod dopravnyBod, string cesta, VSProject projekt)
+        public Generator(MapTrasaBod[] trasaBodyVlakov, MapVlak[] vlaky, MapTrasaBod[] trasaBodyVybStanice,
+            MapDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
             //načítanie potrebných údajov
             _trasaBodyVlakov = trasaBodyVlakov;
-            _druh = DataZoSuboru.Nacitaj.DopravneDruhy(cesta + @"\DopravneDruhy.json");
+            _druh = DataZoSuboru.Nacitaj.MapTrasaDruhy(cesta + @"\MapDopravneDruhy.json");
             _vlaky = vlaky;
             TrasaBodyVybStanice =
                 trasaBodyVybStanice.OrderBy(c => Parse(TimeSpan.FromSeconds(c.CasPrijazdu).ToString("hh"))).ToArray();
-            _dopravneBody = DataZoSuboru.Nacitaj.DopravneBody(cesta+ @"\DopravneBody.json");
+            _dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(cesta+ @"\MapDopravneBody.json");
             _trasaObPoznamka = DataZoSuboru.Nacitaj.TrasaObPozn(cesta + @"\TrasaObPoznamky.json");
             _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(cesta + @"\ObecnaPoznamka.json");
             _dopravnyBod = dopravnyBod;

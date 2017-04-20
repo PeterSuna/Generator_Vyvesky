@@ -1,24 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Data_Kontroler;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 namespace Zobrazovac_Dat
 {
     public partial class UvitacieOkno : Form
     {
-        private VSDopravnyBod[] _dopravneBody;
+        private MapDopravnyBod[] _dopravneBody;
         private VSProject[] _projekty;
 
         public VSProject VybranyProjekt { get; set; }
-        public VSDopravnyBod VybranyDopravnyBod { get; set; }
+        public MapDopravnyBod VybranyDopravnyBod { get; set; }
         public eVSVlakFaza VybranaFaza { get; set; }
 
 
@@ -44,8 +39,8 @@ namespace Zobrazovac_Dat
         {
             VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
             _dopravneBody =
-                DataZoSuboru.Nacitaj.DopravneBody(@"..\..\..\Projekt\" + VybranyProjekt.Nazov +
-                                                          "\\DopravneBody.json");
+                DataZoSuboru.Nacitaj.MapDopravneBody(@"..\..\..\Projekt\" + VybranyProjekt.Nazov +
+                                                          "\\MapDopravneBody.json");
             InitCmbox();
         }
 
@@ -129,16 +124,16 @@ namespace Zobrazovac_Dat
             switch (text)
             {
                 case "Dopravné body":
-                    cesta += @"\DopravneBody.json";
-                    data = poseidon.GetDopravneBody();
+                    cesta += @"\MapDopravneBody.json";
+                    data = poseidon.GetMapDopravneBody();
                     break;
                 case "Dopravné druhy":
-                    cesta += @"\DopravneDruhy.json";
-                    data = poseidon.GetTrasaDopravneDruhy();
+                    cesta += @"\MapDopravneDruhy.json";
+                    data = poseidon.GetMapTrasaDopravneDruhy();
                     break;
                 case "Dopravné úseky":
-                    cesta += @"\DopravneUseky.json";
-                    data = poseidon.GetDopravneUseky();
+                    cesta += @"\MapDopravneUseky.json";
+                    data = poseidon.GetMapDopravneUseky();
                     break;
                 case "Poznámky":
                     DataZoSuboru.Zapis.DoSuboru(cesta+ @"\TrasaObPoznamky.json", poseidon.GetTrasaObPoznamky());
@@ -147,11 +142,11 @@ namespace Zobrazovac_Dat
                     break;
                 case "Trasa body":
                     cesta += @"\MapTrasaBody.json";
-                    data = poseidon.GetMapTrasy();
+                    data = poseidon.GetMapTrasaBody();
                     break;
                 case "Vlaky":
-                    cesta += @"\Vlaky.json";
-                    data = poseidon.GetVlaky();
+                    cesta += @"\MapVlaky.json";
+                    data = poseidon.GetMapVlaky();
                     break;
                 default:
                     return;

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data_Kontroler;
+﻿using System.Linq;
 using Service_Konektor.Entity;
-using Service_Konektor.poseidon;
 
 namespace FilterDat
 {
@@ -17,7 +11,7 @@ namespace FilterDat
         /// <param name="id"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static VSVlak NajdiVlakPodlaId(int id, VSVlak[] vlaky)
+        public static MapVlak NajdiVlakPodlaId(int id, MapVlak[] vlaky)
         {
             return vlaky.SingleOrDefault(c => c.ID == id);
         }
@@ -30,10 +24,10 @@ namespace FilterDat
         /// <param name="body"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static VSVlak[] NajdiVlakyVTrasaBody(MapTrasaBod[] body, VSVlak[] vlaky)
+        public static MapVlak[] NajdiVlakyVTrasaBody(MapTrasaBod[] body, MapVlak[] vlaky)
         {
             int[] idVlakov = body.Select(c => c.VlakID).ToArray();
-            VSVlak[] v = vlaky.Where(c => idVlakov.Contains(c.ID)).Select(c => c).ToArray();
+            MapVlak[] v = vlaky.Where(c => idVlakov.Contains(c.ID)).Select(c => c).ToArray();
             return v;
         }
 
@@ -43,9 +37,9 @@ namespace FilterDat
         /// <param name="idVlaku"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static string ZisiteCisloVlaku(int idVlaku, VSVlak[] vlaky)
+        public static string ZisiteCisloVlaku(int idVlaku, MapVlak[] vlaky)
         {
-            VSVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);
+            MapVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);
             int cislovlaku = vlak?.Cislo ?? -1;
             return "";
         }

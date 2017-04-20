@@ -32,13 +32,13 @@ namespace FilterDat
         /// <param name="vlaky"></param>
         /// <param name="trasaBody"></param>
         /// <returns></returns>
-        public static MapTrasaBod[] NajdiTrasyPoldaVlaku(VSVlak[] vlaky, MapTrasaBod[] trasaBody)
+        public static MapTrasaBod[] NajdiTrasyPoldaVlaku(MapVlak[] vlaky, MapTrasaBod[] trasaBody)
         {
             int[] idVlakov = vlaky.Select(c => c.ID).ToArray();
             return trasaBody.Where(c => c!=null && idVlakov.Contains(c.VlakID)).Select(c => c).ToArray();
         }
 
-        public static MapTrasaBod[] NajdiDopravnéUzly(VSDopravnyUsek[] useky, MapTrasaBod[] body)
+        public static MapTrasaBod[] NajdiDopravnéUzly(MapDopravnyUsek[] useky, MapTrasaBod[] body)
         {
             int[] bod1 = new int[useky.Length];
             int[] bod2 = new int[useky.Length];

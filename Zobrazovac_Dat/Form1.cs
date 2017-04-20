@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Data_Kontroler;
 using Service_Konektor.poseidon;
 using GeneratorVyvesky;
 using Service_Konektor.Entity;
@@ -17,13 +9,9 @@ namespace Zobrazovac_Dat
 {
     public partial class Form1 : Form
     {
-        private VSProject[] _projekty;
         private VSProject _projekt;
         private eVSVlakFaza _faza;
-        private VSDopravnyBod _vybranyDopBod;
-        private VSTrasaBod[] _trasBody;
-        private VSVlak[] _vlaky;
-        private VSDopravnyBod[] _dopravneBody;
+        private MapDopravnyBod _vybranyDopBod;
 
         public string Cesta { get; set; }
         public string CestaProjekt  { get; set; }
@@ -71,7 +59,7 @@ namespace Zobrazovac_Dat
 
         private void btnNacitaj_Click(object sender, EventArgs e)
         {
-            VSVlak[] vlaky = DataZoSuboru.Nacitaj.Vlaky(Cesta + "Vlaky.json");
+            MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(Cesta + "MapVlaky.json");
             if (vlaky == null)
             {
                 Mwbox("Data neboli ulozene", "chyba");
@@ -84,7 +72,7 @@ namespace Zobrazovac_Dat
 
         private void btnNacitajDopravneBody_Click(object sender, EventArgs e)
         {
-            var dopravneBody = DataZoSuboru.Nacitaj.DopravneBody(CestaProjekt+"DopravneBody.json");
+            var dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(CestaProjekt+"MapDopravneBody.json");
             if (dopravneBody == null)
             {
                 Mwbox("Data neboli ulozene", "chyba");
@@ -161,11 +149,11 @@ namespace Zobrazovac_Dat
             var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(CestaProjekt + "MapTrasaBody.json");
             var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
             var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
-                DataZoSuboru.Nacitaj.Vlaky(CestaProjekt + "Vlaky.json"));
+                DataZoSuboru.Nacitaj.MapVlaky(CestaProjekt + "MapVlaky.json"));
             var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
             var trasaBodyUzly =
                 FilterDat.TrasaBod.NajdiDopravnéUzly(
-                    DataZoSuboru.Nacitaj.DopravnyUsek(CestaProjekt + "DopravneUseky.json"), trasaBodyVlakov);
+                    DataZoSuboru.Nacitaj.MapDopravneUseky(CestaProjekt + "MapDopravneUseky.json"), trasaBodyVlakov);
 
             Generator gen = new Generator(trasaBodyUzly, vlaky, trasaBodyVybStanice, _vybranyDopBod, CestaProjekt,
                 _projekt);

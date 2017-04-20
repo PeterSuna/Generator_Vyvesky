@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 
 namespace FilterDat
@@ -11,9 +12,9 @@ namespace FilterDat
         /// <param name="idVlaku"></param>
         /// <param name="druhy"></param>
         /// <returns></returns>
-        public static string NajdiDruhVlaku(int idVlaku, VSTrasaDruh[] druhy)
+        public static string NajdiDruhVlaku(int idVlaku, MapTrasaDruh[] druhy)
         {
-            VSTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
+            MapTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
             return druh?.Druh;
         }
 
@@ -23,28 +24,22 @@ namespace FilterDat
         /// <param name="idVlaku"></param>
         /// <param name="druhy"></param>
         /// <returns></returns>
-        public static bool ZisitiSpravnyDruhVlaku(int idVlaku, VSTrasaDruh[] druhy)
+        public static bool ZisitiSpravnyDruhVlaku(int idVlaku, MapTrasaDruh[] druhy)
         {
-            //switch (NajdiDruhVlaku(idVlaku,druhy))
-            //{
-            //    case "EC":
-            //    case "IC":
-            //    case "EN":
-            //    case "Ex":
-            //    case "R":
-            //    case "Os":
-            //    case "Sp":
-            //    case "Sv":
-            //        return true;
-            //    default:
-            //        return false;
-            //}
-            VSTrasaDruh druh = druhy.FirstOrDefault(c => c.VlakID == idVlaku);
-            if (druh.Kategorie == "ODv")
+            switch (NajdiDruhVlaku(idVlaku, druhy))
             {
-                return true;
+                case "EC":
+                case "IC":
+                case "EN":
+                case "Ex":
+                case "R":
+                case "Os":
+                case "Sp":
+                case "Sv":
+                    return true;
+                default:
+                    return false;
             }
-            return false;
         }
     }
 }
