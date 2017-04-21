@@ -52,36 +52,36 @@
             // btnNacitaj
             // 
             this.btnNacitaj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNacitaj.Location = new System.Drawing.Point(657, 40);
+            this.btnNacitaj.Location = new System.Drawing.Point(615, 39);
             this.btnNacitaj.Margin = new System.Windows.Forms.Padding(4);
             this.btnNacitaj.Name = "btnNacitaj";
             this.btnNacitaj.Size = new System.Drawing.Size(99, 26);
             this.btnNacitaj.TabIndex = 7;
-            this.btnNacitaj.Text = "Nacitat vlaky";
+            this.btnNacitaj.Text = "Zobraz vlaky";
             this.btnNacitaj.UseVisualStyleBackColor = true;
             this.btnNacitaj.Click += new System.EventHandler(this.btnNacitaj_Click);
             // 
             // btnNacitajTrasyBody
             // 
             this.btnNacitajTrasyBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNacitajTrasyBody.Location = new System.Drawing.Point(531, 4);
+            this.btnNacitajTrasyBody.Location = new System.Drawing.Point(722, 4);
             this.btnNacitajTrasyBody.Margin = new System.Windows.Forms.Padding(4, 4, 65, 4);
             this.btnNacitajTrasyBody.Name = "btnNacitajTrasyBody";
             this.btnNacitajTrasyBody.Size = new System.Drawing.Size(118, 25);
             this.btnNacitajTrasyBody.TabIndex = 10;
-            this.btnNacitajTrasyBody.Text = "Načítaj T. body";
+            this.btnNacitajTrasyBody.Text = "Zobraz T. body";
             this.btnNacitajTrasyBody.UseVisualStyleBackColor = true;
             this.btnNacitajTrasyBody.Click += new System.EventHandler(this.btnNacitajTrasyBody_Click);
             // 
             // btnNacitajDopravneBody
             // 
             this.btnNacitajDopravneBody.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNacitajDopravneBody.Location = new System.Drawing.Point(531, 39);
+            this.btnNacitajDopravneBody.Location = new System.Drawing.Point(722, 39);
             this.btnNacitajDopravneBody.Margin = new System.Windows.Forms.Padding(4);
             this.btnNacitajDopravneBody.Name = "btnNacitajDopravneBody";
             this.btnNacitajDopravneBody.Size = new System.Drawing.Size(118, 27);
             this.btnNacitajDopravneBody.TabIndex = 13;
-            this.btnNacitajDopravneBody.Text = "Nacitaj D. body";
+            this.btnNacitajDopravneBody.Text = "Zobraz D. body";
             this.btnNacitajDopravneBody.UseVisualStyleBackColor = true;
             this.btnNacitajDopravneBody.Click += new System.EventHandler(this.btnNacitajDopravneBody_Click);
             // 

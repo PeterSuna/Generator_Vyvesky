@@ -24,6 +24,18 @@ namespace FilterDat
             return body;
         }
 
+        /// <summary>
+        /// Podla id stanice najde na akých trasách sa nachádza stanica
+        /// </summary>
+        /// <param name="bodId"></param>
+        /// <param name="trasaBody"></param>
+        /// <returns></returns>
+        public static MapTrasaBod[] NajdiPodlaDopravnýchBodov(int[] bodId, MapTrasaBod[] trasaBody)
+        {
+            MapTrasaBod[] body = trasaBody.Where(c => bodId.Contains(c.BodID)).Select(c => c).ToArray();
+            return body;
+        }
+
 
         /// <summary>
         /// porovná všetky id vlakov a všetky idVlakov ktoré obsauje pole trasaBody. Tie trasabody ktoré majú zhodné idVlakou z nejakým vlakom
@@ -40,36 +52,34 @@ namespace FilterDat
 
         public static MapTrasaBod[] NajdiDopravnéUzly(MapDopravnyUsek[] useky, MapTrasaBod[] body)
         {
-            int[] bod1 = new int[useky.Length];
-            int[] bod2 = new int[useky.Length];
-            ArrayList dopBody = new ArrayList();
+            var dictionary = new Dictionary<int, int>();
             for (int i = 0; i < useky.Length; i++)
             {
-
-                if (bod1.Contains(useky[i].DopravnyBod1ID) && !dopBody.Contains(useky[i].DopravnyBod1ID))
+                int id1 = useky[i].DopravnyBod1ID;
+                if (dictionary.ContainsKey(id1))
                 {
-                    dopBody.Add(useky[i].DopravnyBod1ID);
+                    int pocetnost = dictionary[id1];
+                    dictionary[id1] = pocetnost + 1;
                 }
                 else
                 {
-                    bod1[i] = useky[i].DopravnyBod1ID;
+                    dictionary.Add(id1, 1);
                 }
 
-                if (bod2.Contains(useky[i].DopravnyBod2ID) && !dopBody.Contains(useky[i].DopravnyBod2ID))
+                int id2 = useky[i].DopravnyBod2ID;
+                if (dictionary.ContainsKey(id2))
                 {
-                    dopBody.Add(useky[i].DopravnyBod2ID);
+                    int pocetnost = dictionary[id2];
+                    dictionary[id2] = pocetnost+1;
                 }
                 else
                 {
-                    bod2[i] = useky[i].DopravnyBod2ID;
+                    dictionary.Add(id2, 1);
                 }
             }
 
-            MapTrasaBod[] vytriedeneBody = body.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
-
-            MapTrasaBod[] uzly = vytriedeneBody.Where(c => dopBody.Contains(c.BodID)).Select(c => c).ToArray();
-          
-            return uzly;
+            int[] uzly = dictionary.Where(c => c.Value > 2).Select(c => c.Key).ToArray();
+            return NajdiPodlaDopravnýchBodov(uzly,body);
         }
     }
 }

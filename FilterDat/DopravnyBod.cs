@@ -28,27 +28,21 @@ namespace FilterDat
         /// <returns></returns>
         public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, MapDopravnyBod[] dopravneBody)
         {
-            bool asd = false;
-            for (int i = 1; i < body.Length; i++)
-            {
-                if (body[i - 1].BodID == body[i].BodID)
-                {
-                    asd = true;
-                }
-            }
+            
             MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();
+            MapTrasaBod[] bodyStanicPredDist = bodyStanicPred.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
             string text ="";
             for (int i = 0; i < bodyStanicPred.Length; i++)
             {
                 if (i == bodyStanicPred.Length - 1)
                 {
-                    text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPred[i].BodID,dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                    text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPredDist[i].BodID,dopravneBody), TimeSpan.FromSeconds(bodyStanicPredDist[i].CasPrijazdu));
                 }
                 else
                 {
-                    text += string.Format("{0}({1:%h}.{1:%m}) - ", NajdiNazovDopBodu(bodyStanicPred[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                    text += string.Format("{0}({1:%h}.{1:%m}) - ", NajdiNazovDopBodu(bodyStanicPredDist[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPredDist[i].CasPrijazdu));
                 }
             }
             return text;
@@ -66,16 +60,18 @@ namespace FilterDat
             MapTrasaBod[] bodyStanicPred =
                 body.Where(c => c.Poradi > aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
                     .OrderBy(c => c.Poradi).Select(c => c).ToArray();
+            MapTrasaBod[] bodyStanicPredDist = bodyStanicPred.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
+
             string text = "";
-            for (int i = 0; i < bodyStanicPred.Length; i++)
+            for (int i = 0; i < bodyStanicPredDist.Length; i++)
             {
-                if (i == bodyStanicPred.Length - 1)
+                if (i == bodyStanicPredDist.Length - 1)
                 {
-                    text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPred[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                    text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPredDist[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPredDist[i].CasPrijazdu));
                 }
                 else
                 {
-                    text += string.Format("{0}({1:%h}.{1:%m}) - ", NajdiNazovDopBodu(bodyStanicPred[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPred[i].CasPrijazdu));
+                    text += string.Format("{0}({1:%h}.{1:%m}) - ", NajdiNazovDopBodu(bodyStanicPredDist[i].BodID, dopravneBody), TimeSpan.FromSeconds(bodyStanicPredDist[i].CasPrijazdu));
                 }
             }
             return text;

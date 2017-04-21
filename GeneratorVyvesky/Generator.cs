@@ -168,7 +168,7 @@ namespace GeneratorVyvesky
                     continue;
                 }
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
-                int riadok = (poznamka != null && (poznamka.Length * 4) - 20 > text.Length) ? (poznamka.Length * 4)-20 : text.Length;
+                int riadok = (poznamka != null && (poznamka.Length * 3) + 30 > text.Length) ? (poznamka.Length * 3) + 30 : text.Length;
                 riadok = (riadok < 65) ? 65 : riadok;   //ak je text menší ako by mal zabrať miesta
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
@@ -177,7 +177,7 @@ namespace GeneratorVyvesky
                 if (hodina == Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2450)
+                    if (znaky >= 2350)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -196,9 +196,9 @@ namespace GeneratorVyvesky
                 }
                 else
                 {
-                    znaky += 65;    //vypisanie asi jeden riadok 
+                    znaky += 80;    //vypisanie asi jeden riadok 
                     hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2450)
+                    if (znaky >= 2350)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;

@@ -26,6 +26,28 @@ namespace Zobrazovac_Dat
         {
             NastavData(true);
             base.OnLoad(e);
+            //MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(CestaProjekt + "MapVlaky.json");
+            //if (vlaky == null)
+            //{
+            //    Mwbox("Data neboli ulozene", "chyba");
+            //}
+            //else
+            //{
+            //    dgvVlaky.DataSource = vlaky;
+            //}
+
+            //var buttonCol = new DataGridViewCheckBoxColumn();
+            //buttonCol.Name = "cbxVymazať";
+            //buttonCol.HeaderText = "Vymazať vlak";
+
+            //dgvVlaky.Columns.Add(buttonCol);
+
+            //foreach (DataGridViewRow row in dgvVlaky.Rows)
+            //{
+            //    //var button = (Button)row.Cells["ButtonColumnName"].Value;
+            //    row.Cells["cbxVymazať"].Value = "ButtonText";
+            //    // button is null here!
+            //}
         }
 
         /// <summary>
@@ -59,7 +81,7 @@ namespace Zobrazovac_Dat
 
         private void btnNacitaj_Click(object sender, EventArgs e)
         {
-            MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(Cesta + "MapVlaky.json");
+            MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(CestaProjekt + "MapVlaky.json");
             if (vlaky == null)
             {
                 Mwbox("Data neboli ulozene", "chyba");
@@ -170,5 +192,6 @@ namespace Zobrazovac_Dat
         {
             MessageBox.Show(telo, hlavicka, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+
     }
 }
