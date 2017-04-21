@@ -28,15 +28,14 @@ namespace FilterDat
         /// <returns></returns>
         public static string VytvorTextZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, MapDopravnyBod[] dopravneBody)
         {
-            
-            MapTrasaBod[] bodyStanicPred =
-                body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
-                    .OrderBy(c => c.Poradi).Select(c => c).ToArray();
-            MapTrasaBod[] bodyStanicPredDist = bodyStanicPred.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
+
+            MapTrasaBod[] bodyStanicPredDist =
+                 body.Where(c => c.Poradi < aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
+                     .GroupBy(c => c.BodID).Select(c => c.First()).OrderBy(c => c.Poradi).Select(c => c).ToArray();
             string text ="";
-            for (int i = 0; i < bodyStanicPred.Length; i++)
+            for (int i = 0; i < bodyStanicPredDist.Length; i++)
             {
-                if (i == bodyStanicPred.Length - 1)
+                if (i == bodyStanicPredDist.Length - 1)
                 {
                     text += string.Format("{0}({1:%h}.{1:%m})", NajdiNazovDopBodu(bodyStanicPredDist[i].BodID,dopravneBody), TimeSpan.FromSeconds(bodyStanicPredDist[i].CasPrijazdu));
                 }
@@ -57,10 +56,10 @@ namespace FilterDat
         /// <returns></returns>
         public static string VytvorTextOdchodovZoSmeru(MapTrasaBod aktualnaTrasa, MapTrasaBod[] body, MapDopravnyBod[] dopravneBody)
         {
-            MapTrasaBod[] bodyStanicPred =
+            MapTrasaBod[] bodyStanicPredDist =
                 body.Where(c => c.Poradi > aktualnaTrasa.Poradi && c.AktCisloVlaku == aktualnaTrasa.AktCisloVlaku)
-                    .OrderBy(c => c.Poradi).Select(c => c).ToArray();
-            MapTrasaBod[] bodyStanicPredDist = bodyStanicPred.GroupBy(c => c.BodID).Select(c => c.First()).ToArray();
+                    .GroupBy(c => c.BodID).Select(c => c.First()).OrderBy(c => c.Poradi).Select(c => c).ToArray();
+
 
             string text = "";
             for (int i = 0; i < bodyStanicPredDist.Length; i++)

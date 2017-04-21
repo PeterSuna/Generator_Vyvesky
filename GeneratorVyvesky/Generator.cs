@@ -70,15 +70,15 @@ namespace GeneratorVyvesky
                     continue;
                 }
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
-                int riadok = (poznamka!=null && (poznamka.Length * 4) - 20 > text.Length) ? (poznamka.Length * 4) - 20 : text.Length;
-                riadok = (riadok < 65) ? 65 : riadok;   //ak je text menší ako by mal zabrať miesta
+                int riadok = (poznamka!=null && (poznamka.Length * 3) +30 > text.Length) ? (poznamka.Length * 3) +30 : text.Length;
+                riadok = (riadok < 75) ? 75 : riadok;   //ak je text menší ako by mal zabrať miesta
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("mm");
                 //rozhodnutie či vypísať hlavičku z časom
                 if (hodina == Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2450)
+                    if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -87,7 +87,7 @@ namespace GeneratorVyvesky
                             break;
                         }
                         table = VytvorHlavičku();
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         row = 2;
                         znaky = riadok;
                         //prvy = true;
@@ -97,9 +97,9 @@ namespace GeneratorVyvesky
                 }
                 else
                 {
-                    znaky += 65;
+                    znaky += 60;    //vypisanie asi jeden riadok 
                     hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2450)
+                    if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -109,7 +109,7 @@ namespace GeneratorVyvesky
                         }
                         table = VytvorHlavičku();
                         row = 2;
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                        // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
 
                     }
@@ -139,7 +139,7 @@ namespace GeneratorVyvesky
                 }
                 i++;
             }
-            _document.SaveToFile("result"+i+".docx", FileFormat.Auto);
+            _document.SaveToFile("result"+i+".docx", FileFormat.Docm2013);
             System.Diagnostics.Process.Start("result"+i+".docx");
             return i;
         }
@@ -169,7 +169,7 @@ namespace GeneratorVyvesky
                 }
                 //riadok zbiera info o tom kolko je vypísaného textu stĺpci aby to nepresiahlo jednu stranu
                 int riadok = (poznamka != null && (poznamka.Length * 3) + 30 > text.Length) ? (poznamka.Length * 3) + 30 : text.Length;
-                riadok = (riadok < 65) ? 65 : riadok;   //ak je text menší ako by mal zabrať miesta
+                riadok = (riadok < 75) ? 75 : riadok;   //ak je text menší ako by mal zabrať miesta
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("mm");
 
@@ -177,7 +177,7 @@ namespace GeneratorVyvesky
                 if (hodina == Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasOdjazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2350)
+                    if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -186,7 +186,7 @@ namespace GeneratorVyvesky
                             break;
                         }
                         table = VytvorHlavičku();
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                       // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         row = 2;
                         znaky = riadok;
                         //prvy = true;
@@ -196,9 +196,9 @@ namespace GeneratorVyvesky
                 }
                 else
                 {
-                    znaky += 80;    //vypisanie asi jeden riadok 
+                    znaky += 60;    //vypisanie asi jeden riadok 
                     hodina = Parse(TimeSpan.FromSeconds(TrasaBodyVybStanice[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2350)
+                    if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -208,7 +208,7 @@ namespace GeneratorVyvesky
                         }
                        table = VytvorHlavičku();
                         row = 2;
-                        _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
+                       // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
 
                     }
@@ -239,7 +239,7 @@ namespace GeneratorVyvesky
                 i++;
             }
 
-            _document.SaveToFile("Odchody"+i+".docx", FileFormat.Auto);
+            _document.SaveToFile("Odchody"+i+".docx", FileFormat.Docm2013);
             System.Diagnostics.Process.Start("Odchody" +i + ".docx");
             return i;
         }
@@ -301,11 +301,13 @@ namespace GeneratorVyvesky
             TR3.CharacterFormat.FontSize = 5;
             DataRow.Cells[2].Width = 10;
            
+            //zo smeru
             Paragraph p4 = DataRow.Cells[3].AddParagraph();
             p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
             TextRange TR4 = p4.AppendText(text);
             TR4.CharacterFormat.FontSize = 5;
             DataRow.Cells[3].Width = 93;
+            DataRow.Cells[3].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
 
             //Poznamky
             Paragraph p5 = DataRow.Cells[4].AddParagraph();

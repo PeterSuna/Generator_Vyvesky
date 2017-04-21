@@ -37,11 +37,11 @@ namespace FilterDat
         /// <param name="idVlaku"></param>
         /// <param name="vlaky"></param>
         /// <returns></returns>
-        public static string ZisiteCisloVlaku(int idVlaku, MapVlak[] vlaky)
+        public static int ZisiteCisloVlaku(int idVlaku, MapVlak[] vlaky)
         {
             MapVlak vlak = vlaky.FirstOrDefault(c => c.ID == idVlaku);
             int cislovlaku = vlak?.Cislo ?? -1;
-            return "";
+            return cislovlaku;
         }
     }
 }
