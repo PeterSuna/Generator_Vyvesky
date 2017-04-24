@@ -79,6 +79,11 @@ namespace Zobrazovac_Dat
         }
 
 
+        /// <summary>
+        /// nacíta a zobrazí vlaky
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNacitaj_Click(object sender, EventArgs e)
         {
             MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(CestaProjekt + "MapVlaky.json");
@@ -92,6 +97,11 @@ namespace Zobrazovac_Dat
             }
         }
 
+        /// <summary>
+        /// nacíta dopravné body a zobrazí ich
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNacitajDopravneBody_Click(object sender, EventArgs e)
         {
             var dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(CestaProjekt+"MapDopravneBody.json");
@@ -105,6 +115,11 @@ namespace Zobrazovac_Dat
             }
         }
 
+        /// <summary>
+        /// nacíta a zobrazí všetky trasa body
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNacitajTrasyBody_Click(object sender, EventArgs e)
         {
             var data = DataZoSuboru.Nacitaj.MapTrasBody(CestaProjekt+"MapTrasaBody.json");
@@ -118,11 +133,21 @@ namespace Zobrazovac_Dat
             }
         }
 
+        /// <summary>
+        /// zavolanie nastavovacieho okna pre zmenu údajov
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNastav_Click(object sender, EventArgs e)
         {
             NastavData(false);
         }
 
+        /// <summary>
+        /// vytvorenie vývesky príchodov
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDocx_Click(object sender, EventArgs e)
         {
             try
@@ -145,6 +170,11 @@ namespace Zobrazovac_Dat
 
         }
 
+        /// <summary>
+        /// vytvorenie vývesky odchodov
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGenerujOdchody_Click(object sender, EventArgs e)
         {
             try
@@ -166,19 +196,13 @@ namespace Zobrazovac_Dat
             }
         }
 
+        /// <summary>
+        /// Vytvorenie inštancie generátora
+        /// </summary>
+        /// <returns></returns>
         private Generator VytvorGenerator()
-        {
-            var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(CestaProjekt + "MapTrasaBody.json");
-            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(_vybranyDopBod.ID, trasaBody);
-            var vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
-                DataZoSuboru.Nacitaj.MapVlaky(CestaProjekt + "MapVlaky.json"));
-            var trasaBodyVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(vlaky, trasaBody);
-            var trasaBodyUzly =
-                FilterDat.TrasaBod.NajdiDopravnéUzly(
-                    DataZoSuboru.Nacitaj.MapDopravneUseky(CestaProjekt + "MapDopravneUseky.json"), trasaBodyVlakov);
-
-            Generator gen = new Generator(_vybranyDopBod, trasaBodyVybStanice, trasaBodyUzly, vlaky,   CestaProjekt,
-                _projekt);
+        {           
+            Generator gen = new Generator(_vybranyDopBod, CestaProjekt, _projekt);
             return gen;
         }
 

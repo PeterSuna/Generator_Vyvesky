@@ -16,7 +16,11 @@ namespace Zobrazovac_Dat
         public MapDopravnyBod VybranyDopravnyBod { get; set; }
         public eVSVlakFaza VybranaFaza { get; set; }
 
-
+        /// <summary>
+        /// Vytvorenie uvítacieho okna
+        /// </summary>
+        /// <param name="projekt">Ak je rôzne od null okno sa bere ako nastavovacie</param>
+        /// <param name="faza"></param>
         public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
             InitializeComponent();
@@ -34,7 +38,11 @@ namespace Zobrazovac_Dat
             }
         }
 
-
+        /// <summary>
+        /// Vybranie načítanie údajov zo súbora
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSubor_Click(object sender, EventArgs e)
         {
             VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
@@ -44,6 +52,11 @@ namespace Zobrazovac_Dat
             InitCmbox();
         }
 
+        /// <summary>
+        /// aktualizovanie vybraných tried
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnServer_Click(object sender, EventArgs e)
         {
             PoseidonData kontrolerPoseidon;
@@ -82,13 +95,18 @@ namespace Zobrazovac_Dat
             Mwbox("Data sú aktualizované","info");
         }
 
+        /// <summary>
+        /// pred ukončením poukladá potrebné atributy
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.OK)
             {
                 if (cbxMesto.SelectedItem != null)
                 {
-                    VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
+                    //VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
+                    VybranyDopravnyBod = _dopravneBody[cbxMesto.SelectedIndex];
                     VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
                        ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
                        : eVSVlakFaza.Pozadavek_zkonstruovano;
@@ -116,9 +134,16 @@ namespace Zobrazovac_Dat
         /// </summary>
         private void InitCmbox()
         {
+
             cbxMesto.DataSource = _dopravneBody.Select(c => c.Nazov).ToArray();
+            
         }
 
+        /// <summary>
+        /// Aktualizuje vybrané dáta a uloží ich do súboru
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="poseidon"></param>
         private void Aktualizuj(string text, PoseidonData poseidon)
         {
             string cesta = @"..\..\..\Projekt\" + VybranyProjekt.Nazov;

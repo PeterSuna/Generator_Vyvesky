@@ -28,20 +28,34 @@ namespace GeneratorVyvesky
 
         public MapTrasaBod[] TrasaBodyVybStanice { get; }
 
-
-        public Generator(MapDopravnyBod dopravnyBod ,MapTrasaBod[] trasaBodyVybStanice, MapTrasaBod[] trasaBodyVlakov, MapVlak[] vlaky,
-             string cesta, VSProject projekt)
+        /// <summary>
+        /// Vytvorenie inštancie generátora
+        /// </summary>
+        /// <param name="dopravnyBod"></param>
+        /// <param name="cesta"></param>
+        /// <param name="projekt"></param>
+        public Generator(MapDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
             //načítanie potrebných údajov
-            _trasaBodyVlakov = trasaBodyVlakov;
+            var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(cesta + "MapTrasaBody.json");
+            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(dopravnyBod.ID, trasaBody);
+            _vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
+                DataZoSuboru.Nacitaj.MapVlaky(cesta + "MapVlaky.json"));
+            var trasiVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(_vlaky, trasaBody);                   
+            _trasaBodyVlakov =                                                                              
+                FilterDat.TrasaBod.NajdiDopravnéUzly(
+                    DataZoSuboru.Nacitaj.MapDopravneUseky(cesta + "MapDopravneUseky.json"), trasiVlakov);
+
+
+            //nacítanie potrebných údajov zo súboru
             _druh = DataZoSuboru.Nacitaj.MapTrasaDruhy(cesta + @"\MapDopravneDruhy.json");
-            _vlaky = vlaky;
             TrasaBodyVybStanice = trasaBodyVybStanice.GroupBy(c => c.VlakID).Select(c=>c.First()).ToArray();
             _dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(cesta+ @"\MapDopravneBody.json");
             _trasaObPoznamka = DataZoSuboru.Nacitaj.TrasaObPozn(cesta + @"\TrasaObPoznamky.json");
             _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(cesta + @"\ObecnaPoznamka.json");
             _dopravnyBod = dopravnyBod;
             _projekt = projekt;
+
             _document = new Document();
         }
 
