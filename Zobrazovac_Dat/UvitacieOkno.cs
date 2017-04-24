@@ -78,6 +78,7 @@ namespace Zobrazovac_Dat
             {
                 Aktualizuj(itemChecked.ToString(),kontrolerPoseidon);
             }
+            kontrolerPoseidon.Logout();
             Mwbox("Data sú aktualizované","info");
         }
 
@@ -92,6 +93,7 @@ namespace Zobrazovac_Dat
                        ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
                        : eVSVlakFaza.Pozadavek_zkonstruovano;
                     VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+
                 }
                 else
                 {

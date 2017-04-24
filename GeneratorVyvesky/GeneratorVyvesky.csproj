@@ -56,9 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DataZoSuboru\DataZoSuboru.csproj">
       <Project>{084c6cf7-d5c8-4596-aef2-6bdb66b51446}</Project>
       <Name>DataZoSuboru</Name>
@@ -71,6 +68,9 @@
       <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
       <Name>Service_Konektor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

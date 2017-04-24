@@ -177,7 +177,7 @@ namespace Zobrazovac_Dat
                 FilterDat.TrasaBod.NajdiDopravnéUzly(
                     DataZoSuboru.Nacitaj.MapDopravneUseky(CestaProjekt + "MapDopravneUseky.json"), trasaBodyVlakov);
 
-            Generator gen = new Generator(trasaBodyUzly, vlaky, trasaBodyVybStanice, _vybranyDopBod, CestaProjekt,
+            Generator gen = new Generator(_vybranyDopBod, trasaBodyVybStanice, trasaBodyUzly, vlaky,   CestaProjekt,
                 _projekt);
             return gen;
         }

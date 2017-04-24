@@ -60,15 +60,14 @@ namespace Data_Kontroler
         public bool SelektProjektu(eVSVlakFaza faza, VSProject project)
         {
             var filter = new VSVlakFilter {Faza = faza};
-            
-            if (_poseidon.SelectProject(project, filter))
-            {
-                return true;
-            }
-            return false;
+
+            return _poseidon.SelectProject(project, filter);
         }
 
-
+        public void Logout()
+        {
+            _poseidon.Logout();
+        }
         /// <summary>
         /// Pred zavolaním metody je potrebne vykonať metodu SelektProjektu()
         /// </summary>
