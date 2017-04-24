@@ -14,6 +14,11 @@ namespace DataZoSuboru
         /// <param name="data"></param>
         public static void DoSuboru(string cesta, VSEntitaBase[] data)
         {
+            if (!Directory.Exists(Directory.GetParent(cesta).FullName))
+            {
+                Directory.CreateDirectory(Directory.GetParent(cesta).FullName);
+            }
+            
             using (TextWriter writer = File.CreateText(cesta))
             {
                     var serializer = new JsonSerializer();

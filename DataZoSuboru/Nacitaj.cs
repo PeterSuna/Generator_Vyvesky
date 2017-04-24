@@ -187,6 +187,11 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<VSDopravnyBod[]>(json);
         }
 
+        /// <summary>
+        /// Nacíta zo súbora pole VSDopravnyUsek
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
         public static VSDopravnyUsek[] DopravneUseky(string cesta)
         {
             string json;
@@ -204,6 +209,11 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<VSDopravnyUsek[]>(json);
         }
 
+        /// <summary>
+        /// Nacíta zo súbora pole MapDopravnyBod
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
         public static MapDopravnyBod[] MapDopravneBody(string cesta)
         {
             string json;
@@ -221,6 +231,11 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<MapDopravnyBod[]>(json);
         }
 
+        /// <summary>
+        /// Nacíta zo súbora pole MapDopravnyUsek
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
         public static MapDopravnyUsek[] MapDopravneUseky(string cesta)
         {
             string json;
@@ -238,6 +253,11 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<MapDopravnyUsek[]>(json);
         }
 
+        /// <summary>
+        /// Nacíta zo súbora pole MapTrasaDruh
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
         public static MapTrasaDruh[] MapTrasaDruhy(string cesta)
         {
             string json;
@@ -255,6 +275,11 @@ namespace DataZoSuboru
             return JsonConvert.DeserializeObject<MapTrasaDruh[]>(json);
         }
 
+        /// <summary>
+        /// Nacíta zo súbora pole MapVlaky
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
         public static MapVlak[] MapVlaky(string cesta)
         {
             string json;
@@ -270,6 +295,28 @@ namespace DataZoSuboru
                 return null;
             }
             return JsonConvert.DeserializeObject<MapVlak[]>(json);
+        }
+
+        /// <summary>
+        /// Nacíta zo súbora pole MapTrasaObecPozn
+        /// </summary>
+        /// <param name="cesta"></param>
+        /// <returns></returns>
+        public static MapTrasaObecPozn[] MapTrasaObecPoznamky(string cesta)
+        {
+            string json;
+            try
+            {
+                using (var sr = new StreamReader(cesta))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return JsonConvert.DeserializeObject<MapTrasaObecPozn[]>(json);
         }
     }
 }

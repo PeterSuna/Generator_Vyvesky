@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Service_Konektor.Entity;
 using Service_Konektor.poseidon;
 using Spire.Doc;
@@ -21,7 +18,7 @@ namespace GeneratorVyvesky
         private readonly MapTrasaDruh[] _druh;
         private readonly MapVlak[] _vlaky;
         private readonly MapDopravnyBod[] _dopravneBody;
-        private readonly VSTrasaObecPozn[] _trasaObPoznamka;
+        private readonly MapTrasaObecPozn[] _trasaObPoznamka;
         private readonly VSObecnaPoznamka[] _obecnaPoznamka;
         private readonly MapDopravnyBod _dopravnyBod;
         private readonly VSProject _projekt;
@@ -36,26 +33,29 @@ namespace GeneratorVyvesky
         /// <param name="projekt"></param>
         public Generator(MapDopravnyBod dopravnyBod, string cesta, VSProject projekt)
         {
-            //načítanie potrebných údajov
-            var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(cesta + "MapTrasaBody.json");
-            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(dopravnyBod.ID, trasaBody);
-            _vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,
-                DataZoSuboru.Nacitaj.MapVlaky(cesta + "MapVlaky.json"));
-            var trasiVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(_vlaky, trasaBody);                   
-            _trasaBodyVlakov =                                                                              
-                FilterDat.TrasaBod.NajdiDopravnéUzly(
-                    DataZoSuboru.Nacitaj.MapDopravneUseky(cesta + "MapDopravneUseky.json"), trasiVlakov);
-
-
             //nacítanie potrebných údajov zo súboru
-            _druh = DataZoSuboru.Nacitaj.MapTrasaDruhy(cesta + @"\MapDopravneDruhy.json");
+            string cestaProj = Path.GetDirectoryName(cesta);
+            _dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(Path.Combine(cestaProj, "MapDopravneBody.json"));
+            _trasaObPoznamka = DataZoSuboru.Nacitaj.MapTrasaObecPoznamky(Path.Combine(cesta, "MapTrasaObPoznamky.json"));
+            _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(Path.Combine(cestaProj, "ObecnaPoznamka.json"));
+            _druh = DataZoSuboru.Nacitaj.MapTrasaDruhy(Path.Combine(cesta, "MapDopravneDruhy.json"));
+            var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(Path.Combine(cesta, "MapTrasaBody.json"));
+            var mapDu = DataZoSuboru.Nacitaj.MapDopravneUseky(Path.Combine(cestaProj, "MapDopravneUseky.json"));
+            var vlaky = DataZoSuboru.Nacitaj.MapVlaky(Path.Combine(cesta, "MapVlaky.json"));
+
+            if (_dopravneBody == null ||_druh == null || trasaBody == null || mapDu == null || vlaky == null)
+            {
+                throw new ApplicationException();
+            }
+            //Upravenie potrebných údajov
+            var trasaBodyVybStanice = FilterDat.TrasaBod.NajdiPodlaDopravnehoBodu(dopravnyBod.ID, trasaBody);
+            _vlaky = FilterDat.Vlak.NajdiVlakyVTrasaBody(trasaBodyVybStanice,vlaky);
+            var trasiVlakov = FilterDat.TrasaBod.NajdiTrasyPoldaVlaku(_vlaky, trasaBody);                   
+            _trasaBodyVlakov = FilterDat.TrasaBod.NajdiDopravnéUzly(mapDu, trasiVlakov);
             TrasaBodyVybStanice = trasaBodyVybStanice.GroupBy(c => c.VlakID).Select(c=>c.First()).ToArray();
-            _dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(cesta+ @"\MapDopravneBody.json");
-            _trasaObPoznamka = DataZoSuboru.Nacitaj.TrasaObPozn(cesta + @"\TrasaObPoznamky.json");
-            _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(cesta + @"\ObecnaPoznamka.json");
+            
             _dopravnyBod = dopravnyBod;
             _projekt = projekt;
-
             _document = new Document();
         }
 
@@ -64,9 +64,9 @@ namespace GeneratorVyvesky
         /// </summary>
         public int GenerujPrichodyDocxSubor(int index)
         {
-            _document.LoadFromFile(@"..\..\..\vzorP.docx");
+            _document.LoadFromFile(@"Data\vzorP.docx");
             var trasaBodyVybStanciePrich = TrasaBodyVybStanice.OrderBy(c => c.CasPrijazdu).ToArray();
-            nastavDokument();
+            NastavDokument();
             int hodina =-1; 
             int row = 0;
             Table table = VytvorHlavičku();
@@ -106,7 +106,7 @@ namespace GeneratorVyvesky
                         znaky = riadok;
                         //prvy = true;
                     }
-                    NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, row, text, poznamka, cas, false);
+                    NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, row, text, poznamka, cas);
                     row++;
                 }
                 else
@@ -134,7 +134,7 @@ namespace GeneratorVyvesky
                         table.AddRow(false, 7);
                         table.ApplyHorizontalMerge(2, 0, 6);
                         nastavCas(table, hodina, 2);
-                        NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, 3, text, poznamka, cas, false);
+                        NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, 3, text, poznamka, cas);
                         row = 3;
                     }
                     else
@@ -146,7 +146,7 @@ namespace GeneratorVyvesky
                         nastavCas(table, hodina, row);
                         row++;
                         //nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, row, text, poznamka, cas, false);
+                        NastavenieTabulkyVlakov(trasaBodyVybStanciePrich[i], table, row, text, poznamka, cas);
                     }
 
                     row++;
@@ -163,9 +163,9 @@ namespace GeneratorVyvesky
         /// </summary>
         public int GenerujOdchodyDocxSubor(int index)
         {
-            _document.LoadFromFile(@"..\..\..\vzorO.docx");     //načíta vzor pre Odchody vlakov
+            _document.LoadFromFile(@"Data\vzorO.docx");     //načíta vzor pre Odchody vlakov
             var trasaBodyVybStancieOdch = TrasaBodyVybStanice.OrderBy(c => c.CasOdjazdu).ToArray();
-            nastavDokument();                                   //prednastavý potrebné veci na dokumente
+            NastavDokument();                                   //prednastavý potrebné veci na dokumente
             int hodina = -1;                                    //ukladá hodinu v akej odchádza vlak
             int row = 0;                                        //riadok na akom sa nachádzam vo vytvorenej tabulke
             bool prvy = true;                                   //ak potrebujem oddeliť abulky
@@ -206,7 +206,7 @@ namespace GeneratorVyvesky
                         znaky = riadok;
                         //prvy = true;
                     }
-                    NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, row, text, poznamka,cas,false);
+                    NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, row, text, poznamka,cas);
                     row++;
                 }
                 else
@@ -234,7 +234,7 @@ namespace GeneratorVyvesky
                         table.AddRow(false, 7);
                         table.ApplyHorizontalMerge(2, 0, 6);
                         nastavCas(table, hodina, 2);
-                        NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, 3, text, poznamka, cas, false);
+                        NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, 3, text, poznamka, cas);
                         row = 3;
                     }
                     else
@@ -246,7 +246,7 @@ namespace GeneratorVyvesky
                         nastavCas(table, hodina, row);
                         row++;
                         //nastavCas(table, hodina, 0);
-                        NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, row, text, poznamka, cas, false);
+                        NastavenieTabulkyVlakov(trasaBodyVybStancieOdch[i], table, row, text, poznamka, cas);
                     }
                     
                     row++;
@@ -259,21 +259,21 @@ namespace GeneratorVyvesky
             return i;
         }
 
-      
 
         /// <summary>
         /// Pre vytvorenú tabulki 1x1 vloží čas
         /// </summary>
         /// <param name="table"></param>
         /// <param name="h"></param>
+        /// <param name="row"></param>
         private void nastavCas(Table table, int h,int row)
         {
-            TableRow DataRow1 = table.Rows[row];
-            Paragraph p2 = DataRow1.Cells[0].AddParagraph();
+            TableRow dataRow1 = table.Rows[row];
+            Paragraph p2 = dataRow1.Cells[0].AddParagraph();
             p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR2 = p2.AppendText(h + ".00 - " + h + ".59");
-            TR2.CharacterFormat.FontSize = 7;
-            DataRow1.Cells[0].Width = 150;
+            TextRange tR2 = p2.AppendText(h + ".00 - " + h + ".59");
+            tR2.CharacterFormat.FontSize = 7;
+            dataRow1.Cells[0].Width = 150;
         }
 
 
@@ -285,53 +285,50 @@ namespace GeneratorVyvesky
         /// <param name="riadok"> na akú pozíciu riadku v tabulke sa zapíše info o vlaku</param>
         /// <param name="text"> zoznam staníc a časou cez ktoré prechádza daný vlak </param>
         /// <param name="poznamka"> poznámka priradená k danému vlaku</param>
-        private void NastavenieTabulkyVlakov(MapTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka, string cas,bool tabScasom)
+        /// <param name="cas"></param>
+        private void NastavenieTabulkyVlakov(MapTrasaBod trasBodStanice, Table table, int riadok, string text, string poznamka, string cas)
         {
-            if (riadok != 0 && !tabScasom)
-            {
-                table.AddRow(false, 7);
-                
-            }
+            table.AddRow(false, 7);
 
-            TableRow DataRow = table.Rows[riadok];
+            TableRow dataRow = table.Rows[riadok];
 
             //čas
-            Paragraph p1 = DataRow.Cells[0].AddParagraph();
+            Paragraph p1 = dataRow.Cells[0].AddParagraph();
             p1.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR1 = p1.AppendText(cas);
-            TR1.CharacterFormat.FontSize = 5;
-            DataRow.Cells[0].Width = 5;
+            TextRange tR1 = p1.AppendText(cas);
+            tR1.CharacterFormat.FontSize = 5;
+            dataRow.Cells[0].Width = 5;
 
             //druh
-            Paragraph p2 = DataRow.Cells[1].AddParagraph();
+            Paragraph p2 = dataRow.Cells[1].AddParagraph();
             p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR2 = p2.AppendText(FilterDat.TrasaDruh.NajdiDruhVlaku(trasBodStanice.VlakID,_druh));
-            TR2.CharacterFormat.FontSize = 5;
-            DataRow.Cells[1].Width = 12;
+            TextRange tR2 = p2.AppendText(FilterDat.TrasaDruh.NajdiDruhVlaku(trasBodStanice.VlakID,_druh));
+            tR2.CharacterFormat.FontSize = 5;
+            dataRow.Cells[1].Width = 12;
 
             //čislo
-            Paragraph p3 = DataRow.Cells[2].AddParagraph();
+            Paragraph p3 = dataRow.Cells[2].AddParagraph();
             p3.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR3 = p3.AppendText(FilterDat.Vlak.ZisiteCisloVlaku(trasBodStanice.VlakID,_vlaky)+"");
-            TR3.CharacterFormat.FontSize = 5;
-            DataRow.Cells[2].Width = 10;
+            TextRange tR3 = p3.AppendText(FilterDat.Vlak.ZisiteCisloVlaku(trasBodStanice.VlakID,_vlaky)+"");
+            tR3.CharacterFormat.FontSize = 5;
+            dataRow.Cells[2].Width = 10;
            
             //zo smeru
-            Paragraph p4 = DataRow.Cells[3].AddParagraph();
+            Paragraph p4 = dataRow.Cells[3].AddParagraph();
             p4.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR4 = p4.AppendText(text);
-            TR4.CharacterFormat.FontSize = 5;
-            DataRow.Cells[3].Width = 93;
-            DataRow.Cells[3].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
+            TextRange tR4 = p4.AppendText(text);
+            tR4.CharacterFormat.FontSize = 5;
+            dataRow.Cells[3].Width = 93;
+            dataRow.Cells[3].CellFormat.VerticalAlignment = VerticalAlignment.Middle;
 
             //Poznamky
-            Paragraph p5 = DataRow.Cells[4].AddParagraph();
+            Paragraph p5 = dataRow.Cells[4].AddParagraph();
             p5.Format.HorizontalAlignment = HorizontalAlignment.Center;
-            TextRange TR5 = p5.AppendText(poznamka);
-            TR5.CharacterFormat.FontSize = 5;
-            DataRow.Cells[4].Width = 25;
-            DataRow.Cells[5].Width = 12;
-            DataRow.Cells[6].Width = 12;
+            TextRange tR5 = p5.AppendText(poznamka);
+            tR5.CharacterFormat.FontSize = 5;
+            dataRow.Cells[4].Width = 25;
+            dataRow.Cells[5].Width = 12;
+            dataRow.Cells[6].Width = 12;
 
         }
 
@@ -351,8 +348,8 @@ namespace GeneratorVyvesky
             table.ApplyVerticalMerge(5,0,1);
             table.ApplyVerticalMerge(6,0,1);
 
-            string[][] data = { new string[] {"Čas", "Vlak","", "Zo smeru", "Poznámky", "Nást.", "Kol." },
-                                new string[]{ "","Druh", "Čislo" }};
+            string[][] data = { new [] {"Čas", "Vlak","", "Zo smeru", "Poznámky", "Nást.", "Kol." },
+                                new [] { "","Druh", "Čislo" }};
 
             table.TableFormat.HorizontalAlignment = RowAlignment.Center;
             table.TableFormat.WrapTextAround = true;
@@ -363,7 +360,7 @@ namespace GeneratorVyvesky
 
             for (int r = 0; r < data.Length; r++)
             {
-                TableRow DataRow = table.Rows[r];
+                TableRow dataRow = table.Rows[r];
 
                 for (int c = 0; c < data[r].Length; c++)
                 {
@@ -393,11 +390,11 @@ namespace GeneratorVyvesky
                             break;
                     }
 
-                    DataRow.Cells[c].CellFormat.VerticalAlignment = VerticalAlignment.Bottom;
-                    DataRow.RowFormat.HorizontalAlignment = RowAlignment.Center;
-                    Paragraph p2 = DataRow.Cells[c].AddParagraph();
-                    TextRange TR2 = p2.AppendText(data[r][c]);
-                    TR2.CharacterFormat.FontSize = 5;
+                    dataRow.Cells[c].CellFormat.VerticalAlignment = VerticalAlignment.Bottom;
+                    dataRow.RowFormat.HorizontalAlignment = RowAlignment.Center;
+                    Paragraph p2 = dataRow.Cells[c].AddParagraph();
+                    TextRange tR2 = p2.AppendText(data[r][c]);
+                    tR2.CharacterFormat.FontSize = 5;
                     p2.Format.HorizontalAlignment = HorizontalAlignment.Center;
                 }
             }
@@ -407,7 +404,7 @@ namespace GeneratorVyvesky
         /// <summary>
         /// Prepísanie #Stanice na stanicu pre kotú sa robý vývseka a nastavenie času platnosti podla vybraného projektu
         /// </summary>
-        private void nastavDokument()
+        private void NastavDokument()
         {
             ParagraphStyle style = new ParagraphStyle(_document);
             style.Name = "FontStyle";

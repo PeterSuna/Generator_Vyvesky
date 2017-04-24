@@ -149,6 +149,10 @@ namespace Data_Kontroler
             return _poseidon.GetObecnePoznamky();
         }
 
+        /// <summary>
+        /// Vrati všetky Dopravné uskey s poseidona
+        /// </summary>
+        /// <returns></returns>
         public VSDopravnyUsek[] GetDopravneUseky()
         {
             return _poseidon.GetDopravneUseky();
@@ -249,6 +253,26 @@ namespace Data_Kontroler
             foreach (var d in data)
             {
                 MapVlak v = mapper.Map<MapVlak>(d);
+                array.Add(v);
+            }
+            return array.ToArray();
+        }
+
+        /// <summary>
+        /// Vytvorý s VSTrasaObecPozn skrátenú verziu
+        /// </summary>
+        /// <returns></returns>
+        public MapTrasaObecPozn[] GetMapTrasaObecPozn()
+        {
+            var data = _poseidon.GetTrasaObecPoznamky();
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<VSTrasaObecPozn, MapTrasaObecPozn>();
+            });
+            IMapper mapper = config.CreateMapper();
+            List<MapTrasaObecPozn> array = new List<MapTrasaObecPozn>();
+            foreach (var d in data)
+            {
+                MapTrasaObecPozn v = mapper.Map<MapTrasaObecPozn>(d);
                 array.Add(v);
             }
             return array.ToArray();

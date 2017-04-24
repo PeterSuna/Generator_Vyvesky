@@ -24,8 +24,7 @@ namespace Zobrazovac_Dat
         public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
             InitializeComponent();
-
-            _projekty = DataZoSuboru.Nacitaj.Projekty(@"..\..\..\Projekt\Projekty.json");
+            _projekty = DataZoSuboru.Nacitaj.Projekty(@"Data\Projekty.json");
             cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
             cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
 
@@ -47,7 +46,7 @@ namespace Zobrazovac_Dat
         {
             VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
             _dopravneBody =
-                DataZoSuboru.Nacitaj.MapDopravneBody(@"..\..\..\Projekt\" + VybranyProjekt.Nazov +
+                DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov + 
                                                           "\\MapDopravneBody.json");
             InitCmbox();
         }
@@ -111,14 +110,13 @@ namespace Zobrazovac_Dat
                        ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
                        : eVSVlakFaza.Pozadavek_zkonstruovano;
                     VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
-
+                    base.OnFormClosing(e);
                 }
                 else
                 {
-                    Mwbox("Pre pokračovanie je potrebné zvoliť mesto", "Upozornenie");
-                    return;
+                    Mwbox("Pre pokračovanie je potrebné načítať dáta a zvoliť mesto", "Upozornenie");
+                    e.Cancel = true;
                 }
-                base.OnFormClosing(e);
             }
         }
 
@@ -146,7 +144,7 @@ namespace Zobrazovac_Dat
         /// <param name="poseidon"></param>
         private void Aktualizuj(string text, PoseidonData poseidon)
         {
-            string cesta = @"..\..\..\Projekt\" + VybranyProjekt.Nazov;
+            string cesta = @"Data\" + VybranyProjekt.Nazov;
             VSEntitaBase[] data;
             switch (text)
             {
@@ -155,7 +153,7 @@ namespace Zobrazovac_Dat
                     data = poseidon.GetMapDopravneBody();
                     break;
                 case "Dopravné druhy":
-                    cesta += @"\MapDopravneDruhy.json";
+                    cesta += "\\" + VybranaFaza +@"\MapDopravneDruhy.json";
                     data = poseidon.GetMapTrasaDopravneDruhy();
                     break;
                 case "Dopravné úseky":
@@ -163,16 +161,16 @@ namespace Zobrazovac_Dat
                     data = poseidon.GetMapDopravneUseky();
                     break;
                 case "Poznámky":
-                    DataZoSuboru.Zapis.DoSuboru(cesta+ @"\TrasaObPoznamky.json", poseidon.GetTrasaObPoznamky());
-                    cesta += @"\ObecnaPoznamka.json";
-                    data = poseidon.GetObecnePoznamky();
+                    DataZoSuboru.Zapis.DoSuboru(cesta + @"\ObecnaPoznamka.json", poseidon.GetObecnePoznamky());
+                    cesta += "\\" + VybranaFaza + @"\MapTrasaObPoznamky.json";
+                    data = poseidon.GetMapTrasaObecPozn();
                     break;
                 case "Trasa body":
-                    cesta += @"\MapTrasaBody.json";
+                    cesta += "\\" + VybranaFaza + @"\MapTrasaBody.json";
                     data = poseidon.GetMapTrasaBody();
                     break;
                 case "Vlaky":
-                    cesta += @"\MapVlaky.json";
+                    cesta += "\\" + VybranaFaza + @"\MapVlaky.json";
                     data = poseidon.GetMapVlaky();
                     break;
                 default:

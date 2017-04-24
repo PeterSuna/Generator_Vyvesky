@@ -16,7 +16,7 @@ namespace Zobrazovac_Dat
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new HlavneOkno());
         }
     }
 }
