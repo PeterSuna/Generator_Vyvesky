@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
 using Data_Kontroler;
@@ -70,10 +71,12 @@ namespace Zobrazovac_Dat
             }
             try
             {
-                kontrolerPoseidon = new PoseidonData();
+                var meno = ConfigurationManager.AppSettings["Meno"];
+                var heslo = ConfigurationManager.AppSettings["Heslo"];
+                kontrolerPoseidon = new PoseidonData(meno, heslo);
                 kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Mwbox("Nepodarilo sa pripojiť na server","Chyba");
                 return;

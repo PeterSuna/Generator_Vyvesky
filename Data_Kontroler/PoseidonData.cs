@@ -33,24 +33,6 @@ namespace Data_Kontroler
             }
         }
 
-        public PoseidonData()
-        {
-            _poseidon = new gvd
-            {
-                Timeout = 600000,
-                CookieContainer = new System.Net.CookieContainer()
-            };
-            try
-            {
-                _poseidon.Login("suna", "peter");
-                Projekty = _poseidon.GetProjects();
-            }
-            catch (Exception)
-            {
-                // pokračuje offline
-            }
-        }
-
         /// <summary>
         /// Vyber projektu, potrebné vykonať pred akoukolvek inou metodou
         /// </summary>
