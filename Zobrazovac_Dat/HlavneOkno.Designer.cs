@@ -35,6 +35,7 @@
             this.btnNastav = new System.Windows.Forms.Button();
             this.btnDocx = new System.Windows.Forms.Button();
             this.btnGenerujOdchody = new System.Windows.Forms.Button();
+            this.btnPoznamky = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVlaky)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,7 +80,7 @@
             this.btnNacitajDopravneBody.Location = new System.Drawing.Point(722, 39);
             this.btnNacitajDopravneBody.Margin = new System.Windows.Forms.Padding(4);
             this.btnNacitajDopravneBody.Name = "btnNacitajDopravneBody";
-            this.btnNacitajDopravneBody.Size = new System.Drawing.Size(118, 27);
+            this.btnNacitajDopravneBody.Size = new System.Drawing.Size(118, 26);
             this.btnNacitajDopravneBody.TabIndex = 13;
             this.btnNacitajDopravneBody.Text = "Zobraz D. body";
             this.btnNacitajDopravneBody.UseVisualStyleBackColor = true;
@@ -117,11 +118,22 @@
             this.btnGenerujOdchody.UseVisualStyleBackColor = true;
             this.btnGenerujOdchody.Click += new System.EventHandler(this.btnGenerujOdchody_Click);
             // 
+            // btnPoznamky
+            // 
+            this.btnPoznamky.Location = new System.Drawing.Point(615, 4);
+            this.btnPoznamky.Name = "btnPoznamky";
+            this.btnPoznamky.Size = new System.Drawing.Size(100, 25);
+            this.btnPoznamky.TabIndex = 17;
+            this.btnPoznamky.Text = "Poznámky";
+            this.btnPoznamky.UseVisualStyleBackColor = true;
+            this.btnPoznamky.Click += new System.EventHandler(this.btnPoznamky_Click);
+            // 
             // HlavneOkno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(853, 492);
+            this.Controls.Add(this.btnPoznamky);
             this.Controls.Add(this.btnGenerujOdchody);
             this.Controls.Add(this.btnDocx);
             this.Controls.Add(this.btnNastav);
@@ -145,6 +157,7 @@
         private System.Windows.Forms.Button btnNastav;
         private System.Windows.Forms.Button btnDocx;
         private System.Windows.Forms.Button btnGenerujOdchody;
+        private System.Windows.Forms.Button btnPoznamky;
     }
 }
 

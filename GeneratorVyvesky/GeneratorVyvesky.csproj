@@ -65,7 +65,7 @@
       <Name>FilterDat</Name>
     </ProjectReference>
     <ProjectReference Include="..\Service_Konektor\Service_Konektor.csproj">
-      <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
+      <Project>{86C17E87-7DE6-4B68-9E1C-9F9015A5F977}</Project>
       <Name>Service_Konektor</Name>
     </ProjectReference>
   </ItemGroup>

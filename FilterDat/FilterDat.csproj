@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Data_Kontroler\Data_Kontroler.csproj">
-      <Project>{5e7fbec3-cabc-40cd-8a77-61731d83aa7f}</Project>
-      <Name>Data_Kontroler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Service_Konektor\Service_Konektor.csproj">
       <Project>{86c17e87-7de6-4b68-9e1c-9f9015a5f977}</Project>
       <Name>Service_Konektor</Name>

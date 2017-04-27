@@ -47,8 +47,8 @@ namespace Zobrazovac_Dat
         {
             VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
             _dopravneBody =
-                DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov + 
-                                                          "\\MapDopravneBody.json");
+                DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov +
+                                                     "\\MapDopravneBody.json");
             InitCmbox();
         }
 
@@ -69,32 +69,32 @@ namespace Zobrazovac_Dat
                 Mwbox("Je potrebný vybrať projekt podla ktorého bude prebiehať aktualizácia", "Upozornenie");
                 return;
             }
-            try
+            
+            var meno = ConfigurationManager.AppSettings["Meno"];
+            var heslo = ConfigurationManager.AppSettings["Heslo"];
+            kontrolerPoseidon = PoseidonData.PoseidonConstruc(meno,heslo);
+            if (kontrolerPoseidon == null)
             {
-                var meno = ConfigurationManager.AppSettings["Meno"];
-                var heslo = ConfigurationManager.AppSettings["Heslo"];
-                kontrolerPoseidon = new PoseidonData(meno, heslo);
-                kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
-            }
-            catch (Exception ex)
-            {
-                Mwbox("Nepodarilo sa pripojiť na server","Chyba");
+                Mwbox("Aplikácii sa nepodarilo prihlásiť, zrejme ste zadali nesprávne prihlasovacie údaje","upoztornenie");
                 return;
             }
-           
+            kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
+            
+
+
 
             lblFilter.Text = "Vybraná fáza: " + VybranaFaza;
             lblSelekt.Text = "Vybraný projekt: " + VybranyProjekt.Nazov;
-            
+
             _projekty = kontrolerPoseidon.Projekty;
             cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
             //Aktualizcácia Dát
             foreach (object itemChecked in chbxAktData.CheckedItems)
             {
-                Aktualizuj(itemChecked.ToString(),kontrolerPoseidon);
+                Aktualizuj(itemChecked.ToString(), kontrolerPoseidon);
             }
             kontrolerPoseidon.Logout();
-            Mwbox("Data sú aktualizované","info");
+            Mwbox("Data sú aktualizované", "info");
         }
 
         /// <summary>
@@ -110,9 +110,9 @@ namespace Zobrazovac_Dat
                     //VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
                     VybranyDopravnyBod = _dopravneBody[cbxMesto.SelectedIndex];
                     VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
-                       ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
-                       : eVSVlakFaza.Pozadavek_zkonstruovano;
-                    VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+                        ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
+                        : eVSVlakFaza.Pozadavek_zkonstruovano;
+                    VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
                     base.OnFormClosing(e);
                 }
                 else
@@ -137,7 +137,7 @@ namespace Zobrazovac_Dat
         {
 
             cbxMesto.DataSource = _dopravneBody.Select(c => c.Nazov).ToArray();
-            
+
         }
 
         /// <summary>
@@ -149,36 +149,45 @@ namespace Zobrazovac_Dat
         {
             string cesta = @"Data\" + VybranyProjekt.Nazov;
             VSEntitaBase[] data;
-            switch (text)
+            try
             {
-                case "Dopravné body":
-                    cesta += @"\MapDopravneBody.json";
-                    data = poseidon.GetMapDopravneBody();
-                    break;
-                case "Dopravné druhy":
-                    cesta += "\\" + VybranaFaza +@"\MapDopravneDruhy.json";
-                    data = poseidon.GetMapTrasaDopravneDruhy();
-                    break;
-                case "Dopravné úseky":
-                    cesta += @"\MapDopravneUseky.json";
-                    data = poseidon.GetMapDopravneUseky();
-                    break;
-                case "Poznámky":
-                    DataZoSuboru.Zapis.DoSuboru(cesta + @"\ObecnaPoznamka.json", poseidon.GetObecnePoznamky());
-                    cesta += "\\" + VybranaFaza + @"\MapTrasaObPoznamky.json";
-                    data = poseidon.GetMapTrasaObecPozn();
-                    break;
-                case "Trasa body":
-                    cesta += "\\" + VybranaFaza + @"\MapTrasaBody.json";
-                    data = poseidon.GetMapTrasaBody();
-                    break;
-                case "Vlaky":
-                    cesta += "\\" + VybranaFaza + @"\MapVlaky.json";
-                    data = poseidon.GetMapVlaky();
-                    break;
-                default:
-                    return;
+                switch (text)
+                {
+                    case "Dopravné body":
+                        cesta += @"\MapDopravneBody.json";
+                        data = poseidon.GetMapDopravneBody();
+                        break;
+                    case "Dopravné druhy":
+                        cesta += "\\" + VybranaFaza + @"\MapDopravneDruhy.json";
+                        data = poseidon.GetMapTrasaDopravneDruhy();
+                        break;
+                    case "Dopravné úseky":
+                        cesta += @"\MapDopravneUseky.json";
+                        data = poseidon.GetMapDopravneUseky();
+                        break;
+                    case "Poznámky":
+                        DataZoSuboru.Zapis.DoSuboru(cesta + @"\ObecnaPoznamka.json", poseidon.GetObecnePoznamky());
+                        cesta += "\\" + VybranaFaza + @"\MapTrasaObPoznamky.json";
+                        data = poseidon.GetMapTrasaObecPozn();
+                        break;
+                    case "Trasa body":
+                        cesta += "\\" + VybranaFaza + @"\MapTrasaBody.json";
+                        data = poseidon.GetMapTrasaBody();
+                        break;
+                    case "Vlaky":
+                        cesta += "\\" + VybranaFaza + @"\MapVlaky.json";
+                        data = poseidon.GetMapVlaky();
+                        break;
+                    default:
+                        return;
+                }
             }
+            catch (System.Net.WebException)
+            {
+                Mwbox("Nepodarilo sa stiahnúť dáta "+ text + " kvlôli timeout na servery","upozornenie");
+                return;
+            }
+
             DataZoSuboru.Zapis.DoSuboru(cesta,data);
         }
     }

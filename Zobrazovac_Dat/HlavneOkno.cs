@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Service_Konektor.poseidon;
 using GeneratorVyvesky;
@@ -89,7 +90,7 @@ namespace Zobrazovac_Dat
             MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(Path.Combine(CestaProjFaz, "MapVlaky.json"));
             if (vlaky == null)
             {
-                Mwbox("Data neboli ulozene", "chyba");
+                Mwbox("Data neboli nájdené", "chyba");
             }
             else
             {
@@ -107,7 +108,7 @@ namespace Zobrazovac_Dat
             var dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(Path.Combine(CestaProj, "MapDopravneBody.json"));
             if (dopravneBody == null)
             {
-                Mwbox("Data neboli ulozene", "chyba");
+                Mwbox("Data neboli nájdené", "chyba");
             }
             else
             {
@@ -125,12 +126,24 @@ namespace Zobrazovac_Dat
             var data = DataZoSuboru.Nacitaj.MapTrasBody(Path.Combine(CestaProjFaz, "MapTrasaBody.json"));
             if (data == null)
             {
-                Mwbox("Data neboli ulozene", "chyba");
+                Mwbox("Data neboli nájdené", "chyba");
             }
             else
             {
                 dgvVlaky.DataSource = data;
             }
+        }
+
+
+        private void btnPoznamky_Click(object sender, EventArgs e)
+        {
+            var obpozn = DataZoSuboru.Nacitaj.ObecnuPoznam(Path.Combine(CestaProj, "ObecnaPoznamka.json"));
+            var trasaobpozn = DataZoSuboru.Nacitaj.TrasaObPozn(Path.Combine(CestaProjFaz, "MapTrasaObPoznamky.json"));
+            if (obpozn == null && trasaobpozn==null)
+            {
+                Mwbox("Data neboli nájdené", "chyba");
+            }
+
         }
 
         /// <summary>

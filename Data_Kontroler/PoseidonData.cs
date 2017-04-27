@@ -13,24 +13,31 @@ namespace Data_Kontroler
         private readonly gvd _poseidon;
 
         public VSProject[] Projekty { get; set; }
-        public VSVlak[] Vlaky { get; set; }
 
-        public PoseidonData(string meno, string heslo)
+        public static PoseidonData PoseidonConstruc(string meno, string heslo)
         {
-            _poseidon = new gvd
+            var poseidon = new gvd
             {
                 Timeout = 2000000,
                 CookieContainer = new System.Net.CookieContainer()
             };
             try
             {
-                _poseidon.Login(meno, heslo);
-                Projekty = _poseidon.GetProjects();
+                poseidon.Login(meno, heslo);
+                var poseidonData = new PoseidonData(poseidon);
+                return poseidonData;
             }
             catch (Exception)
             {
-               // pokračuje offline
+                return null;
             }
+        }
+
+        private PoseidonData(gvd poseidon)
+        {
+            _poseidon = poseidon;
+
+            Projekty = _poseidon.GetProjects();
         }
 
         /// <summary>
@@ -50,6 +57,7 @@ namespace Data_Kontroler
         {
             _poseidon.Logout();
         }
+
         /// <summary>
         /// Pred zavolaním metody je potrebne vykonať metodu SelektProjektu()
         /// </summary>
@@ -146,7 +154,16 @@ namespace Data_Kontroler
         /// <returns></returns>
         public MapTrasaBod[] GetMapTrasaBody()
         {
-            var trasy = _poseidon.GetTrasaBody();
+            VSTrasaBod[] trasy; 
+            try
+            {
+                trasy = _poseidon.GetTrasaBody();
+            }
+            catch (System.Net.WebException ex)
+            {
+                throw ex;
+            }
+
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<VSTrasaBod, MapTrasaBod>();
             });

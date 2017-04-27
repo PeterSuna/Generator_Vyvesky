@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Data_Kontroler;
 using Newtonsoft.Json;
 using Service_Konektor.Entity;
 using Service_Konektor.poseidon;

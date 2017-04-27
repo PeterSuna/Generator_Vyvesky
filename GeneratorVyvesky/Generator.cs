@@ -7,7 +7,6 @@ using Service_Konektor.poseidon;
 using Spire.Doc;
 using Spire.Doc.Documents;
 using Spire.Doc.Fields;
-using static System.Int32;
 
 namespace GeneratorVyvesky
 {
@@ -89,7 +88,7 @@ namespace GeneratorVyvesky
                 znaky += riadok;
                 string cas = TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh") + "." + TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("mm");
                 //rozhodnutie či vypísať hlavičku z časom
-                if (hodina == Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh")))
+                if (hodina == int.Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
                     if (znaky >= 2650)
@@ -112,7 +111,7 @@ namespace GeneratorVyvesky
                 else
                 {
                     znaky += 60;    //vypisanie asi jeden riadok 
-                    hodina = Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh"));
+                    hodina = int.Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
@@ -189,7 +188,7 @@ namespace GeneratorVyvesky
                 string cas = TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasOdjazdu).ToString("hh") + "." + TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasOdjazdu).ToString("mm");
 
                 //rozhodnutie či vypísať hlavičku z časom
-                if (hodina == Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasOdjazdu).ToString("hh")))
+                if (hodina == int.Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasOdjazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
                     if (znaky >= 2650)
@@ -212,7 +211,7 @@ namespace GeneratorVyvesky
                 else
                 {
                     znaky += 60;    //vypisanie asi jeden riadok 
-                    hodina = Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasPrijazdu).ToString("hh"));
+                    hodina = int.Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasPrijazdu).ToString("hh"));
                     if (znaky >= 2650)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);

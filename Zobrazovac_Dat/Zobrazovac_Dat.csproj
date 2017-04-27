@@ -234,10 +234,6 @@
       <Project>{5e7fbec3-cabc-40cd-8a77-61731d83aa7f}</Project>
       <Name>Data_Kontroler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FilterDat\FilterDat.csproj">
-      <Project>{7aaab3da-f869-4095-9a8c-07b21e87080c}</Project>
-      <Name>FilterDat</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GeneratorVyvesky\GeneratorVyvesky.csproj">
       <Project>{298de4c5-3c91-4f70-b1c6-fb276cda56e7}</Project>
       <Name>GeneratorVyvesky</Name>
