@@ -34,13 +34,13 @@ namespace GeneratorVyvesky
         {
             //nacítanie potrebných údajov zo súboru
             string cestaProj = Path.GetDirectoryName(cesta);
-            _dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(Path.Combine(cestaProj, "MapDopravneBody.json"));
-            _trasaObPoznamka = DataZoSuboru.Nacitaj.MapTrasaObecPoznamky(Path.Combine(cesta, "MapTrasaObPoznamky.json"));
-            _obecnaPoznamka = DataZoSuboru.Nacitaj.ObecnuPoznam(Path.Combine(cestaProj, "ObecnaPoznamka.json"));
-            _druh = DataZoSuboru.Nacitaj.MapTrasaDruhy(Path.Combine(cesta, "MapDopravneDruhy.json"));
-            var trasaBody = DataZoSuboru.Nacitaj.MapTrasBody(Path.Combine(cesta, "MapTrasaBody.json"));
-            var mapDu = DataZoSuboru.Nacitaj.MapDopravneUseky(Path.Combine(cestaProj, "MapDopravneUseky.json"));
-            var vlaky = DataZoSuboru.Nacitaj.MapVlaky(Path.Combine(cesta, "MapVlaky.json"));
+            _dopravneBody = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(Path.Combine(cestaProj, "MapDopravneBody.json"));
+            _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaObecPozn[]>(Path.Combine(cesta, "MapTrasaObPoznamky.json"));
+            _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboru<VSObecnaPoznamka[]>(Path.Combine(cestaProj, "ObecnaPoznamka.json"));
+            _druh = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaDruh[]>(Path.Combine(cesta, "MapDopravneDruhy.json"));
+            var trasaBody = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaBod[]>(Path.Combine(cesta, "MapTrasaBody.json"));
+            var mapDu = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyUsek[]>(Path.Combine(cestaProj, "MapDopravneUseky.json"));
+            var vlaky = DataZoSuboru.Nacitaj.ZoSuboru<MapVlak[]>(Path.Combine(cesta, "MapVlaky.json"));
 
             if (_dopravneBody == null ||_druh == null || trasaBody == null || mapDu == null || vlaky == null)
             {

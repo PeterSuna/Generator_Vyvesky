@@ -25,7 +25,7 @@ namespace Zobrazovac_Dat
         public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
             InitializeComponent();
-            _projekty = DataZoSuboru.Nacitaj.Projekty(@"Data\Projekty.json");
+            _projekty = DataZoSuboru.Nacitaj.ZoSuboru<VSProject[]>(@"Data\Projekty.json");
             cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
             cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
 
@@ -46,9 +46,18 @@ namespace Zobrazovac_Dat
         private void btnSubor_Click(object sender, EventArgs e)
         {
             VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
-            _dopravneBody =
-                DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov +
+            //_dopravneBody =
+            //    DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov +
+            //                                         "\\MapDopravneBody.json");
+             var dopravneBody =
+                DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(@"Data\" + VybranyProjekt.Nazov +
                                                      "\\MapDopravneBody.json");
+            if (dopravneBody == null)
+            {
+                Mwbox("Dáta neboli nájdené","Upozornenie");
+                return;
+            }
+            _dopravneBody = dopravneBody;
             InitCmbox();
         }
 
@@ -135,7 +144,6 @@ namespace Zobrazovac_Dat
         /// </summary>
         private void InitCmbox()
         {
-
             cbxMesto.DataSource = _dopravneBody.Select(c => c.Nazov).ToArray();
 
         }

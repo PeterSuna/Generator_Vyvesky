@@ -87,7 +87,7 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitaj_Click(object sender, EventArgs e)
         {
-            MapVlak[] vlaky = DataZoSuboru.Nacitaj.MapVlaky(Path.Combine(CestaProjFaz, "MapVlaky.json"));
+            MapVlak[] vlaky = DataZoSuboru.Nacitaj.ZoSuboru<MapVlak[]>(Path.Combine(CestaProjFaz, "MapVlaky.json"));
             if (vlaky == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
@@ -105,7 +105,7 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitajDopravneBody_Click(object sender, EventArgs e)
         {
-            var dopravneBody = DataZoSuboru.Nacitaj.MapDopravneBody(Path.Combine(CestaProj, "MapDopravneBody.json"));
+            var dopravneBody = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(Path.Combine(CestaProj, "MapDopravneBody.json"));
             if (dopravneBody == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
@@ -123,7 +123,7 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitajTrasyBody_Click(object sender, EventArgs e)
         {
-            var data = DataZoSuboru.Nacitaj.MapTrasBody(Path.Combine(CestaProjFaz, "MapTrasaBody.json"));
+            var data = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaBod[]>(Path.Combine(CestaProjFaz, "MapTrasaBody.json"));
             if (data == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
@@ -137,12 +137,7 @@ namespace Zobrazovac_Dat
 
         private void btnPoznamky_Click(object sender, EventArgs e)
         {
-            var obpozn = DataZoSuboru.Nacitaj.ObecnuPoznam(Path.Combine(CestaProj, "ObecnaPoznamka.json"));
-            var trasaobpozn = DataZoSuboru.Nacitaj.TrasaObPozn(Path.Combine(CestaProjFaz, "MapTrasaObPoznamky.json"));
-            if (obpozn == null && trasaobpozn==null)
-            {
-                Mwbox("Data neboli nájdené", "chyba");
-            }
+           
 
         }
 
