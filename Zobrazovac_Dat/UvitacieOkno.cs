@@ -131,7 +131,7 @@ namespace Zobrazovac_Dat
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (cbxMesto.SelectedItem != null && VybranyProjekt==null)
+                if (cbxMesto.SelectedItem != null && VybranyProjekt!=null)
                 {
                     //VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
                     VybranyDopravnyBod = _dopravneBody[cbxMesto.SelectedIndex];
