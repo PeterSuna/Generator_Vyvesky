@@ -26,7 +26,11 @@ namespace Zobrazovac_Dat
         {
             InitializeComponent();
             _projekty = DataZoSuboru.Nacitaj.ZoSuboru<VSProject[]>(@"Data\Projekty.json");
-            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
+            if (_projekty == null)
+            {
+                Mwbox("Projekty neboli zatiaľ stiahnuté, pre úspešné pokračovanie je potrebné kliknúť na tlačidlo Aktualizovať vybrané dáta","Upozornenie");
+            }
+            cbxSelektProjektu.DataSource = _projekty?.Select(c => c.Nazov).ToList();
             cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
 
             if (projekt != null)
@@ -72,12 +76,8 @@ namespace Zobrazovac_Dat
             VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
                 ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
                 : eVSVlakFaza.Pozadavek_zkonstruovano;
-            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
-            if (VybranyProjekt == null)
-            {
-                Mwbox("Je potrebný vybrať projekt podla ktorého bude prebiehať aktualizácia", "Upozornenie");
-                return;
-            }
+            
+            
             
             var meno = ConfigurationManager.AppSettings["Meno"];
             var heslo = ConfigurationManager.AppSettings["Heslo"];
@@ -87,23 +87,40 @@ namespace Zobrazovac_Dat
                 Mwbox("Aplikácii sa nepodarilo prihlásiť, zrejme ste zadali nesprávne prihlasovacie údaje","upoztornenie");
                 return;
             }
-            kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
-            
-
-
-
-            lblFilter.Text = "Vybraná fáza: " + VybranaFaza;
-            lblSelekt.Text = "Vybraný projekt: " + VybranyProjekt.Nazov;
-
-            _projekty = kontrolerPoseidon.Projekty;
-            cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
-            //Aktualizcácia Dát
-            foreach (object itemChecked in chbxAktData.CheckedItems)
+            if (_projekty == null)
             {
-                Aktualizuj(itemChecked.ToString(), kontrolerPoseidon);
+                _projekty = kontrolerPoseidon.Projekty;
+                cbxSelektProjektu.DataSource = _projekty?.Select(c => c.Nazov).ToList(); 
+                Aktualizuj("Projekty", kontrolerPoseidon);
             }
-            kontrolerPoseidon.Logout();
-            Mwbox("Data sú aktualizované", "info");
+            else
+            {
+                VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+
+                if (VybranyProjekt == null)
+                {
+                    Mwbox("Je potrebný vybrať projekt podla ktorého bude prebiehať aktualizácia", "Upozornenie");
+                    return;
+                }
+                kontrolerPoseidon.SelektProjektu(VybranaFaza, VybranyProjekt);
+
+
+
+
+                lblFilter.Text = "Vybraná fáza: " + VybranaFaza;
+                lblSelekt.Text = "Vybraný projekt: " + VybranyProjekt.Nazov;
+
+                _projekty = kontrolerPoseidon.Projekty;
+                cbxSelektProjektu.DataSource = _projekty.Select(c => c.Nazov).ToList();
+                //Aktualizcácia Dát
+                foreach (object itemChecked in chbxAktData.CheckedItems)
+                {
+                    Aktualizuj(itemChecked.ToString(), kontrolerPoseidon);
+                }
+                kontrolerPoseidon.Logout();
+                Mwbox("Data sú aktualizované", "info");
+            }
+            
         }
 
         /// <summary>
@@ -114,7 +131,7 @@ namespace Zobrazovac_Dat
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (cbxMesto.SelectedItem != null)
+                if (cbxMesto.SelectedItem != null && VybranyProjekt==null)
                 {
                     //VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
                     VybranyDopravnyBod = _dopravneBody[cbxMesto.SelectedIndex];
@@ -155,7 +172,7 @@ namespace Zobrazovac_Dat
         /// <param name="poseidon"></param>
         private void Aktualizuj(string text, PoseidonData poseidon)
         {
-            string cesta = @"Data\" + VybranyProjekt.Nazov;
+            string cesta = @"Data\" + VybranyProjekt?.Nazov;
             VSEntitaBase[] data;
             try
             {
@@ -185,6 +202,10 @@ namespace Zobrazovac_Dat
                     case "Vlaky":
                         cesta += "\\" + VybranaFaza + @"\MapVlaky.json";
                         data = poseidon.GetMapVlaky();
+                        break;
+                    case "Projekty":
+                        cesta = @"Data\Projekty.json";
+                        data = poseidon.Projekty;
                         break;
                     default:
                         return;

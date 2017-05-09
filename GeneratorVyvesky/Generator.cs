@@ -13,7 +13,6 @@ namespace GeneratorVyvesky
     public class Generator
     {
         private readonly MapTrasaBod[] _trasaBodyVlakov;
-        private readonly Document _document;
         private readonly MapTrasaDruh[] _druh;
         private readonly MapVlak[] _vlaky;
         private readonly MapDopravnyBod[] _dopravneBody;
@@ -21,6 +20,7 @@ namespace GeneratorVyvesky
         private readonly VSObecnaPoznamka[] _obecnaPoznamka;
         private readonly MapDopravnyBod _dopravnyBod;
         private readonly VSProject _projekt;
+        private readonly Document _document;
 
         public MapTrasaBod[] TrasaBodyVybStanice { get; }
 
@@ -68,7 +68,7 @@ namespace GeneratorVyvesky
             NastavDokument();
             int hodina =-1; 
             int row = 0;
-            Table table = VytvorHlavičku();
+            Table table = VytvorHlavicku();
             bool prvy = true;
             int i = index;
             int zlomy = 0;
@@ -99,7 +99,7 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                        table = VytvorHlavičku();
+                        table = VytvorHlavicku();
                         // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         row = 2;
                         znaky = riadok;
@@ -120,7 +120,7 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                        table = VytvorHlavičku();
+                        table = VytvorHlavicku();
                         row = 2;
                         // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
@@ -168,7 +168,7 @@ namespace GeneratorVyvesky
             int hodina = -1;                                    //ukladá hodinu v akej odchádza vlak
             int row = 0;                                        //riadok na akom sa nachádzam vo vytvorenej tabulke
             bool prvy = true;                                   //ak potrebujem oddeliť abulky
-            Table table = VytvorHlavičku();
+            Table table = VytvorHlavicku();
             int i = index;
             int zlomy = 0;                                      //počíta zlomy strán aby sa vytvoril práve jeden dokument
             int znaky = 0; //2450
@@ -199,7 +199,7 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                        table = VytvorHlavičku();
+                        table = VytvorHlavicku();
                        // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         row = 2;
                         znaky = riadok;
@@ -220,7 +220,7 @@ namespace GeneratorVyvesky
                         {
                             break;
                         }
-                       table = VytvorHlavičku();
+                       table = VytvorHlavicku();
                         row = 2;
                        // _document.Sections[1].AddParagraph().Format.LineSpacing = 0.1f;
                         znaky = riadok;
@@ -334,7 +334,7 @@ namespace GeneratorVyvesky
         /// <summary>
         /// V dokumente vytvorý hlavičku z metadátami
         /// </summary>
-        private Table VytvorHlavičku()
+        private Table VytvorHlavicku()
         {
             Section section = _document.Sections[1];
            

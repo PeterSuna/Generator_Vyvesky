@@ -48,7 +48,7 @@ namespace Data_Kontroler
         /// <returns></returns>
         public bool SelektProjektu(eVSVlakFaza faza, VSProject project)
         {
-            var filter = new VSVlakFilter {Faza = faza};
+            var filter = new VSVlakFilter();
 
             return _poseidon.SelectProject(project, filter);
         }
