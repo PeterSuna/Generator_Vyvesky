@@ -87,7 +87,7 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitaj_Click(object sender, EventArgs e)
         {
-            MapVlak[] vlaky = DataZoSuboru.Nacitaj.ZoSuboru<MapVlak[]>(Path.Combine(CestaProjFaz, "MapVlaky.json"));
+            MapVlak[] vlaky = DataZoSuboru.Nacitanie.ZoSuboru<MapVlak[]>(Path.Combine(CestaProjFaz, "MapVlaky.json"));
             if (vlaky == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
@@ -105,7 +105,7 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitajDopravneBody_Click(object sender, EventArgs e)
         {
-            var dopravneBody = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(Path.Combine(CestaProj, "MapDopravneBody.json"));
+            var dopravneBody = DataZoSuboru.Nacitanie.ZoSuboru<MapDopravnyBod[]>(Path.Combine(CestaProj, "MapDopravneBody.json"));
             if (dopravneBody == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
@@ -123,14 +123,15 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnNacitajTrasyBody_Click(object sender, EventArgs e)
         {
-            var data = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaBod[]>(Path.Combine(CestaProjFaz, "MapTrasaBody.json"));
+            var data = DataZoSuboru.Nacitanie.ZoSuboru<MapTrasaBod[]>(Path.Combine(CestaProjFaz, "MapTrasaBody.json"));
             if (data == null)
             {
                 Mwbox("Data neboli nájdené", "chyba");
             }
             else
             {
-                dgvVlaky.DataSource = data;
+                var d = data.Where(c => c!=null && c.VlakID == 4055).Select(c => c).ToArray();
+                dgvVlaky.DataSource = d;
             }
         }
 
@@ -164,6 +165,8 @@ namespace Zobrazovac_Dat
                 while (true)
                 {
                     var generator = VytvorGenerator();
+                    if (generator == null)
+                        return;
                     i = generator.GenerujPrichodyDocxSubor(i);
                     if (i >= generator.TrasaBodyVybStanice.Length)
                     {
@@ -173,7 +176,7 @@ namespace Zobrazovac_Dat
             }
             catch (IOException)
             {
-                Mwbox("Vyvesku sa nepodarilo uložiť, je potrebné zavrieť Prichody.docx dokument", "Upozornenie");
+                Mwbox("Vývesku sa nepodarilo uložiť, je potrebné zavrieť Prichody.docx dokument", "Upozornenie");
             }
 
         }

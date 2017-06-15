@@ -5,7 +5,7 @@ using Service_Konektor.poseidon;
 
 namespace DataZoSuboru
 {
-    public static class Zapis
+    public static class Zapisanie
     {
         /// <summary>
         /// Zapíše do súboru data

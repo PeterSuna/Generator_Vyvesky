@@ -34,13 +34,13 @@ namespace GeneratorVyvesky
         {
             //nacítanie potrebných údajov zo súboru
             string cestaProj = Path.GetDirectoryName(cesta);
-            _dopravneBody = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(Path.Combine(cestaProj, "MapDopravneBody.json"));
-            _trasaObPoznamka = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaObecPozn[]>(Path.Combine(cesta, "MapTrasaObPoznamky.json"));
-            _obecnaPoznamka = DataZoSuboru.Nacitaj.ZoSuboru<VSObecnaPoznamka[]>(Path.Combine(cestaProj, "ObecnaPoznamka.json"));
-            _druh = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaDruh[]>(Path.Combine(cesta, "MapDopravneDruhy.json"));
-            var trasaBody = DataZoSuboru.Nacitaj.ZoSuboru<MapTrasaBod[]>(Path.Combine(cesta, "MapTrasaBody.json"));
-            var mapDu = DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyUsek[]>(Path.Combine(cestaProj, "MapDopravneUseky.json"));
-            var vlaky = DataZoSuboru.Nacitaj.ZoSuboru<MapVlak[]>(Path.Combine(cesta, "MapVlaky.json"));
+            _dopravneBody = DataZoSuboru.Nacitanie.ZoSuboru<MapDopravnyBod[]>(Path.Combine(cestaProj, "MapDopravneBody.json"));
+            _trasaObPoznamka = DataZoSuboru.Nacitanie.ZoSuboru<MapTrasaObecPozn[]>(Path.Combine(cesta, "MapTrasaObPoznamky.json"));
+            _obecnaPoznamka = DataZoSuboru.Nacitanie.ZoSuboru<VSObecnaPoznamka[]>(Path.Combine(cestaProj, "ObecnaPoznamka.json"));
+            _druh = DataZoSuboru.Nacitanie.ZoSuboru<MapTrasaDruh[]>(Path.Combine(cesta, "MapDopravneDruhy.json"));
+            var trasaBody = DataZoSuboru.Nacitanie.ZoSuboru<MapTrasaBod[]>(Path.Combine(cesta, "MapTrasaBody.json"));
+            var mapDu = DataZoSuboru.Nacitanie.ZoSuboru<MapDopravnyUsek[]>(Path.Combine(cestaProj, "MapDopravneUseky.json"));
+            var vlaky = DataZoSuboru.Nacitanie.ZoSuboru<MapVlak[]>(Path.Combine(cesta, "MapVlaky.json"));
 
             if (_dopravneBody == null ||_druh == null || trasaBody == null || mapDu == null || vlaky == null)
             {
@@ -91,7 +91,7 @@ namespace GeneratorVyvesky
                 if (hodina == int.Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2650)
+                    if (znaky >= 2500)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -112,7 +112,7 @@ namespace GeneratorVyvesky
                 {
                     znaky += 60;    //vypisanie asi jeden riadok 
                     hodina = int.Parse(TimeSpan.FromSeconds(trasaBodyVybStanciePrich[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2650)
+                    if (znaky >= 2500)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -152,8 +152,8 @@ namespace GeneratorVyvesky
                 }
                 i++;
             }
-            _document.SaveToFile("result"+i+".docx", FileFormat.Docm2013);
-            System.Diagnostics.Process.Start("result"+i+".docx");
+            _document.SaveToFile("Prichody"+i+".docx", FileFormat.Docm2013);
+            System.Diagnostics.Process.Start("Prichody"+i+".docx");
             return i;
         }
 
@@ -191,7 +191,7 @@ namespace GeneratorVyvesky
                 if (hodina == int.Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasOdjazdu).ToString("hh")))
                 {
                     //približný počet kolko znakou sa vopchá do tabulky na jednu stranu
-                    if (znaky >= 2650)
+                    if (znaky >= 2500)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;
@@ -212,7 +212,7 @@ namespace GeneratorVyvesky
                 {
                     znaky += 60;    //vypisanie asi jeden riadok 
                     hodina = int.Parse(TimeSpan.FromSeconds(trasaBodyVybStancieOdch[i].CasPrijazdu).ToString("hh"));
-                    if (znaky >= 2650)
+                    if (znaky >= 2500)
                     {
                         _document.Sections[1].AddParagraph().AppendBreak(BreakType.ColumnBreak);
                         zlomy++;

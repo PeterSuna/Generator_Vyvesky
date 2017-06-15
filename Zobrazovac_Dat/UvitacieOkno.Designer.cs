@@ -45,10 +45,10 @@
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(266, 174);
-            this.button1.Margin = new System.Windows.Forms.Padding(30, 32, 30, 16);
+            this.button1.Location = new System.Drawing.Point(355, 214);
+            this.button1.Margin = new System.Windows.Forms.Padding(40, 39, 40, 20);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(106, 37);
+            this.button1.Size = new System.Drawing.Size(141, 46);
             this.button1.TabIndex = 0;
             this.button1.Text = "Ok";
             this.button1.UseVisualStyleBackColor = true;
@@ -56,68 +56,68 @@
             // lblFilter
             // 
             this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(203, 11);
-            this.lblFilter.Margin = new System.Windows.Forms.Padding(10, 11, 10, 11);
+            this.lblFilter.Location = new System.Drawing.Point(271, 14);
+            this.lblFilter.Margin = new System.Windows.Forms.Padding(13, 14, 13, 14);
             this.lblFilter.Name = "lblFilter";
-            this.lblFilter.Size = new System.Drawing.Size(70, 13);
+            this.lblFilter.Size = new System.Drawing.Size(94, 17);
             this.lblFilter.TabIndex = 9;
             this.lblFilter.Text = "Vyber z filtrov";
             // 
             // lblSelekt
             // 
             this.lblSelekt.AutoSize = true;
-            this.lblSelekt.Location = new System.Drawing.Point(13, 11);
-            this.lblSelekt.Margin = new System.Windows.Forms.Padding(4, 11, 10, 11);
+            this.lblSelekt.Location = new System.Drawing.Point(17, 14);
+            this.lblSelekt.Margin = new System.Windows.Forms.Padding(5, 14, 13, 14);
             this.lblSelekt.Name = "lblSelekt";
-            this.lblSelekt.Size = new System.Drawing.Size(89, 13);
+            this.lblSelekt.Size = new System.Drawing.Size(118, 17);
             this.lblSelekt.TabIndex = 8;
             this.lblSelekt.Text = "Vyber z projektov";
             // 
             // cbxSelektFiltra
             // 
             this.cbxSelektFiltra.FormattingEnabled = true;
-            this.cbxSelektFiltra.Location = new System.Drawing.Point(205, 39);
-            this.cbxSelektFiltra.Margin = new System.Windows.Forms.Padding(4);
+            this.cbxSelektFiltra.Location = new System.Drawing.Point(273, 48);
+            this.cbxSelektFiltra.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.cbxSelektFiltra.Name = "cbxSelektFiltra";
-            this.cbxSelektFiltra.Size = new System.Drawing.Size(167, 21);
+            this.cbxSelektFiltra.Size = new System.Drawing.Size(221, 24);
             this.cbxSelektFiltra.TabIndex = 7;
             this.cbxSelektFiltra.Text = "Vyber Filter";
             // 
             // cbxSelektProjektu
             // 
             this.cbxSelektProjektu.FormattingEnabled = true;
-            this.cbxSelektProjektu.Location = new System.Drawing.Point(13, 39);
-            this.cbxSelektProjektu.Margin = new System.Windows.Forms.Padding(4);
+            this.cbxSelektProjektu.Location = new System.Drawing.Point(17, 48);
+            this.cbxSelektProjektu.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.cbxSelektProjektu.Name = "cbxSelektProjektu";
-            this.cbxSelektProjektu.Size = new System.Drawing.Size(167, 21);
+            this.cbxSelektProjektu.Size = new System.Drawing.Size(221, 24);
             this.cbxSelektProjektu.TabIndex = 6;
             this.cbxSelektProjektu.Text = "Vyber Selekt";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 148);
-            this.label1.Margin = new System.Windows.Forms.Padding(4);
+            this.label1.Location = new System.Drawing.Point(17, 182);
+            this.label1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.Size = new System.Drawing.Size(94, 17);
             this.label1.TabIndex = 10;
-            this.label1.Text = "Vyber Mesto";
+            this.label1.Text = "Vyber stanice";
             // 
             // cbxMesto
             // 
             this.cbxMesto.FormattingEnabled = true;
-            this.cbxMesto.Location = new System.Drawing.Point(10, 170);
-            this.cbxMesto.Margin = new System.Windows.Forms.Padding(4);
+            this.cbxMesto.Location = new System.Drawing.Point(13, 209);
+            this.cbxMesto.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.cbxMesto.Name = "cbxMesto";
-            this.cbxMesto.Size = new System.Drawing.Size(164, 21);
+            this.cbxMesto.Size = new System.Drawing.Size(217, 24);
             this.cbxMesto.TabIndex = 11;
             // 
             // btnServer
             // 
-            this.btnServer.Location = new System.Drawing.Point(124, 84);
-            this.btnServer.Margin = new System.Windows.Forms.Padding(4);
+            this.btnServer.Location = new System.Drawing.Point(165, 103);
+            this.btnServer.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnServer.Name = "btnServer";
-            this.btnServer.Size = new System.Drawing.Size(103, 56);
+            this.btnServer.Size = new System.Drawing.Size(137, 69);
             this.btnServer.TabIndex = 12;
             this.btnServer.Text = "Aktualizovať vybrané dáta";
             this.btnServer.UseVisualStyleBackColor = true;
@@ -125,10 +125,10 @@
             // 
             // btnSubor
             // 
-            this.btnSubor.Location = new System.Drawing.Point(16, 84);
-            this.btnSubor.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSubor.Location = new System.Drawing.Point(21, 103);
+            this.btnSubor.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnSubor.Name = "btnSubor";
-            this.btnSubor.Size = new System.Drawing.Size(100, 56);
+            this.btnSubor.Size = new System.Drawing.Size(133, 69);
             this.btnSubor.TabIndex = 13;
             this.btnSubor.Text = "Načítať dáta";
             this.btnSubor.UseVisualStyleBackColor = true;
@@ -144,16 +144,17 @@
             "Poznámky",
             "Trasa body",
             "Vlaky"});
-            this.chbxAktData.Location = new System.Drawing.Point(234, 67);
+            this.chbxAktData.Location = new System.Drawing.Point(312, 82);
+            this.chbxAktData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chbxAktData.Name = "chbxAktData";
-            this.chbxAktData.Size = new System.Drawing.Size(138, 94);
+            this.chbxAktData.Size = new System.Drawing.Size(183, 106);
             this.chbxAktData.TabIndex = 14;
             // 
             // UvitacieOkno
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(410, 236);
+            this.ClientSize = new System.Drawing.Size(547, 290);
             this.Controls.Add(this.chbxAktData);
             this.Controls.Add(this.btnSubor);
             this.Controls.Add(this.btnServer);
@@ -164,11 +165,12 @@
             this.Controls.Add(this.cbxSelektFiltra);
             this.Controls.Add(this.cbxSelektProjektu);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximumSize = new System.Drawing.Size(484, 300);
-            this.MinimumSize = new System.Drawing.Size(426, 275);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximumSize = new System.Drawing.Size(639, 358);
+            this.MinimumSize = new System.Drawing.Size(562, 328);
             this.Name = "UvitacieOkno";
-            this.Text = "UvitacieOkno";
+            this.Text = "Generátor vývesky";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -6,7 +6,7 @@ using Service_Konektor.poseidon;
 
 namespace DataZoSuboru
 {
-    public static class Nacitaj
+    public static class Nacitanie
     {
         /// <summary>
         /// Nacíta vybrané dáta

@@ -25,10 +25,10 @@ namespace Zobrazovac_Dat
         public UvitacieOkno(VSProject projekt, eVSVlakFaza faza)
         {
             InitializeComponent();
-            _projekty = DataZoSuboru.Nacitaj.ZoSuboru<VSProject[]>(@"Data\Projekty.json");
+            _projekty = DataZoSuboru.Nacitanie.ZoSuboru<VSProject[]>(@"Data\Projekty.json");
             if (_projekty == null)
             {
-                Mwbox("Projekty neboli zatiaľ stiahnuté, pre úspešné pokračovanie je potrebné kliknúť na tlačidlo Aktualizovať vybrané dáta","Upozornenie");
+                Mwbox("Projekty neboli zatiaľ stiahnuté, pre úspešné pokračovanie je potrebné kliknúť na tlačidlo Aktualizovať vybrané dáta", "Upozornenie");
             }
             cbxSelektProjektu.DataSource = _projekty?.Select(c => c.Nazov).ToList();
             cbxSelektFiltra.DataSource = Enum.GetValues(typeof(eVSVlakFaza));
@@ -49,20 +49,30 @@ namespace Zobrazovac_Dat
         /// <param name="e"></param>
         private void btnSubor_Click(object sender, EventArgs e)
         {
-            VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
-            //_dopravneBody =
-            //    DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov +
-            //                                         "\\MapDopravneBody.json");
-             var dopravneBody =
-                DataZoSuboru.Nacitaj.ZoSuboru<MapDopravnyBod[]>(@"Data\" + VybranyProjekt.Nazov +
-                                                     "\\MapDopravneBody.json");
-            if (dopravneBody == null)
+            bool ok = false;
+            if (_projekty != null)
             {
-                Mwbox("Dáta neboli nájdené","Upozornenie");
+                ok = true;
+                VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
+                //_dopravneBody =
+                //    DataZoSuboru.Nacitaj.MapDopravneBody(@"Data\" + VybranyProjekt.Nazov +
+                //                                         "\\MapDopravneBody.json");
+                var dopravneBody =
+                   DataZoSuboru.Nacitanie.ZoSuboru<MapDopravnyBod[]>(@"Data\" + VybranyProjekt.Nazov +
+                                                        "\\MapDopravneBody.json");
+                if (dopravneBody == null)
+                    ok = false;
+                else
+                {
+                    _dopravneBody = dopravneBody;
+                    InitCmbox();
+                }
+            }
+            if (!ok)
+            {
+                Mwbox("Dáta neboli nájdené", "Upozornenie");
                 return;
             }
-            _dopravneBody = dopravneBody;
-            InitCmbox();
         }
 
         /// <summary>
@@ -74,23 +84,23 @@ namespace Zobrazovac_Dat
         {
             PoseidonData kontrolerPoseidon;
             VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
-                ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
+                ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
                 : eVSVlakFaza.Pozadavek_zkonstruovano;
-            
-            
-            
+
+
+
             var meno = ConfigurationManager.AppSettings["Meno"];
             var heslo = ConfigurationManager.AppSettings["Heslo"];
-            kontrolerPoseidon = PoseidonData.PoseidonConstruc(meno,heslo);
+            kontrolerPoseidon = PoseidonData.PoseidonConstruc(meno, heslo);
             if (kontrolerPoseidon == null)
             {
-                Mwbox("Aplikácii sa nepodarilo prihlásiť, zrejme ste zadali nesprávne prihlasovacie údaje","upoztornenie");
+                Mwbox("Aplikácii sa nepodarilo prihlásiť, zrejme ste zadali nesprávne prihlasovacie údaje", "upoztornenie");
                 return;
             }
             if (_projekty == null)
             {
                 _projekty = kontrolerPoseidon.Projekty;
-                cbxSelektProjektu.DataSource = _projekty?.Select(c => c.Nazov).ToList(); 
+                cbxSelektProjektu.DataSource = _projekty?.Select(c => c.Nazov).ToList();
                 Aktualizuj("Projekty", kontrolerPoseidon);
             }
             else
@@ -120,7 +130,7 @@ namespace Zobrazovac_Dat
                 kontrolerPoseidon.Logout();
                 Mwbox("Data sú aktualizované", "info");
             }
-            
+
         }
 
         /// <summary>
@@ -131,14 +141,14 @@ namespace Zobrazovac_Dat
         {
             if (DialogResult == DialogResult.OK)
             {
-                if (cbxMesto.SelectedItem != null && VybranyProjekt!=null)
+                if (cbxMesto.SelectedItem != null && VybranyProjekt != null)
                 {
                     //VybranyDopravnyBod = _dopravneBody.SingleOrDefault(c => c.Nazov == (string) cbxMesto.SelectedItem);
                     VybranyDopravnyBod = _dopravneBody[cbxMesto.SelectedIndex];
                     VybranaFaza = cbxSelektFiltra.SelectedItem is eVSVlakFaza
-                        ? (eVSVlakFaza) cbxSelektFiltra.SelectedItem
+                        ? (eVSVlakFaza)cbxSelektFiltra.SelectedItem
                         : eVSVlakFaza.Pozadavek_zkonstruovano;
-                    VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string) cbxSelektProjektu.SelectedItem);
+                    VybranyProjekt = _projekty.SingleOrDefault(c => c.Nazov == (string)cbxSelektProjektu.SelectedItem);
                     base.OnFormClosing(e);
                 }
                 else
@@ -191,7 +201,7 @@ namespace Zobrazovac_Dat
                         data = poseidon.GetMapDopravneUseky();
                         break;
                     case "Poznámky":
-                        DataZoSuboru.Zapis.DoSuboru(cesta + @"\ObecnaPoznamka.json", poseidon.GetObecnePoznamky());
+                        DataZoSuboru.Zapisanie.DoSuboru(cesta + @"\ObecnaPoznamka.json", poseidon.GetObecnePoznamky());
                         cesta += "\\" + VybranaFaza + @"\MapTrasaObPoznamky.json";
                         data = poseidon.GetMapTrasaObecPozn();
                         break;
@@ -213,11 +223,11 @@ namespace Zobrazovac_Dat
             }
             catch (System.Net.WebException)
             {
-                Mwbox("Nepodarilo sa stiahnúť dáta "+ text + " kvlôli timeout na servery","upozornenie");
+                Mwbox("Nepodarilo sa stiahnúť dáta " + text + " kvlôli timeout na servery", "upozornenie");
                 return;
             }
 
-            DataZoSuboru.Zapis.DoSuboru(cesta,data);
+            DataZoSuboru.Zapisanie.DoSuboru(cesta, data);
         }
     }
 }
